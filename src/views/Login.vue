@@ -61,9 +61,7 @@ export default {
     };
   },
   methods: {
-    toRegister(){
-      
-    },
+    toRegister() {},
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
@@ -73,7 +71,7 @@ export default {
         }
       });
     },
-    handleCancel(name){
+    handleCancel(name) {
       this.$refs[name].resetFields();
     }
   }
@@ -81,17 +79,17 @@ export default {
 </script>
 
 <style scoped>
-.wrapper{
-  width:360px;
-  margin:60px auto;
+.wrapper {
+  width: 360px;
+  margin: 60px auto;
 }
-.title{
+.title {
   font-size: 18px;
 }
-.photo{
+.photo {
   font-size: 24px;
 }
-.cancel{
+.cancel {
   margin-left: 8px;
 }
 </style>

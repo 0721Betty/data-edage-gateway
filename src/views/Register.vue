@@ -131,7 +131,6 @@ export default {
         if (valid) {
           this.$Message.success("Success!");
           // 提交数据代码
-          
         } else {
           this.$Message.error("Fail!");
         }
@@ -139,22 +138,22 @@ export default {
     },
     handleReset(name) {
       this.$refs[name].resetFields();
-    },
+    }
   }
 };
 </script>
 <style scoped>
-.wrapper{
-  width:360px;
-  margin:60px auto;
+.wrapper {
+  width: 360px;
+  margin: 60px auto;
 }
-.title{
+.title {
   font-size: 18px;
 }
-.photo{
+.photo {
   font-size: 24px;
 }
-.reset{
+.reset {
   margin-left: 8px;
 }
 </style>
