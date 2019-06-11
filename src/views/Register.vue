@@ -131,6 +131,7 @@ export default {
         if (valid) {
           this.$Message.success("Success!");
           // 提交数据代码
+          // 将用户输入的信息存到数据库中
         } else {
           this.$Message.error("Fail!");
         }

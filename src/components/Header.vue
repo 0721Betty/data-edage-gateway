@@ -27,7 +27,8 @@
   </div>
 </template>
 <script>
-export default {};
+export default {
+};
 </script>
 
 <style scoped>
@@ -36,6 +37,8 @@ export default {};
   background-color: #caf0fd;
   height: 88px;
   line-height: 88px;
+  box-shadow: 0px 10px 10px #999;
+  border-radius: 10px;
 }
 /* logo样式 */
 .logo {

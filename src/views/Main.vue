@@ -5,11 +5,11 @@
         <HeadBar></HeadBar>
       </Header>
       <Layout>
-        <Sider class="sider" style="border-right:1px solid #dcdee2;">
+        <Sider class="sider">
           <SideBar></SideBar>
         </Sider>
         <Layout>
-          <Content :style="{padding: '20px 20px 20px 200px', minHeight: autoHeight, background: '#e0f6fd'}">
+          <Content :style="{minHeight: autoHeight, background: '#e0f6fd'}">
             <router-view></router-view>
           </Content>
         </Layout>
@@ -41,15 +41,21 @@ export default {
   background-color: #caf0fd;
   height: 88px;
   line-height: 88px;
+  margin-bottom: 10px;
 }
 .sider {
   width: 200px;
   display: block;
-  position: absolute;
+  position: relative;
   left: 0;
-  top: 88px;
+  top: 0px;
   bottom: 0;
   background-color: #e0f6fd;
+  margin-right: 5px;
+  box-shadow: 5px 0px 5px #999;
+}
+.ivu-layout-content{
+  padding: 20px;
 }
 </style>
 

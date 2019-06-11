@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <Menu active-name="1" class="inner">
+    <Menu active-name="1-1" :open-names="['1']" class="inner" @on-select="handleRouter" accordion>
       <Submenu name="1">
         <template slot="title">
           <Icon type="ios-stats"/>设备信息
@@ -23,7 +23,7 @@
       </Submenu>
       <Submenu name="2">
         <template slot="title">
-          <Icon type="ios-construct" />设备控制
+          <Icon type="ios-construct"/>设备控制
         </template>
         <MenuItem name="2-1">
           <Icon type="ios-flash"/>电机
@@ -48,7 +48,24 @@
 export default {
   data() {
     return {};
-  }
+  },
+  methods: {
+		handleRouter(name) {
+      // 设备信息展示页面路由跳转
+			if (name === '1-1') this.$router.push('/msg1')
+			if (name === '1-2') this.$router.push('/msg2')
+			if (name === '1-3') this.$router.push('/msg3')
+      if (name === '1-4') this.$router.push('/msg4')
+      if (name === '1-5') this.$router.push('/msg5')
+
+      // 设备控制页面路由跳转
+      if (name === '2-1') this.$router.push('/ctrl1')
+			if (name === '2-2') this.$router.push('/ctrl2')
+			if (name === '2-3') this.$router.push('/ctrl3')
+      if (name === '2-4') this.$router.push('/ctrl4')
+      if (name === '2-5') this.$router.push('/ctrl5')
+		}
+	},
 };
 </script>
 <style scoped>
@@ -76,6 +93,11 @@ ul {
 /* 高亮显示的颜色 */
 .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu) {
   background: #caf0fd;
+}
+/* 让导航栏右边的线消失 */
+.ivu-menu-vertical.ivu-menu-light:after {
+  width: 0px;
+  height: 0px;
 }
 </style>
 

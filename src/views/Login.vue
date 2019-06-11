@@ -66,6 +66,9 @@ export default {
       this.$refs[name].validate(valid => {
         if (valid) {
           this.$Message.success("Success!");
+          // 此处还应该实现查看该用户名有没有在数据库中，并且用户名与密码应该相匹配
+          // 跳转到Main.vue
+          this.$router.replace('/main');
         } else {
           this.$Message.error("Fail!");
         }
