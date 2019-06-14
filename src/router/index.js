@@ -5,11 +5,8 @@ import login from '../views/Login.vue'
 import register from '../views/Register.vue'
 import main from '../views/Main.vue'
 
-import MelecMachine from '../views/message/elecMachine.vue'
-import MslideTable from '../views/message/slideTable.vue'
-import Mplc from '../views/message/PLC.vue'
-import MpushRod from '../views/message/pushRod.vue'
-import Mrelay from '../views/message/Relay.vue'
+import realTime from '../views/message/realTime.vue'
+import history from '../views/message/history.vue'
 
 import CelecMachine from '../views/control/elecMachine.vue'
 import CslideTable from '../views/control/slideTable.vue'
@@ -49,6 +46,7 @@ const routes = [
   }, 
   {
     path: '/main',
+    name: 'main',
     component: main,
     redirect: 'msg1',
 		meta: {
@@ -57,37 +55,16 @@ const routes = [
     children: [
       {
         path: '/msg1',
-        component: MelecMachine,
+        component: realTime,
         meta: {
-          title: '电机信息页面'
+          title: '实时数据页面'
         }
       },
       {
         path: '/msg2',
-        component: MslideTable,
+        component: history,
         meta: {
-          title: '滑台信息页面'
-        }
-      },
-      {
-        path: '/msg3',
-        component: Mplc,
-        meta: {
-          title: 'PLC信息页面'
-        }
-      },
-      {
-        path: '/msg4',
-        component: MpushRod,
-        meta: {
-          title: '推杆信息页面'
-        }
-      },
-      {
-        path: '/msg5',
-        component: Mrelay,
-        meta: {
-          title: '继电器信息页面'
+          title: '历史数据页面'
         }
       },
       {

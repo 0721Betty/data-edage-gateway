@@ -2,18 +2,23 @@
   <div class="layout">
     <Layout>
       <Header>
-        <HeadBar></HeadBar>
+        <Affix>
+          <HeadBar></HeadBar>
+        </Affix>
       </Header>
       <Layout>
         <Sider class="sider">
-          <SideBar></SideBar>
+          <Affix :offset-top="90">
+            <SideBar></SideBar>
+          </Affix>
         </Sider>
         <Layout>
-          <Content :style="{minHeight: autoHeight, background: '#e0f6fd'}">
+          <Content :style="{minHeight: autoHeight}">
+            <!-- background: '#eaf6fa' -->
             <router-view></router-view>
           </Content>
         </Layout>
-      </Layout>
+        </Layout>
     </Layout>
   </div>
 </template>
@@ -32,30 +37,41 @@ export default {
   },
   beforeMount() {
     // this.$router.push('/form1')
-    this.autoHeight = window.innerHeight - 88 + "px";
+    this.autoHeight = window.innerHeight - 80 + "px";
   }
 };
 </script>
 <style scoped>
 .ivu-layout-header {
   background-color: #caf0fd;
-  height: 88px;
-  line-height: 88px;
+  height: 80px;
+  line-height: 80px;
   margin-bottom: 10px;
+  padding: 0;
+}
+.ivu-layout-sider{
+  background: #f5f7f9 !important;
+  /* background-color: #e0f6fd !important; */
+  position: relative;
+}
+.ivu-layout-sider-children{
+  padding-top: 0!important;
+  margin-top: 0!important;
 }
 .sider {
   width: 200px;
   display: block;
   position: relative;
   left: 0;
-  top: 0px;
+  top: 0;
   bottom: 0;
+  /* background-color: #caf0fd; */
   background-color: #e0f6fd;
-  margin-right: 5px;
-  box-shadow: 5px 0px 5px #999;
+  /* margin-right: 10px; */
+  /* box-shadow: 5px 0px 5px #999; */
 }
-.ivu-layout-content{
-  padding: 20px;
+.ivu-layout-content {
+  padding: 0px 20px;
 }
 </style>
 

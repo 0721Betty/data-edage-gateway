@@ -15,11 +15,10 @@
         <div class="nav" @mouseover="over" @mouseout="out">
           <img src="../assets/we.png" alt>
           <a href="javascript:;">关于我们</a>
-          <div ref="text" style="display: none;" class="text">
-            本产品主要针对工业应用领域的数据采集，
-            开发可以连接多种 PLC、多种传感器，
-            能够控制生产过程中使用的电机、开关、指示灯等的设备。
-            该设备可以作为数据采集终端，也可以作为数据采集和处理的边缘网关使用。
+          <div ref="text" class="text">
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp本产品主要针对工业应用领域的数据采集，
+            开发可以连接多种 PLC、多种传感器，能够控制
+            生产过程中使用的电机、开关、指示灯等的设备。该设备可以作为数据采集终端，也可以作为数据采集和处理的边缘网关使用。
           </div>
         </div>
       </Col>
@@ -65,17 +64,19 @@ export default {
 }
 /* logo样式 */
 .logo {
-  height: 88px;
+  height: 80px;
+  line-height: 80px;
   text-align: center;
   transition: -webkit-transform 1s;
 }
 /* 系统名称样式 */
 .name {
-  height: 88px;
+  height: 80px;
   font-size: 50px;
   text-align: center;
-  color: #4dd2ff;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  /* color: #4dd2ff; */
+  color: #08acf8;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   font-style: italic;
   transition: -webkit-transform 1s;
 }
@@ -83,18 +84,16 @@ export default {
 .logo:hover {
   transform: rotate(360deg);
 }
-.name:hover {
-  transform: rotate(-5deg);
-}
 /* 头部右边样式 */
 .nav {
-  height: 88px;
+  height: 80px;
 }
 .nav a {
   display: inline-block;
-  height: 88px;
-  line-height: 88px;
-  color: #4dd2ff;
+  height: 80px;
+  line-height: 80px;
+  /* color: #4dd2ff; */
+  color: #08acf8;
   font-size: 18px;
   text-align: center;
 }
@@ -115,11 +114,12 @@ export default {
   padding-bottom: 5px;
 }
 .text {
+  display: none;
   width: 400px;
-  height: 57px;
+  height: 120px;
+  font-size: 18px;
   border-radius: 8px;
-  line-height: 18px;
-  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  line-height: 23px;
   font-style: italic;
   border: 1px solid #37ccfd;
   position: absolute;

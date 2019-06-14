@@ -1,24 +1,15 @@
 <template>
   <div class="wrapper">
-    <Menu active-name="1-1" :open-names="['1']" class="inner" @on-select="handleRouter" accordion>
+    <Menu ref="leftMenu" :active-name='activeNav' :open-names="openKeys" class="inner" @on-select="handleRouter" :theme="theme1">
       <Submenu name="1">
         <template slot="title">
-          <Icon type="ios-stats"/>设备信息
+          <Icon type="ios-stats"/>设备数据
         </template>
         <MenuItem name="1-1">
-          <Icon type="ios-flash"/>电机
+          <Icon type="ios-flash"/>实时数据
         </MenuItem>
         <MenuItem name="1-2">
-          <Icon type="ios-cube"/>滑台
-        </MenuItem>
-        <MenuItem name="1-3">
-          <Icon type="ios-barcode"/>PLC
-        </MenuItem>
-        <MenuItem name="1-4">
-          <Icon type="ios-build"/>推杆
-        </MenuItem>
-        <MenuItem name="1-5">
-          <Icon type="ios-settings"/>继电器
+          <Icon type="ios-cube"/>历史数据
         </MenuItem>
       </Submenu>
       <Submenu name="2">
@@ -45,18 +36,32 @@
   </div>
 </template>
 <script>
+// 实现页面刷新时，侧边栏仍然停留在之前高亮显示的页面
+import getActiveNav from '../leftNav.config.js'
+import getOpenKeys from '../openKeys.config.js'
 export default {
   data() {
-    return {};
+    return {
+      theme1: 'light',
+      activeNav: '1-1',
+      openKeys: ['1']
+    };
+  },
+  beforeMount(){
+    // this.$nextTick(() => {
+		// 	this.$refs.leftMenu.updateOpened()
+		// 	// this.$refs.leftMenu.updateActiveName()
+    // });
+    var keys = getOpenKeys(window.location.href);
+    this.openKeys = keys.toString().split('');
+    console.log(keys.toString().split(''));
+    this.activeNav = getActiveNav(window.location.href);
   },
   methods: {
 		handleRouter(name) {
       // 设备信息展示页面路由跳转
 			if (name === '1-1') this.$router.push('/msg1')
 			if (name === '1-2') this.$router.push('/msg2')
-			if (name === '1-3') this.$router.push('/msg3')
-      if (name === '1-4') this.$router.push('/msg4')
-      if (name === '1-5') this.$router.push('/msg5')
 
       // 设备控制页面路由跳转
       if (name === '2-1') this.$router.push('/ctrl1')
@@ -98,6 +103,12 @@ ul {
 .ivu-menu-vertical.ivu-menu-light:after {
   width: 0px;
   height: 0px;
+}
+.ivu-menu{
+  font-size: 16px;
+}
+.ivu-menu-item{
+  font-size: 15px;
 }
 </style>
 

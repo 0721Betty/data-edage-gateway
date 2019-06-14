@@ -3,31 +3,31 @@
     <p slot="title" class="title">
       <Icon type="md-happy" class="photo"></Icon>管理员注册
     </p>
-    <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
+    <Form ref="registerUser" :model="registerUser" :rules="ruleValidate" :label-width="80">
       <FormItem label="姓名" prop="name">
-        <Input v-model="formValidate.name" placeholder="请输入你的姓名"></Input>
+        <Input v-model="registerUser.name" placeholder="请输入你的姓名"></Input>
       </FormItem>
       <FormItem label="密码" prop="pwd">
-        <Input type="password" v-model="formValidate.pwd" placeholder="请输入你的密码"></Input>
+        <Input type="password" v-model="registerUser.pwd" placeholder="请输入你的密码"></Input>
       </FormItem>
-      <FormItem label="验证密码" prop="pwdCheck">
-        <Input type="password" v-model="formValidate.pwdCheck" placeholder="请再次输入你的密码"></Input>
+      <FormItem label="确认密码" prop="pwdCheck">
+        <Input type="password" v-model="registerUser.pwdCheck" placeholder="请再次输入你的密码"></Input>
       </FormItem>
       <FormItem label="手机号码" prop="mobile">
-        <Input v-model="formValidate.mobile" placeholder="请输入你的手机号"></Input>
+        <Input v-model="registerUser.mobile" placeholder="请输入你的手机号"></Input>
       </FormItem>
-      <FormItem label="E-mail" prop="mail">
-        <Input v-model="formValidate.mail" placeholder="请输入你的邮箱"></Input>
+      <FormItem label="邮箱" prop="mail">
+        <Input v-model="registerUser.mail" placeholder="请输入你的邮箱"></Input>
       </FormItem>
       <FormItem label="性别" prop="gender">
-        <RadioGroup v-model="formValidate.gender">
+        <RadioGroup v-model="registerUser.gender">
           <Radio label="male">男</Radio>
           <Radio label="female">女</Radio>
         </RadioGroup>
       </FormItem>
       <FormItem>
-        <Button type="primary" @click="handleSubmit('formValidate')">提交</Button>
-        <Button type="info" @click="handleReset('formValidate')" class="reset">重置</Button>
+        <Button type="primary" @click="handleSubmit('registerUser')">提交</Button>
+        <Button type="info" @click="handleReset('registerUser')" class="reset">重置</Button>
       </FormItem>
     </Form>
   </Card>
@@ -47,14 +47,14 @@ export default {
     const validatePassCheck = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请再次输入密码"));
-      } else if (value !== this.formValidate.pwd) {
+      } else if (value !== this.registerUser.pwd) {
         callback(new Error("与第一次输入的密码不匹配"));
       } else {
         callback();
       }
     };
     return {
-      formValidate: {
+      registerUser: {
         name: "",
         pwd: "",
         pwdCheck: "",
@@ -94,6 +94,17 @@ export default {
             required: true,
             validator: validatePassCheck,
             trigger: "blur"
+          },
+          {
+            required: true,
+            message: "密码不能为空",
+            trigger: "blur"
+          },
+          {
+            type: "string",
+            min: 6,
+            message: "密码不小于六位",
+            trigger: "blur"
           }
         ],
         mobile: [
@@ -132,8 +143,22 @@ export default {
           this.$Message.success("Success!");
           // 提交数据代码
           // 将用户输入的信息存到数据库中
+
+          // this.$axios
+          // .post("",this.registerUser)
+          // .then(function(res){
+          //   // 注册成功
+          //   this.$message({
+          //     message: "账号注册成功！",
+          //     type: 'success'
+          //   })
+          //   this.$router.push('/login');//注册成功后跳转到login页面
+          // })
+          // .catch(function(error){
+          //   console.log(error);
+          // })
         } else {
-          this.$Message.error("Fail!");
+          this.$Message.error("信息格式不正确!");
         }
       });
     },

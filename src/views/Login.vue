@@ -3,14 +3,14 @@
     <p slot="title" class="title">
       <Icon type="md-happy" class="photo"></Icon>管理员登录
     </p>
-    <Form ref="formInline" :model="formInline" :rules="ruleInline">
+    <Form ref="loginUser" :model="loginUser" :rules="ruleInline">
       <FormItem prop="user">
-        <Input type="text" v-model="formInline.user" placeholder="请输入姓名">
+        <Input type="text" v-model="loginUser.user" placeholder="请输入姓名">
           <Icon type="ios-person-outline" slot="prepend"></Icon>
         </Input>
       </FormItem>
       <FormItem prop="password">
-        <Input type="password" v-model="formInline.password" placeholder="请输入密码">
+        <Input type="password" v-model="loginUser.password" placeholder="请输入密码">
           <Icon type="ios-lock-outline" slot="prepend"></Icon>
         </Input>
       </FormItem>
@@ -18,8 +18,8 @@
         <Checkbox v-model="config.remember">记住密码</Checkbox>
       </FormItem>
       <FormItem>
-        <Button type="success" @click="handleSubmit('formInline')">登录</Button>
-        <Button type="info" @click="handleCancel('formInline')" class="cancel">取消</Button>
+        <Button type="primary" @click="handleSubmit('loginUser')">登录</Button>
+        <Button type="info" @click="handleCancel('loginUser')" class="cancel">取消</Button>
       </FormItem>
     </Form>
   </Card>
@@ -29,7 +29,7 @@
 export default {
   data() {
     return {
-      formInline: {
+      loginUser: {
         user: "",
         password: ""
       },
@@ -61,11 +61,10 @@ export default {
     };
   },
   methods: {
-    toRegister() {},
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          this.$Message.success("Success!");
+          this.$Message.success("欢迎您!");
           // 此处还应该实现查看该用户名有没有在数据库中，并且用户名与密码应该相匹配
           // 跳转到Main.vue
           this.$router.replace('/main');

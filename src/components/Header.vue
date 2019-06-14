@@ -13,7 +13,7 @@
         <div class="user">
           <Dropdown>
             <a href="javascript:void(0)">
-              <span>用户中心</span>
+              <span>个人中心&nbsp</span>
               <Icon type="ios-arrow-down"></Icon>
             </a>
             <DropdownMenu slot="list">
@@ -35,23 +35,24 @@ export default {
 /* 头部样式 */
 .head {
   background-color: #caf0fd;
-  height: 88px;
-  line-height: 88px;
-  box-shadow: 0px 10px 10px #999;
-  border-radius: 10px;
+  height: 80px;
+  line-height: 80px;
+  /* box-shadow: 0px 10px 10px #999; */
+  /* border-radius: 10px; */
 }
 /* logo样式 */
 .logo {
-  height: 88px;
+  height: 80px;
   text-align: center;
   transition: -webkit-transform 1s;
 }
 /* 系统名称样式 */
 .name {
-  height: 88px;
+  height: 80px;
   font-size: 50px;
   text-align: center;
-  color: #4dd2ff;
+  /* color: #4dd2ff; */
+  color: #08acf8;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   font-style: italic;
   transition: -webkit-transform 1s;
@@ -60,13 +61,14 @@ export default {
 .logo:hover {
   transform: rotate(360deg);
 }
-.name:hover {
-  transform: rotate(-5deg);
-}
 .user{
     text-align: center;
+    height: 80px;
 }
 span{
-    font-size: 15px;
+    font-size: 16px;
+}
+.ivu-dropdown,.ivu-dropdown-rel{
+  height: 80px !important
 }
 </style>
