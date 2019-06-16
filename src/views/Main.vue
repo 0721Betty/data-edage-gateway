@@ -12,6 +12,7 @@
             <SideBar></SideBar>
           </Affix>
         </Sider>
+        <Divider type="vertical" :style="{minHeight: autoHeight}"/>
         <Layout>
           <Content :style="{minHeight: autoHeight}">
             <!-- background: '#eaf6fa' -->

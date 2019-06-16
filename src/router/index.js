@@ -5,14 +5,16 @@ import login from '../views/Login.vue'
 import register from '../views/Register.vue'
 import main from '../views/Main.vue'
 
-import realTime from '../views/message/realTime.vue'
-import history from '../views/message/history.vue'
+import realTime from '../views/message/RealTime.vue'
+import history from '../views/message/History.vue'
 
-import CelecMachine from '../views/control/elecMachine.vue'
-import CslideTable from '../views/control/slideTable.vue'
-import Cplc from '../views/control/PLC.vue'
-import CpushRod from '../views/control/pushRod.vue'
-import Crelay from '../views/control/Relay.vue'
+import CelecMachine from '../views/control/ElecMachine.vue'
+import CslideTable from '../views/control/SlideTable.vue'
+import CpushRod from '../views/control/PushRod.vue'
+
+import Tips from '../views/Tips.vue'
+
+import notFound from '../views/404.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -83,26 +85,26 @@ const routes = [
       },
       {
         path: '/ctrl3',
-        component: Cplc,
-        meta: {
-          title: 'PLC控制页面'
-        }
-      },
-      {
-        path: '/ctrl4',
         component: CpushRod,
         meta: {
           title: '推杆控制页面'
         }
       },
       {
-        path: '/ctrl5',
-        component: Crelay,
+        path: '/tips',
+        component: Tips,
         meta: {
-          title: '继电器控制页面'
+          title: '系统提示页面'
         }
       }
     ]
+  },
+  {
+    path: '/*',
+    component: notFound,
+    meta: {
+      title: '404'
+    }
   }
 ]
 

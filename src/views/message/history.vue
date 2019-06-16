@@ -30,7 +30,7 @@ export default {
         },
         tooltip: {
           trigger: "axis",
-          formatter: '{b}<br/>{a0}:{c0}℃<br/>{a1}:{c1}%rh<br/>{a2}:{c2}V<br/>{a3}:{c3}A<br/>{a4}:{c4}W<br/>{a5}:{c5}Kg',
+          formatter: '{b}<br/>{a0}:{c0}℃<br/>{a1}:{c1}%rh<br/>{a2}:{c2}V<br/>{a3}:{c3}A<br/>{a4}:{c4}Kg<br/>{a5}:{c5}W',
           axisPointer: {
             type: "cross",
             label: {
@@ -39,12 +39,12 @@ export default {
           }
         },
         legend: {
-          data: ["温度", "湿度", "电压", "电流", "功耗", "压力"]
+          data: ["温度", "湿度", "电压", "电流", "压力", "功率"]
         },
         toolbox: {
           feature: {
-            restore: {},
-            saveAsImage: {}
+            saveAsImage: {},
+            restore: {}
           }
         },
         grid: {
@@ -92,16 +92,16 @@ export default {
             data: [4.32, 4.332, 5.301, 3.334, 3.39, 4.33, 2.32]
           },
           {
-            name: "功耗",
-            type: "line",
-            stack: "总量",
-            data: [1.32, 2.332, 2.301, 2.334, 1.39, 2.33, 2.32]
-          },
-          {
             name: "压力",
             type: "line",
             stack: "总量",
             data: [82.12, 93.322, 90.131, 93.444, 88.129, 89.133, 95.132]
+          },
+          {
+            name: "功率",
+            type: "line",
+            stack: "总量",
+            data: [109.132, 108.332, 102.301, 110.334, 110.139, 120.033, 102.032]
           }
         ]
       });

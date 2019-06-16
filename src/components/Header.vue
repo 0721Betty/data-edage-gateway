@@ -3,7 +3,7 @@
     <Row class-name="head">
       <Col span="3">
         <div class="logo">
-            <img src="../assets/logo.png" alt="">
+          <img src="../assets/logo.png" alt>
         </div>
       </Col>
       <Col span="18">
@@ -13,6 +13,7 @@
         <div class="user">
           <Dropdown>
             <a href="javascript:void(0)">
+              <Avatar src="http://www.zhongaigou.com/UploadFiles/2014/cabie.jpg"/>&nbsp
               <span>个人中心&nbsp</span>
               <Icon type="ios-arrow-down"></Icon>
             </a>
@@ -27,8 +28,7 @@
   </div>
 </template>
 <script>
-export default {
-};
+export default {};
 </script>
 
 <style scoped>
@@ -61,14 +61,15 @@ export default {
 .logo:hover {
   transform: rotate(360deg);
 }
-.user{
-    text-align: center;
-    height: 80px;
+.user {
+  text-align: center;
+  height: 80px;
 }
-span{
-    font-size: 16px;
+span {
+  font-size: 16px;
 }
-.ivu-dropdown,.ivu-dropdown-rel{
-  height: 80px !important
+.ivu-dropdown,
+.ivu-dropdown-rel {
+  height: 80px !important;
 }
 </style>

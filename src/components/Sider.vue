@@ -23,22 +23,19 @@
           <Icon type="ios-cube"/>滑台
         </MenuItem>
         <MenuItem name="2-3">
-          <Icon type="ios-barcode"/>PLC
-        </MenuItem>
-        <MenuItem name="2-4">
           <Icon type="ios-build"/>推杆
         </MenuItem>
-        <MenuItem name="2-5">
-          <Icon type="ios-settings"/>继电器
-        </MenuItem>
       </Submenu>
+      <MenuItem name="3">
+            <Icon type="md-chatboxes" />系统提示
+        </MenuItem>
     </Menu>
   </div>
 </template>
 <script>
 // 实现页面刷新时，侧边栏仍然停留在之前高亮显示的页面
-import getActiveNav from '../leftNav.config.js'
-import getOpenKeys from '../openKeys.config.js'
+import getActiveNav from '../siderConfig/leftNav.config.js'
+import getOpenKeys from '../siderConfig/openKeys.config.js'
 export default {
   data() {
     return {
@@ -48,13 +45,8 @@ export default {
     };
   },
   beforeMount(){
-    // this.$nextTick(() => {
-		// 	this.$refs.leftMenu.updateOpened()
-		// 	// this.$refs.leftMenu.updateActiveName()
-    // });
     var keys = getOpenKeys(window.location.href);
     this.openKeys = keys.toString().split('');
-    console.log(keys.toString().split(''));
     this.activeNav = getActiveNav(window.location.href);
   },
   methods: {
@@ -67,8 +59,9 @@ export default {
       if (name === '2-1') this.$router.push('/ctrl1')
 			if (name === '2-2') this.$router.push('/ctrl2')
 			if (name === '2-3') this.$router.push('/ctrl3')
-      if (name === '2-4') this.$router.push('/ctrl4')
-      if (name === '2-5') this.$router.push('/ctrl5')
+
+      // 系统提示页面路由跳转
+      if(name === '3') this.$router.push('/tips')
 		}
 	},
 };
@@ -108,7 +101,10 @@ ul {
   font-size: 16px;
 }
 .ivu-menu-item{
-  font-size: 15px;
+  font-size: 16px;
+}
+i.ivu-icon.ivu-icon-md-chatboxes::before{
+  font-size: 16px;
 }
 </style>
 

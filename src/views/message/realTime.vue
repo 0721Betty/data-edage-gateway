@@ -52,6 +52,7 @@ export default {
       let volt = this.$echarts.init(document.getElementById("volt"));
       let elec = this.$echarts.init(document.getElementById("elec"));
       let press = this.$echarts.init(document.getElementById("press"));
+      let power = this.$echarts.init(document.getElementById("power"));
       temp.setOption({
         width: "auto",
         height: "auto",
@@ -177,6 +178,31 @@ export default {
           }
         ]
       });
+      power.setOption({
+        series: [
+          {
+            name: "设备参数",
+            type: "gauge",
+            detail: { formatter: "{value}W" },
+            data: [{ value: 110, name: "功率" }],
+            title:{
+              color: "#08acf8"
+            },
+            min: 0,
+            max: 150,
+            splitNumber: 15,
+            fontWeight: "normal",
+            radius: "100%" ,
+            axisLine: { 
+              lineStyle: { 
+                color: [[11/15,"#91c7ae"], [1, "#c23531"]]
+              }
+            }
+          }
+        ]
+      }
+
+      );
     }
   }
 };
