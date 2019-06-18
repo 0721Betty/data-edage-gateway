@@ -18,8 +18,12 @@
               <Icon type="ios-arrow-down"></Icon>
             </a>
             <DropdownMenu slot="list">
-              <DropdownItem>未读消息</DropdownItem>
-              <DropdownItem>退出登录</DropdownItem>
+              <DropdownItem>
+                <router-link to="/tips">系统消息</router-link>
+              </DropdownItem>
+              <DropdownItem>
+                <router-link to="/login">退出登录</router-link>
+              </DropdownItem>
             </DropdownMenu>
           </Dropdown>
         </div>
@@ -28,7 +32,8 @@
   </div>
 </template>
 <script>
-export default {};
+export default {
+};
 </script>
 
 <style scoped>

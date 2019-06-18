@@ -7,24 +7,24 @@
       <FormItem label="姓名" prop="name">
         <Input v-model="registerUser.name" placeholder="请输入你的姓名"></Input>
       </FormItem>
-      <FormItem label="密码" prop="pwd">
-        <Input type="password" v-model="registerUser.pwd" placeholder="请输入你的密码"></Input>
+      <FormItem label="密码" prop="password">
+        <Input type="password" v-model="registerUser.password" placeholder="请输入你的密码"></Input>
       </FormItem>
       <FormItem label="确认密码" prop="pwdCheck">
         <Input type="password" v-model="registerUser.pwdCheck" placeholder="请再次输入你的密码"></Input>
       </FormItem>
-      <FormItem label="手机号码" prop="mobile">
-        <Input v-model="registerUser.mobile" placeholder="请输入你的手机号"></Input>
+      <FormItem label="手机号码" prop="phone">
+        <Input v-model="registerUser.phone" placeholder="请输入你的手机号"></Input>
       </FormItem>
-      <FormItem label="邮箱" prop="mail">
-        <Input v-model="registerUser.mail" placeholder="请输入你的邮箱"></Input>
+      <FormItem label="邮箱" prop="email">
+        <Input v-model="registerUser.email" placeholder="请输入你的邮箱"></Input>
       </FormItem>
-      <FormItem label="性别" prop="gender">
+      <!-- <FormItem label="性别" prop="gender">
         <RadioGroup v-model="registerUser.gender">
           <Radio label="male">男</Radio>
           <Radio label="female">女</Radio>
         </RadioGroup>
-      </FormItem>
+      </FormItem> -->
       <FormItem>
         <Button type="primary" @click="handleSubmit('registerUser')">提交</Button>
         <Button type="info" @click="handleReset('registerUser')" class="reset">重置</Button>
@@ -47,7 +47,7 @@ export default {
     const validatePassCheck = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请再次输入密码"));
-      } else if (value !== this.registerUser.pwd) {
+      } else if (value !== this.registerUser.password) {
         callback(new Error("与第一次输入的密码不匹配"));
       } else {
         callback();
@@ -56,11 +56,12 @@ export default {
     return {
       registerUser: {
         name: "",
-        pwd: "",
-        pwdCheck: "",
-        mobile: "",
-        mail: "",
-        gender: ""
+        password: "",
+        // pwdCheck: "",
+        // mobile: "",
+        phone: "",
+        email: "",
+        // gender: ""
       },
       ruleValidate: {
         name: [
@@ -76,7 +77,7 @@ export default {
             trigger: "blur"
           }
         ],
-        pwd: [
+        password: [
           {
             required: true,
             message: "密码不能为空",
@@ -107,14 +108,14 @@ export default {
             trigger: "blur"
           }
         ],
-        mobile: [
+        phone: [
           {
             required: true,
             validator: validatePhone,
             trigger: "blur"
           }
         ],
-        mail: [
+        email: [
           {
             required: true,
             message: "邮箱不能为空",
@@ -125,14 +126,14 @@ export default {
             message: "邮箱格式不正确",
             trigger: "blur"
           }
-        ],
-        gender: [
-          {
-            required: true,
-            message: "请选择性别",
-            trigger: "change"
-          }
         ]
+        // gender: [
+        //   {
+        //     required: true,
+        //     message: "请选择性别",
+        //     trigger: "change"
+        //   }
+        // ]
       }
     };
   },
@@ -140,23 +141,20 @@ export default {
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          this.$Message.success("Success!");
-          // 提交数据代码
-          // 将用户输入的信息存到数据库中
-
-          // this.$axios
-          // .post("",this.registerUser)
-          // .then(function(res){
-          //   // 注册成功
-          //   this.$message({
-          //     message: "账号注册成功！",
-          //     type: 'success'
-          //   })
-          //   this.$router.push('/login');//注册成功后跳转到login页面
-          // })
-          // .catch(function(error){
-          //   console.log(error);
-          // })
+          this.$axios
+          .post("/api/customer",this.registerUser)
+          .then(res => {
+            if(res.data.code >= 300){
+              // 注册账号失败，账号已经存在
+              this.$Message.error(res.data.msg);
+            }else{
+              this.$Message.success("注册成功！");
+              this.$router.push('/login');//注册成功后跳转到login页面
+            }  
+          })
+          .catch(function(error){
+            console.log(error);
+          })
         } else {
           this.$Message.error("信息格式不正确!");
         }

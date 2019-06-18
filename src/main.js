@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import './plugins/axios'
 import App from './App.vue'
-import router from './router'
+import router from './router/index'
 import store from './store'
 import './plugins/iview.js'
 import echarts from 'echarts'

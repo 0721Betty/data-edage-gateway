@@ -2,3 +2,4 @@
 App.vue
 /src/components/Header.vue
 /src/views/message/history.vue
+/src/plugins/axios.js

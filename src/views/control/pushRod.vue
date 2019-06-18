@@ -4,6 +4,9 @@
       <Col span="16" offset="4">
         <Card>
           <div id="pushRod" class="myChart"></div>
+          <div>
+            <selectTime></selectTime>
+          </div>
         </Card>
       </Col>
     </Row>
@@ -12,12 +15,12 @@
       <Col span="16" offset="4">
         <Card style="width: 450px;">
           <p slot="title">
-            <Icon type="md-cog"></Icon>控制推杆的移动
+            <Icon type="md-cog"></Icon>控制推杆的移动(单位cm)
           </p>
           <Form ref="pushRod" :model="pushRod">
             <FormItem label="当前距离" prop="distance">
               <br>
-              <Slider v-model="pushRod.distance" show-input></Slider>
+              <Slider v-model="pushRod.distance" show-input :min="0" :max="200"></Slider>
             </FormItem>
             <FormItem label="方向" prop="direction">
               <RadioGroup v-model="pushRod.direction">
@@ -25,6 +28,7 @@
                 <Radio label="forward"><Icon type="ios-arrow-forward"></Icon>前进</Radio>
               </RadioGroup>
             </FormItem>
+            <FormItem>
             <ButtonGroup shape="circle" style="margin-left:28px;">
               <Button type="primary">
                 <Icon type="ios-play"></Icon>开始
@@ -34,6 +38,7 @@
                 <Icon type="md-power"></Icon>
               </Button>
             </ButtonGroup>
+            </FormItem>
           </Form>
         </Card>
         <div class="photo">
@@ -44,7 +49,11 @@
   </div>
 </template>
 <script>
+import selectTime from '../../components/selectTime.vue'
 export default {
+  components: {
+    selectTime
+  },
   data() {
     return {
       pushRod: {
@@ -110,7 +119,7 @@ export default {
                 position: "top"
               }
             },
-            data: [220, 532, 401, 334, 200, 330, 600]
+            data: [120, 32, 40, 34, 200, 130, 100]
           }
         ]
       });
@@ -128,6 +137,10 @@ export default {
   position: absolute;
   top: 73px;
   right: 120px;
+}
+.selectTime{
+  top: 40px;
+  right: 192px;
 }
 </style>
 

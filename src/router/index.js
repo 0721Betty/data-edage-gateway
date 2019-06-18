@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import face from '../views/Face.vue'
 import login from '../views/Login.vue'
 import register from '../views/Register.vue'
-import main from '../views/Main.vue'
+import home from '../views/Home.vue'
 
 import realTime from '../views/message/RealTime.vue'
 import history from '../views/message/History.vue'
@@ -20,12 +20,12 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    redirect: 'face',
+    redirect: '/face',
   }, 
   {
     path: '/face',
     component: face,
-    redirect: 'login',
+    redirect: '/login',
     meta: {
 			title: '首页门面'
 		},
@@ -47,9 +47,9 @@ const routes = [
     ]
   }, 
   {
-    path: '/main',
-    name: 'main',
-    component: main,
+    path: '/home',
+    name: 'home',
+    component: home,
     redirect: 'msg1',
 		meta: {
 			title: '主界面'
@@ -112,5 +112,15 @@ const routes = [
 const router = new VueRouter({
   routes
 })
+
+// 路由守卫
+// router.beforeEach((to, from, next) => {
+//   const isLogin = localStorage.token ? true : false;
+//   if(to.path == '/login' || to.path == '/register'){
+//     next();
+//   }else {
+//     isLogin ? next() : next('/login');
+//   }
+// })
 
 export default router

@@ -4,8 +4,8 @@
       <Icon type="md-happy" class="photo"></Icon>管理员登录
     </p>
     <Form ref="loginUser" :model="loginUser" :rules="ruleInline">
-      <FormItem prop="user">
-        <Input type="text" v-model="loginUser.user" placeholder="请输入姓名">
+      <FormItem prop="name">
+        <Input type="text" v-model="loginUser.name" placeholder="请输入姓名">
           <Icon type="ios-person-outline" slot="prepend"></Icon>
         </Input>
       </FormItem>
@@ -30,14 +30,14 @@ export default {
   data() {
     return {
       loginUser: {
-        user: "",
+        name: "Betty",
         password: ""
       },
       config: {
         remember: true
       },
       ruleInline: {
-        user: [
+        name: [
           {
             required: true,
             message: "Please fill in the user name",
@@ -64,12 +64,26 @@ export default {
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          this.$Message.success("欢迎您!");
-          // 此处还应该实现查看该用户名有没有在数据库中，并且用户名与密码应该相匹配
-          // 跳转到Main.vue
-          this.$router.replace('/main');
+          this.$axios
+            .post("/api/account", this.loginUser)
+            .then(res => {
+              let token = res.data.data.token;
+              // console.log(token);
+              if (res.data.code > 300) {
+                // 登录失败，账号或密码错误
+                this.$Message.error(res.data.msg);
+              }else{
+                // 登录成功
+                localStorage.setItem("token", token);
+                this.$Message.success("登录成功！欢迎您！");
+                this.$router.push("/home");
+               }
+            })
+            .catch(err => {
+              console.log(err);
+            });
         } else {
-          this.$Message.error("Fail!");
+          this.$Message.error("账号或密码格式不对！");
         }
       });
     },

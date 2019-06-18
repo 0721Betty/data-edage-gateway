@@ -38,12 +38,23 @@
   </div>
 </template>
 <script>
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
 export default {
   data() {
-    return {};
+    return {
+      stompClient: "",
+      timer: ""
+    };
   },
   mounted() {
+    this.initWebSocket();
     this.init();
+  },
+  beforeDestroy() {
+    // 页面离开时断开连接,清除定时器
+    this.disconnect();
+    clearInterval(this.timer);
   },
   methods: {
     init() {
@@ -62,25 +73,19 @@ export default {
             type: "gauge",
             detail: { formatter: "{value}℃" },
             data: [{ value: 50.1, name: "温度" }],
-            // markPoint: {
-            //   symbol: "circle",
-            //   symbolSize: 5,
-            //   data: [
-            //     //跟你的仪表盘的中心位置对应上，颜色可以和画板底色一样
-            //     { x: "center", y: "center", itemStyle: { color: "#FFF" } }
-            //   ]
-            // },
             min: 10,
             max: 60,
-            title:{
+            title: {
               color: "#08acf8"
             },
             splitNumber: 5, //分成5份
             fontWeight: "normal",
             radius: "100%", //仪表盘大小
-            axisLine: {   // 坐标轴线
-              lineStyle: {   // 属性lineStyle控制线条样式
-                color: [[4/5,"#91c7ae"], [1, "#c23531"]]
+            axisLine: {
+              // 坐标轴线
+              lineStyle: {
+                // 属性lineStyle控制线条样式
+                color: [[4 / 5, "#91c7ae"], [1, "#c23531"]]
               }
             }
           }
@@ -93,7 +98,7 @@ export default {
             type: "gauge",
             detail: { formatter: "{value}%rh" },
             data: [{ value: 40.1, name: "湿度" }],
-            title:{
+            title: {
               color: "#08acf8"
             },
             min: 30,
@@ -101,9 +106,9 @@ export default {
             splitNumber: 6,
             fontWeight: "normal",
             radius: "100%",
-            axisLine: { 
-              lineStyle: { 
-                color: [[4/6,"#91c7ae"], [1, "#c23531"]]
+            axisLine: {
+              lineStyle: {
+                color: [[4 / 6, "#91c7ae"], [1, "#c23531"]]
               }
             }
           }
@@ -116,17 +121,17 @@ export default {
             type: "gauge",
             detail: { formatter: "{value}V" },
             data: [{ value: 20.625, name: "电压" }],
-            title:{
+            title: {
               color: "#08acf8"
             },
             min: 5,
-            max: 30, 
-            splitNumber: 5, 
+            max: 30,
+            splitNumber: 5,
             fontWeight: "normal",
-            radius: "100%" ,
-            axisLine: {  
+            radius: "100%",
+            axisLine: {
               lineStyle: {
-                color: [[0.76,"#91c7ae"], [1, "#c23531"]]
+                color: [[0.76, "#91c7ae"], [1, "#c23531"]]
               }
             }
           }
@@ -139,17 +144,17 @@ export default {
             type: "gauge",
             detail: { formatter: "{value}A" },
             data: [{ value: 2.333, name: "电流" }],
-            title:{
+            title: {
               color: "#08acf8"
             },
             min: 0,
             max: 6,
-            splitNumber: 6, 
+            splitNumber: 6,
             fontWeight: "normal",
-            radius: "100%" ,
-            axisLine: { 
-              lineStyle: {   
-                color: [[5/6,"#91c7ae"], [1, "#c23531"]]
+            radius: "100%",
+            axisLine: {
+              lineStyle: {
+                color: [[5 / 6, "#91c7ae"], [1, "#c23531"]]
               }
             }
           }
@@ -162,17 +167,17 @@ export default {
             type: "gauge",
             detail: { formatter: "{value}KG" },
             data: [{ value: 80.354, name: "压力" }],
-            title:{
+            title: {
               color: "#08acf8"
             },
             min: 0,
             max: 110,
             splitNumber: 11,
             fontWeight: "normal",
-            radius: "100%" ,
-            axisLine: { 
-              lineStyle: { 
-                color: [[10/11,"#91c7ae"], [1, "#c23531"]]
+            radius: "100%",
+            axisLine: {
+              lineStyle: {
+                color: [[10 / 11, "#91c7ae"], [1, "#c23531"]]
               }
             }
           }
@@ -185,25 +190,49 @@ export default {
             type: "gauge",
             detail: { formatter: "{value}W" },
             data: [{ value: 110, name: "功率" }],
-            title:{
+            title: {
               color: "#08acf8"
             },
             min: 0,
             max: 150,
             splitNumber: 15,
             fontWeight: "normal",
-            radius: "100%" ,
-            axisLine: { 
-              lineStyle: { 
-                color: [[11/15,"#91c7ae"], [1, "#c23531"]]
+            radius: "100%",
+            axisLine: {
+              lineStyle: {
+                color: [[11 / 15, "#91c7ae"], [1, "#c23531"]]
               }
             }
           }
         ]
+      });
+    },
+    initWebSocket() {
+      this.connection();
+    },
+    connection() {
+      // 建立连接对象
+      let socket = new SockJS("http://10.168.30.104:8080/ws");
+      // 获取STOMP子协议的客户端对象
+      this.stompClient = Stomp.over(socket);
+      // 向服务器发起websocket连接
+      this.stompClient.connect("guest", "guest", () => {
+          this.stompClient.subscribe("/topic/msg", msg => {
+            // 订阅服务端提供的某个topic
+            console.log("广播成功");
+            console.log(msg.body); // msg.body存放的是服务端发送给我们的信息
+          });
+        },err => {
+          // 连接发生错误时的处理函数
+          console.log("失败");
+          console.log(err);
+        }, "/");
+    }, //连接 后台
+    disconnect() {
+      if (this.stompClient) {
+        this.stompClient.disconnect();
       }
-
-      );
-    }
+    } // 断开连接
   }
 };
 </script>
