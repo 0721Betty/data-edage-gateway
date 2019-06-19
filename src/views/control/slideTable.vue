@@ -18,9 +18,8 @@
             <Icon type="md-cog"></Icon>控制滑台的移动(单位cm)
           </p>
           <Form ref="slideTable" :model="slideTable">
-            <FormItem label="当前距离" prop="distance">
-              <br>
-              <Slider v-model="slideTable.distance" show-input :min="0" :max="300"></Slider>
+            <FormItem label="速度" prop="speed">
+              <Input type="number" placeholder="请输入滑台的移动速度" style="width: 200px;" v-model="slideTable.speed"></Input>&nbspcm/s
             </FormItem>
             <FormItem label="方向" prop="direction">
               <RadioGroup v-model="slideTable.direction">
@@ -28,16 +27,19 @@
                 <Radio label="forward"><Icon type="ios-arrow-forward"></Icon>前进</Radio>
               </RadioGroup>
             </FormItem>
-            <FormItem>
-            <ButtonGroup shape="circle" style="margin-left:28px;">
-              <Button type="primary">
-                <Icon type="ios-play"></Icon>开始
-              </Button>
-              <Button type="primary">
-                停止
-                <Icon type="md-power"></Icon>
-              </Button>
-            </ButtonGroup>
+            <FormItem label="当前距离" prop="distance">
+              <br>
+              <Slider v-model="slideTable.distance" show-input show-stops :min="0" :max="20" :step="5"></Slider>
+            </FormItem>
+            <FormItem label="运行状态">
+            <i-switch v-model="slideTable.switch" size="large">
+                <span slot="open">On</span>
+                <span slot="close">Off</span>
+            </i-switch>
+          </FormItem>
+          <FormItem style="margin-left:36px">
+              <Button type="primary" @click="handleSubmit()">确定</Button>
+              <Button style="margin-left: 8px" @click="handleCancel('slideTable')">取消</Button>
             </FormItem>
           </Form>
         </Card>
@@ -57,8 +59,10 @@ export default {
   data() {
     return {
       slideTable: {
-        distance: 25,
-        direction: ''
+        distance: 5,
+        direction: '',
+        speed: '',
+        switch: true
       },
     };
   },
@@ -125,6 +129,12 @@ export default {
           }
         ]
       });
+    },
+    handleCancel(name) {
+      this.$refs[name].resetFields();
+    },
+    handleSubmit(){
+      console.log(this.slideTable);
     }
   }
 };

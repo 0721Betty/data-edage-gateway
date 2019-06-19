@@ -1,14 +1,6 @@
 <template>
   <!-- 横轴根据后台传递过来的json数据的长度或时间点决定 -->
   <div>
-    <div class="selectTime">
-      <Form :model="timeSelect" >
-        <FormItem>
-        <DatePicker type="datetimerange" placeholder="请选择日期和时间" style="width: 300px" v-model="value"></DatePicker>
-        </FormItem>
-      <Button type="primary" :size="buttonSize" class="sure" @click="handleSubmit()">查询</Button>
-      </Form>
-    </div>
     <Row>
       <Col span="24">
         <Card>
@@ -16,45 +8,27 @@
         </Card>
       </Col>
     </Row>
+    <div>
+      <selectTime></selectTime>
+    </div>
   </div>
 </template>
 <script>
+import selectTime from "../../components/selectTime.vue";
 export default {
+  components: {
+    selectTime
+  },
   data() {
     return {
-      buttonSize: 'small',
-      value: '',
-      timeSelect: {
-        start: '',
-        end: ''
-      }
+      buttonSize: "small",
+      value: ""
     };
   },
   mounted() {
     this.init();
   },
   methods: {
-    handleSubmit(){
-      // console.log(this.formItem.value);
-      let value1 = this.value[0];//获取起始时间
-      let value2 = this.value[1];//获取结束时间
-      // let timestamp1 = Number(value1);//起始时间转化为时间戳1
-      // let timestamp2 = Number(value2);//结束时间转化为时间戳2
-      this.timeSelect.start = Number(value1);
-      this.timeSelect.end = Number(value2);
-      // console.log(this.timeSelect);
-      // this.$axios
-      //       .post("",this.timeSelect,{headers:{
-      //         'token': localStorage.getItem('token')
-      //       }})
-      //       .then(res => {
-              
-      //       })
-      //       .catch(err => {
-      //         console.log(err);
-      //       });
-
-    },
     init() {
       let temp = this.$echarts.init(document.getElementById("temp"));
       temp.setOption({
@@ -152,23 +126,12 @@ export default {
 };
 </script>
 <style scoped>
-.ivu-icon-ios-calendar-outline:before{
-  content: '';
+.ivu-icon-ios-calendar-outline:before {
+  content: "";
 }
 .myChart {
   display: block;
   width: 1309px;
-  height: 630px;
-}
-.selectTime {
-  position: absolute;
-  z-index: 999;
-  right: 180px;
-  top: 100px;
-}
-.sure{
-  position: absolute;
-  right: -46px;
-  top: 5px;
+  height: 600px;
 }
 </style>

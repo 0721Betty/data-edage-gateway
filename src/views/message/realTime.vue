@@ -44,7 +44,8 @@ export default {
   data() {
     return {
       stompClient: "",
-      timer: ""
+      timer: "",
+      tempValue: 25.5
     };
   },
   mounted() {
@@ -72,7 +73,7 @@ export default {
             name: "设备参数",
             type: "gauge",
             detail: { formatter: "{value}℃" },
-            data: [{ value: 50.1, name: "温度" }],
+            data: [{ value: this.tempValue, name: "温度" }],
             min: 10,
             max: 60,
             title: {
@@ -212,15 +213,30 @@ export default {
     },
     connection() {
       // 建立连接对象
-      let socket = new SockJS("http://10.168.30.104:8080/ws");
+      let socket = new SockJS("http://119.23.243.252:8080/ws");
       // 获取STOMP子协议的客户端对象
       this.stompClient = Stomp.over(socket);
       // 向服务器发起websocket连接
       this.stompClient.connect("guest", "guest", () => {
           this.stompClient.subscribe("/topic/msg", msg => {
             // 订阅服务端提供的某个topic
-            console.log("广播成功");
-            console.log(msg.body); // msg.body存放的是服务端发送给我们的信息
+            let body = JSON.parse(msg.body); //字符串转对象
+            console.log("获取成功");
+            console.log(body); // msg.body存放的是服务端发送给我们的信息
+            console.log(body.type);
+            console.log(body.data);
+            if (body.type === "TEMPERATURE") {
+              this.tempValue = body.data;
+              console.log(this.tempValue);
+              let temp = this.$echarts.init(document.getElementById("temp"));
+              temp.setOption({
+              series: [
+                {
+                  data: [{ value: this.tempValue, name: "温度" }],
+                }
+              ]
+            })
+            }
           });
         },err => {
           // 连接发生错误时的处理函数

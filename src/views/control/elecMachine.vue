@@ -35,8 +35,14 @@
                 <Radio label="antiClockWise"><Icon type="ios-undo" />逆时针</Radio>
               </RadioGroup>
             </FormItem>
+            <FormItem label="运行状态">
+            <i-switch v-model="elecCtrl.switch" size="large">
+                <span slot="open">On</span>
+                <span slot="close">Off</span>
+            </i-switch>
+          </FormItem>
             <FormItem style="margin-left:36px">
-              <Button type="primary">确定</Button>
+              <Button type="primary" @click="handleSubmit()">确定</Button>
               <Button style="margin-left: 8px" @click="handleCancel('elecCtrl')">取消</Button>
             </FormItem>
             <div class="photo">
@@ -50,8 +56,6 @@
 </template>
 <script>
 import selectTime from '../../components/selectTime.vue'
-import SockJS from "sockjs-client";
-import Stomp from "stompjs";
 export default {
   components: {
     selectTime
@@ -61,20 +65,13 @@ export default {
       buttonSize: "large",
       elecCtrl: {
         speed: '',
-        turn: ''
+        turn: 'clockWise',
+        switch: true
       },
-      stompClient: "",
-      timer: ""
     };
   },
   mounted() {
-    this.initWebSocket();
     this.init();
-  },
-  beforeDestroy() {
-    // 页面离开时断开连接,清除定时器
-    this.disconnect();
-    clearInterval(this.timer);
   },
   methods: {
     init() {
@@ -166,32 +163,9 @@ export default {
     handleCancel(name) {
       this.$refs[name].resetFields();
     },
-    initWebSocket() {
-      this.connection();
-    },
-    connection() {
-      // 建立连接对象
-      let socket = new SockJS("http://10.168.30.104:8080/ws");
-      // 获取STOMP子协议的客户端对象
-      this.stompClient = Stomp.over(socket);
-      // 向服务器发起websocket连接
-      this.stompClient.connect("guest", "guest", () => {
-          this.stompClient.subscribe("/topic/msg", msg => {
-            // 订阅服务端提供的某个topic
-            console.log("广播成功");
-            console.log(msg.body); // msg.body存放的是服务端发送给我们的信息
-          });
-        },err => {
-          // 连接发生错误时的处理函数
-          console.log("失败");
-          console.log(err);
-        }, "/");
-    }, //连接 后台
-    disconnect() {
-      if (this.stompClient) {
-        this.stompClient.disconnect();
-      }
-    } // 断开连接
+    handleSubmit(){
+      console.log(this.elecCtrl);
+    }
   }
 };
 </script>

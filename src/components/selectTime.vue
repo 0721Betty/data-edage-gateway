@@ -8,8 +8,8 @@
           style="width: 300px"
           v-model="value"
         ></DatePicker>
-      </FormItem>
-      <Button type="primary" :size="buttonSize" class="sure" @click="handleSubmit()">查询</Button>
+        <Button type="primary" :size="buttonSize" class="sure" @click="handleSubmit()">查询</Button>
+      </FormItem>   
     </Form>
   </div>
 </template>
@@ -41,14 +41,10 @@ export default {
   content: none;
 }
 .selectTime {
-  position: absolute;
-  z-index: 999;
-  right: 180px;
-  top: 100px;
+  margin-top: 32px;
+  text-align: center;
 }
 .sure{
-  position: absolute;
-  right: -46px;
-  top: 5px;
+  margin-left: 8px;
 }
 </style>

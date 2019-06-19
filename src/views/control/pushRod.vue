@@ -20,7 +20,7 @@
           <Form ref="pushRod" :model="pushRod">
             <FormItem label="当前距离" prop="distance">
               <br>
-              <Slider v-model="pushRod.distance" show-input :min="0" :max="200"></Slider>
+              <Slider v-model="pushRod.distance" show-input show-stops :min="0" :max="20" :step="5"></Slider>
             </FormItem>
             <FormItem label="方向" prop="direction">
               <RadioGroup v-model="pushRod.direction">
@@ -28,16 +28,15 @@
                 <Radio label="forward"><Icon type="ios-arrow-forward"></Icon>前进</Radio>
               </RadioGroup>
             </FormItem>
-            <FormItem>
-            <ButtonGroup shape="circle" style="margin-left:28px;">
-              <Button type="primary">
-                <Icon type="ios-play"></Icon>开始
-              </Button>
-              <Button type="primary">
-                停止
-                <Icon type="md-power"></Icon>
-              </Button>
-            </ButtonGroup>
+           <FormItem label="运行状态">
+            <i-switch v-model="pushRod.switch" size="large">
+                <span slot="open">On</span>
+                <span slot="close">Off</span>
+            </i-switch>
+          </FormItem>
+          <FormItem style="margin-left:36px">
+              <Button type="primary" @click="handleSubmit()">确定</Button>
+              <Button style="margin-left: 8px" @click="handleCancel('pushRod')">取消</Button>
             </FormItem>
           </Form>
         </Card>
@@ -57,8 +56,9 @@ export default {
   data() {
     return {
       pushRod: {
-        distance: 30,
-        direction: ''
+        distance: 15,
+        direction: '',
+        switch: true
       }
     };
   },
@@ -123,6 +123,12 @@ export default {
           }
         ]
       });
+    },
+    handleCancel(name) {
+      this.$refs[name].resetFields();
+    },
+    handleSubmit(){
+      console.log(this.pushRod);
     }
   }
 };

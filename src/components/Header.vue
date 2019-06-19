@@ -60,9 +60,8 @@ export default {
   color: #08acf8;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   font-style: italic;
-  transition: -webkit-transform 1s;
 }
-/* 当鼠标悬浮时让logo和name旋转 */
+/* 当鼠标悬浮时让logo旋转 */
 .logo:hover {
   transform: rotate(360deg);
 }

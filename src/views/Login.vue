@@ -31,7 +31,7 @@ export default {
     return {
       loginUser: {
         name: "Betty",
-        password: ""
+        password: "123456"
       },
       config: {
         remember: true

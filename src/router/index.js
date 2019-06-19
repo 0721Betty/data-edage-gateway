@@ -113,14 +113,14 @@ const router = new VueRouter({
   routes
 })
 
-// 路由守卫
-// router.beforeEach((to, from, next) => {
-//   const isLogin = localStorage.token ? true : false;
-//   if(to.path == '/login' || to.path == '/register'){
-//     next();
-//   }else {
-//     isLogin ? next() : next('/login');
-//   }
-// })
+// 路由守卫(在地址栏中输入要去的路由去不了，得先登录，localStorage中有token)
+router.beforeEach((to, from, next) => {
+  const isLogin = localStorage.token ? true : false;
+  if(to.path == '/login' || to.path == '/register'){
+    next();
+  }else {
+    isLogin ? next() : next('/login');
+  }
+})
 
 export default router
