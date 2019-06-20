@@ -49,8 +49,8 @@
                 </CheckboxGroup>
               </FormItem>
               <FormItem>
-                <Button type="primary">确定</Button>
-                <Button style="margin-left: 8px">取消</Button>
+                <Button type="primary" @click="handleSubmit()">确定</Button>
+                <Button style="margin-left: 8px" @click="handleCancel('plc')">取消</Button>
               </FormItem>
             </Form>
           </Card>
@@ -88,6 +88,13 @@ export default {
     },
     close() {
       clearInterval(this.timer);
+    },
+    handleCancel(name) {
+      this.$refs[name].resetFields();
+    },
+    handleSubmit(){
+      console.log(this.plc);
+      
     }
   }
 };

@@ -9,7 +9,7 @@
           v-model="value"
         ></DatePicker>
         <Button type="primary" :size="buttonSize" class="sure" @click="handleSubmit()">查询</Button>
-      </FormItem>   
+      </FormItem>
     </Form>
   </div>
 </template>
@@ -26,25 +26,35 @@ export default {
     };
   },
   methods: {
-    handleSubmit(){
-      let value1 = this.value[0];//获取起始时间
-      let value2 = this.value[1];//获取结束时间
+    handleSubmit() {
+      let value1 = this.value[0]; //获取起始时间
+      let value2 = this.value[1]; //获取结束时间
       this.timeSelect.start = Number(value1);
       this.timeSelect.end = Number(value2);
       // console.log(this.timeSelect);
-    },
+      // this.$axios
+      //   .post("", this.timeSelect, {
+      //     headers: {
+      //       token: localStorage.getItem("token")
+      //     }
+      //   })
+      //   .then(res => {})
+      //   .catch(err => {
+      //     console.log(err);
+      //   });
+    }
   }
 };
 </script>
 <style scoped>
-.ivu-icon-ios-calendar-outline:before{
+.ivu-icon-ios-calendar-outline:before {
   content: none;
 }
 .selectTime {
   margin-top: 32px;
   text-align: center;
 }
-.sure{
+.sure {
   margin-left: 8px;
 }
 </style>

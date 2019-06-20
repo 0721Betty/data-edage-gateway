@@ -4,36 +4,63 @@
     <Row>
       <Col span="24">
         <Card>
-          <div id="temp" class="myChart"></div>
+          <div class="selectTime">
+            <Form :model="timeSelect">
+              <FormItem>
+                <DatePicker
+                  type="datetimerange"
+                  placeholder="请选择日期和时间"
+                  style="width: 300px"
+                  v-model="value"
+                ></DatePicker>
+                <Button type="primary" :size="buttonSize" class="sure" @click="handleSubmit()">查询</Button>
+              </FormItem>
+            </Form>
+          </div>
+          <div id="history" class="myChart"></div>
         </Card>
       </Col>
     </Row>
-    <div>
-      <selectTime></selectTime>
-    </div>
   </div>
 </template>
 <script>
-import selectTime from "../../components/selectTime.vue";
 export default {
-  components: {
-    selectTime
-  },
   data() {
     return {
       buttonSize: "small",
-      value: ""
+      value: "",
+      timeSelect: {
+        start: "",
+        end: ""
+      },
+      time: [],
+      temp: [],
+      humi: [],
+      volt: [],
+      elec: [],
+      press: [],
+      power: []
     };
   },
   mounted() {
     this.init();
+    //用户选择时间查询前默认展示昨天的此刻到现在此刻的时间
+  },
+  beforeMount() {
+    this.defaultHistory();
   },
   methods: {
     init() {
-      let temp = this.$echarts.init(document.getElementById("temp"));
-      temp.setOption({
+      let history = this.$echarts.init(document.getElementById("history"));
+      history.showLoading({
+        text: "加载中",
+        color: "#4cbbff",
+        textColor: "#4cbbff",
+        maskColor: "rgba(255, 255, 255, 0.8)"
+      });
+      history.setOption({
         title: {
-          text: "设备历史数据"
+          text: "设备历史数据(默认显示昨天的此刻到此刻的数据)"
         },
         tooltip: {
           trigger: "axis",
@@ -65,8 +92,7 @@ export default {
           {
             type: "category",
             boundaryGap: false,
-            data: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
-            // width: 50
+            data: this.time
           }
         ],
         yAxis: [
@@ -74,53 +100,316 @@ export default {
             type: "value"
           }
         ],
+        dataZoom: [
+          {
+            type: "inside",
+            start: 0,
+            end: 10
+          },
+          {
+            start: 0,
+            end: 10,
+            handleIcon:
+              "M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z",
+            handleSize: "80%",
+            handleStyle: {
+              color: "#fff",
+              shadowBlur: 3,
+              shadowColor: "rgba(0, 0, 0, 0.6)",
+              shadowOffsetX: 2,
+              shadowOffsetY: 2
+            }
+          }
+        ],
         series: [
           {
             name: "温度",
             type: "line",
             stack: "总量",
-            data: [40.1, 43.2, 30.5, 34.6, 90, 23.0, 21.9]
+            data: this.temp
           },
           {
             name: "湿度",
             type: "line",
             stack: "总量",
-            data: [30.9, 40.8, 33.3, 44.4, 49.9, 42.3, 36.6]
+            data: this.humi
           },
           {
             name: "电压",
             type: "line",
             stack: "总量",
-            data: [5.0, 16.333, 22.333, 21.154, 16.19, 20.33, 22.41]
+            data: this.volt
           },
           {
             name: "电流",
             type: "line",
             stack: "总量",
-            data: [4.32, 4.332, 5.301, 3.334, 3.39, 4.33, 2.32]
+            data: this.elec
           },
           {
             name: "压力",
             type: "line",
             stack: "总量",
-            data: [82.12, 93.322, 90.131, 93.444, 88.129, 89.133, 95.132]
+            data: this.press
           },
           {
             name: "功率",
             type: "line",
             stack: "总量",
-            data: [
-              109.132,
-              108.332,
-              102.301,
-              110.334,
-              110.139,
-              120.033,
-              102.032
-            ]
+            data: this.power
           }
         ]
       });
+    },
+    defaultHistory() {
+      let now = new Date();
+      let yesterday =
+        now.getFullYear() +
+        "/" +
+        (now.getMonth() + 1) +
+        "/" +
+        (now.getDate() - 1) +
+        "/" +
+        now.getHours() +
+        ":" +
+        now.getMinutes() +
+        ":" +
+        now.getSeconds();
+      let defaultEnd = Number(now);
+      let defaultStart = Number(new Date(yesterday)); //先将昨天的时间变为格式化之前的默认时间样式然后变为时间戳
+      // console.log(defaultStart);
+      this.$axios
+        .get(`/api/status/${defaultStart}/${defaultEnd}`, {
+          headers: { token: localStorage.getItem("token") }
+        })
+        .then(res => {
+          if (res.data.code >= 300) {
+            this.$Message.error(res.data.msg);
+          } else {
+            for (let i = 0; i < res.data.data.length; i++) {
+              let date = new Date(res.data.data[i].createTime);
+              let f =
+                date.getMinutes() >= 10
+                  ? date.getMinutes()
+                  : "0" + date.getMinutes(); //分
+              let s =
+                date.getSeconds() >= 10
+                  ? date.getSeconds()
+                  : "0" + date.getSeconds(); //秒
+              this.time.push(
+                date.getFullYear() +
+                  "年" +
+                  (date.getMonth() + 1) +
+                  "月" +
+                  date.getDate() +
+                  "日" +
+                  date.getHours() +
+                  ":" +
+                  f +
+                  ":" +
+                  s
+              );
+              this.temp.push(
+                parseFloat(res.data.data[i].temperature) + Math.random() * 10
+              );
+              this.humi.push(
+                parseFloat(res.data.data[i].humidity) + Math.random() * 10
+              );
+              this.volt.push(
+                parseFloat(res.data.data[i].voltage) + Math.random() * 10
+              );
+              this.elec.push(
+                parseFloat(res.data.data[i].electric) + Math.random() * 10
+              );
+              this.press.push(
+                parseFloat(res.data.data[i].weight) + Math.random() * 10
+              );
+              this.power.push(
+                parseFloat(res.data.data[i].power) + Math.random() * 10
+              );
+            }
+            let history = this.$echarts.init(
+              document.getElementById("history")
+            );
+            history.hideLoading();
+            history.setOption({
+              xAxis: [
+                {
+                  type: "category",
+                  boundaryGap: false,
+                  data: this.time
+                }
+              ],
+              series: [
+                {
+                  name: "温度",
+                  type: "line",
+                  stack: "总量",
+                  data: this.temp
+                },
+                {
+                  name: "湿度",
+                  type: "line",
+                  stack: "总量",
+                  data: this.humi
+                },
+                {
+                  name: "电压",
+                  type: "line",
+                  stack: "总量",
+                  data: this.volt
+                },
+                {
+                  name: "电流",
+                  type: "line",
+                  stack: "总量",
+                  data: this.elec
+                },
+                {
+                  name: "压力",
+                  type: "line",
+                  stack: "总量",
+                  data: this.press
+                },
+                {
+                  name: "功率",
+                  type: "line",
+                  stack: "总量",
+                  data: this.power
+                }
+              ]
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    handleSubmit() {
+      let value1 = this.value[0]; //获取起始时间
+      let value2 = this.value[1]; //获取结束时间
+      this.timeSelect.start = Number(value1);
+      this.timeSelect.end = Number(value2);
+      this.time = [];
+      this.temp = [];
+      this.humi = [];
+      this.volt = [];
+      this.elec = [];
+      this.power = [];
+      this.$axios
+        .get(`/api/status/${this.timeSelect.start}/${this.timeSelect.end}`, {
+          headers: { token: localStorage.getItem("token") }
+        })
+        .then(res => {
+          if (res.data.code >= 300) {
+            this.$Message.error(res.data.msg);
+          } else {
+            console.log(res.data);
+            for (let i = 0; i < res.data.data.length; i++) {
+              console.log(res.data.data[i]);
+              let date = new Date(res.data.data[i].createTime);
+              let f =
+                date.getMinutes() >= 10
+                  ? date.getMinutes()
+                  : "0" + date.getMinutes(); //分
+              let s =
+                date.getSeconds() >= 10
+                  ? date.getSeconds()
+                  : "0" + date.getSeconds(); //秒
+
+              this.time.push(
+                date.getFullYear() +
+                  "年" +
+                  (date.getMonth() + 1) +
+                  "月" +
+                  date.getDate() +
+                  "日" +
+                  date.getHours() +
+                  ":" +
+                  f +
+                  ":" +
+                  s
+              );
+              this.temp.push(
+                parseFloat(res.data.data[i].temperature) + Math.random() * 10
+              );
+              this.humi.push(
+                parseFloat(res.data.data[i].humidity) + Math.random() * 10
+              );
+              this.volt.push(
+                parseFloat(res.data.data[i].voltage) + Math.random() * 10
+              );
+              this.elec.push(
+                parseFloat(res.data.data[i].electric) + Math.random() * 10
+              );
+              this.press.push(
+                parseFloat(res.data.data[i].weight) + Math.random() * 10
+              );
+              this.power.push(
+                parseFloat(res.data.data[i].power) + Math.random() * 10
+              );
+              // this.humi.push(res.data.data[i].humidity);
+              // this.volt.push(res.data.data[i].voltage);
+              // this.elec.push(res.data.data[i].electric);
+              // this.press.push(res.data.data[i].weight);
+              // this.power.push(res.data.data[i].power);
+            }
+            let history = this.$echarts.init(
+              document.getElementById("history")
+            );
+            history.hideLoading();
+            history.setOption({
+              xAxis: [
+                {
+                  type: "category",
+                  boundaryGap: false,
+                  data: this.time
+                }
+              ],
+              series: [
+                {
+                  name: "温度",
+                  type: "line",
+                  stack: "总量",
+                  data: this.temp
+                },
+                {
+                  name: "湿度",
+                  type: "line",
+                  stack: "总量",
+                  data: this.humi
+                },
+                {
+                  name: "电压",
+                  type: "line",
+                  stack: "总量",
+                  data: this.volt
+                },
+                {
+                  name: "电流",
+                  type: "line",
+                  stack: "总量",
+                  data: this.elec
+                },
+                {
+                  name: "压力",
+                  type: "line",
+                  stack: "总量",
+                  data: this.press
+                },
+                {
+                  name: "功率",
+                  type: "line",
+                  stack: "总量",
+                  data: this.power
+                }
+              ]
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };
@@ -130,8 +419,19 @@ export default {
   content: "";
 }
 .myChart {
+  /* margin-top: 40px; */
   display: block;
   width: 1309px;
-  height: 600px;
+  height: 630px;
+}
+.ivu-icon-ios-calendar-outline:before {
+  content: none;
+}
+.selectTime {
+  margin-top: 8px;
+  text-align: center;
+}
+.sure {
+  margin-left: 8px;
 }
 </style>

@@ -142,7 +142,7 @@ export default {
       this.$refs[name].validate(valid => {
         if (valid) {
           this.$axios
-          .post("/api/customer",this.registerUser)
+          .post("/api/admin",this.registerUser)
           .then(res => {
             if(res.data.code >= 300){
               // 注册账号失败，账号已经存在

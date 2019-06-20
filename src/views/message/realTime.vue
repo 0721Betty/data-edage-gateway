@@ -45,7 +45,12 @@ export default {
     return {
       stompClient: "",
       timer: "",
-      tempValue: 25.5
+      tempValue: 25.5,
+      humiValue: 40.1,
+      voltValue: 20.625,
+      elecValue: 2.333,
+      pressValue: 80.354,
+      powerValue: 110
     };
   },
   mounted() {
@@ -98,7 +103,7 @@ export default {
             name: "设备参数",
             type: "gauge",
             detail: { formatter: "{value}%rh" },
-            data: [{ value: 40.1, name: "湿度" }],
+            data: [{ value: this.humiValue, name: "湿度" }],
             title: {
               color: "#08acf8"
             },
@@ -121,7 +126,7 @@ export default {
             name: "设备参数",
             type: "gauge",
             detail: { formatter: "{value}V" },
-            data: [{ value: 20.625, name: "电压" }],
+            data: [{ value: this.voltValue, name: "电压" }],
             title: {
               color: "#08acf8"
             },
@@ -144,7 +149,7 @@ export default {
             name: "设备参数",
             type: "gauge",
             detail: { formatter: "{value}A" },
-            data: [{ value: 2.333, name: "电流" }],
+            data: [{ value: this.elecValue, name: "电流" }],
             title: {
               color: "#08acf8"
             },
@@ -167,7 +172,7 @@ export default {
             name: "设备参数",
             type: "gauge",
             detail: { formatter: "{value}KG" },
-            data: [{ value: 80.354, name: "压力" }],
+            data: [{ value: this.pressValue, name: "压力" }],
             title: {
               color: "#08acf8"
             },
@@ -190,7 +195,7 @@ export default {
             name: "设备参数",
             type: "gauge",
             detail: { formatter: "{value}W" },
-            data: [{ value: 110, name: "功率" }],
+            data: [{ value: this.powerValue, name: "功率" }],
             title: {
               color: "#08acf8"
             },
@@ -223,20 +228,57 @@ export default {
             let body = JSON.parse(msg.body); //字符串转对象
             console.log("获取成功");
             console.log(body); // msg.body存放的是服务端发送给我们的信息
-            console.log(body.type);
-            console.log(body.data);
-            if (body.type === "TEMPERATURE") {
-              this.tempValue = body.data;
-              console.log(this.tempValue);
+              // let td = parseFloat(body.temperature) + Math.random()*10;
+              this.tempValue = body.temperature;
+              // console.log(this.tempValue);
               let temp = this.$echarts.init(document.getElementById("temp"));
+              let humi = this.$echarts.init(document.getElementById("humi"));
+              let volt = this.$echarts.init(document.getElementById("volt"));
+              let elec = this.$echarts.init(document.getElementById("elec"));
+              let press = this.$echarts.init(document.getElementById("press"));
+              let power = this.$echarts.init(document.getElementById("power"));
               temp.setOption({
               series: [
                 {
                   data: [{ value: this.tempValue, name: "温度" }],
                 }
               ]
-            })
-            }
+              });
+              humi.setOption({
+              series: [
+                {
+                  data: [{ value: this.humiValue, name: "湿度" }],
+                }
+              ]
+              });
+              volt.setOption({
+              series: [
+                {
+                  data: [{ value: this.voltValue, name: "电压" }],
+                }
+              ]
+              });
+              elec.setOption({
+              series: [
+                {
+                  data: [{ value: this.elecValue, name: "电流" }],
+                }
+              ]
+              });
+              press.setOption({
+              series: [
+                {
+                  data: [{ value: this.pressValue, name: "压力" }],
+                }
+              ]
+              });
+              power.setOption({
+              series: [
+                {
+                  data: [{ value: this.powerValue, name: "功率" }],
+                }
+              ]
+              });  
           });
         },err => {
           // 连接发生错误时的处理函数
@@ -258,7 +300,4 @@ export default {
   width: 400px;
   height: 300px;
 }
-/* #temp,#humi,#volt,#elec,#press{
-  background-color: #e0f6fd;
-} */
 </style>
