@@ -1,16 +1,31 @@
 <template>
-  <div class="contain">
+<!-- 滑台信息及控制页面 -->
+  <div>
+    <!-- 滑台信息 -->
     <Row>
       <Col span="16" offset="4">
         <Card>
+          <!-- 折线图 -->
           <div id="slideTable" class="myChart"></div>
-          <div>
-            <selectTime></selectTime>
-          </div>
+          <!-- 时间选择查询 -->
+          <div class="selectTime">
+    <Form :model="timeSelect">
+      <FormItem>
+        <DatePicker
+          type="datetimerange"
+          placeholder="请选择日期和时间"
+          style="width: 300px"
+          v-model="value"
+        ></DatePicker>
+        <Button type="primary" :size="buttonSize" class="sure" @click="handleSubmit()">查询</Button>
+      </FormItem>
+    </Form>
+  </div>
         </Card>
       </Col>
     </Row>
     <br>
+    <!-- 滑台控制 -->
     <Row>
       <Col span="16" offset="4">
         <Card style="width: 450px;">
@@ -19,7 +34,14 @@
           </p>
           <Form ref="slideTable" :model="slideTable">
             <FormItem label="速度" prop="speed">
-              <Input type="number" placeholder="请输入滑台的移动速度" style="width: 200px;" v-model="slideTable.speed"></Input>&nbspcm/s
+              <RadioGroup v-model="slideTable.speed">
+                <Radio label="slow">慢速
+                </Radio>
+                <Radio label="middle">中速
+                </Radio>
+                <Radio label="fast">快速
+                </Radio>
+              </RadioGroup>
             </FormItem>
             <FormItem label="方向" prop="direction">
               <RadioGroup v-model="slideTable.direction">
@@ -43,6 +65,7 @@
             </FormItem>
           </Form>
         </Card>
+        <!-- 滑台图片 -->
         <div class="photo">
           <img src="../../assets/slideTable.png" alt title="滑台">
         </div>
@@ -51,11 +74,7 @@
   </div>
 </template>
 <script>
-import selectTime from '../../components/selectTime.vue'
 export default {
-  components: {
-    selectTime
-  },
   data() {
     return {
       slideTable: {
@@ -64,6 +83,12 @@ export default {
         speed: '',
         switch: true
       },
+      buttonSize: "small",
+      value: "",
+      timeSelect: {
+        start: "",
+        end: ""
+      }
     };
   },
   mounted() {
@@ -150,9 +175,15 @@ export default {
   top: 73px;
   right: 120px;
 }
-.selectTime{
-  top: 40px;
-  right: 192px;
+.ivu-icon-ios-calendar-outline:before {
+  content: none;
+}
+.selectTime {
+  margin-top: 32px;
+  text-align: center;
+}
+.sure {
+  margin-left: 8px;
 }
 </style>
 

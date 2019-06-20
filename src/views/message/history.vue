@@ -1,9 +1,10 @@
 <template>
-  <!-- 横轴根据后台传递过来的json数据的长度或时间点决定 -->
+  <!-- 历史数据记录页面 -->
   <div>
     <Row>
       <Col span="24">
         <Card>
+          <!-- 时间选择查询 -->
           <div class="selectTime">
             <Form :model="timeSelect">
               <FormItem>
@@ -13,10 +14,11 @@
                   style="width: 300px"
                   v-model="value"
                 ></DatePicker>
-                <Button type="primary" :size="buttonSize" class="sure" @click="handleSubmit()">查询</Button>
+                <Button type="primary" :size="buttonSize" class="sure" @click="handleQuery()">查询</Button>
               </FormItem>
             </Form>
           </div>
+          <!-- 折线图 -->
           <div id="history" class="myChart"></div>
         </Card>
       </Col>
@@ -44,9 +46,9 @@ export default {
   },
   mounted() {
     this.init();
-    //用户选择时间查询前默认展示昨天的此刻到现在此刻的时间
   },
   beforeMount() {
+    //用户选择时间查询前默认展示昨天的此刻到现在此刻的时间
     this.defaultHistory();
   },
   methods: {
@@ -177,7 +179,6 @@ export default {
         now.getSeconds();
       let defaultEnd = Number(now);
       let defaultStart = Number(new Date(yesterday)); //先将昨天的时间变为格式化之前的默认时间样式然后变为时间戳
-      // console.log(defaultStart);
       this.$axios
         .get(`/api/status/${defaultStart}/${defaultEnd}`, {
           headers: { token: localStorage.getItem("token") }
@@ -285,17 +286,26 @@ export default {
           console.log(err);
         });
     },
-    handleSubmit() {
+    handleQuery() {
       let value1 = this.value[0]; //获取起始时间
       let value2 = this.value[1]; //获取结束时间
       this.timeSelect.start = Number(value1);
       this.timeSelect.end = Number(value2);
+      // 清空默认的数据
       this.time = [];
       this.temp = [];
       this.humi = [];
       this.volt = [];
       this.elec = [];
       this.power = [];
+      // 加载动画
+      let history = this.$echarts.init(document.getElementById("history"));
+      history.showLoading({
+        text: "加载中",
+        color: "#4cbbff",
+        textColor: "#4cbbff",
+        maskColor: "rgba(255, 255, 255, 0.8)"
+      });
       this.$axios
         .get(`/api/status/${this.timeSelect.start}/${this.timeSelect.end}`, {
           headers: { token: localStorage.getItem("token") }
@@ -304,9 +314,7 @@ export default {
           if (res.data.code >= 300) {
             this.$Message.error(res.data.msg);
           } else {
-            console.log(res.data);
             for (let i = 0; i < res.data.data.length; i++) {
-              console.log(res.data.data[i]);
               let date = new Date(res.data.data[i].createTime);
               let f =
                 date.getMinutes() >= 10
@@ -354,10 +362,9 @@ export default {
               // this.press.push(res.data.data[i].weight);
               // this.power.push(res.data.data[i].power);
             }
-            let history = this.$echarts.init(
-              document.getElementById("history")
-            );
+            // 清除动画
             history.hideLoading();
+            // 根据查询的时间重新绘制折线图
             history.setOption({
               xAxis: [
                 {
@@ -419,7 +426,6 @@ export default {
   content: "";
 }
 .myChart {
-  /* margin-top: 40px; */
   display: block;
   width: 1309px;
   height: 630px;

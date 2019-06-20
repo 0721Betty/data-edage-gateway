@@ -15,7 +15,6 @@
         <Divider type="vertical" :style="{minHeight: autoHeight}"/>
         <Layout>
           <Content :style="{minHeight: autoHeight}">
-            <!-- background: '#eaf6fa' -->
             <router-view></router-view>
           </Content>
         </Layout>
@@ -38,7 +37,6 @@ export default {
     };
   },
   beforeMount() {
-    // this.$router.push('/form1')
     this.autoHeight = window.innerHeight - 80 + "px";
   }
 };
@@ -48,12 +46,12 @@ export default {
   background-color: #caf0fd;
   height: 80px;
   line-height: 80px;
-  margin-bottom: 10px;
+  /* margin-bottom: 10px; */
   padding: 0;
 }
 .ivu-layout-sider{
   background: #f5f7f9 !important;
-  /* background-color: #e0f6fd !important; */
+  background-color: #e0f6fd !important;
   position: relative;
 }
 .ivu-layout-sider-children{
@@ -67,13 +65,11 @@ export default {
   left: 0;
   top: 0;
   bottom: 0;
-  /* background-color: #caf0fd; */
   background-color: #e0f6fd;
-  /* margin-right: 10px; */
-  /* box-shadow: 5px 0px 5px #999; */
 }
 .ivu-layout-content {
   padding: 0px 20px;
+  margin-top: 10px;
 }
 </style>
 

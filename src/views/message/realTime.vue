@@ -1,16 +1,20 @@
 <template>
+<!-- 实时数据页面 -->
   <div>
     <Row :gutter="20">
+      <!-- 温度 -->
       <Col span="8">
         <Card>
           <div id="temp" class="myChart"></div>
         </Card>
       </Col>
+      <!-- 湿度 -->
       <Col span="8">
         <Card>
           <div id="humi" class="myChart"></div>
         </Card>
       </Col>
+      <!-- 电压 -->
       <Col span="8">
         <Card>
           <div id="volt" class="myChart"></div>
@@ -19,16 +23,19 @@
     </Row>
     <br>
     <Row :gutter="20">
+      <!-- 电流 -->
       <Col span="8">
         <Card>
           <div id="elec" class="myChart"></div>
         </Card>
       </Col>
+      <!-- 压力 -->
       <Col span="8">
         <Card>
           <div id="press" class="myChart"></div>
         </Card>
       </Col>
+      <!-- 功率 -->
       <Col span="8">
         <Card>
           <div id="power" class="myChart"></div>
@@ -45,6 +52,7 @@ export default {
     return {
       stompClient: "",
       timer: "",
+      // 上述仪表盘默认值
       tempValue: 25.5,
       humiValue: 40.1,
       voltValue: 20.625,
@@ -54,8 +62,8 @@ export default {
     };
   },
   mounted() {
-    this.initWebSocket();
-    this.init();
+    this.initWebSocket();//websocket初始化
+    this.init();//仪表盘初始化
   },
   beforeDestroy() {
     // 页面离开时断开连接,清除定时器
@@ -63,6 +71,7 @@ export default {
     clearInterval(this.timer);
   },
   methods: {
+    //仪表盘初始化
     init() {
       let temp = this.$echarts.init(document.getElementById("temp"));
       let humi = this.$echarts.init(document.getElementById("humi"));
@@ -213,9 +222,11 @@ export default {
         ]
       });
     },
+    //websocket初始化
     initWebSocket() {
       this.connection();
     },
+    //连接 后台
     connection() {
       // 建立连接对象
       let socket = new SockJS("http://119.23.243.252:8080/ws");
@@ -231,6 +242,10 @@ export default {
               // let td = parseFloat(body.temperature) + Math.random()*10;
               this.tempValue = body.temperature;
               // console.log(this.tempValue);
+
+
+              
+              //获取到数据后重新绘制仪表盘 
               let temp = this.$echarts.init(document.getElementById("temp"));
               let humi = this.$echarts.init(document.getElementById("humi"));
               let volt = this.$echarts.init(document.getElementById("volt"));
@@ -285,16 +300,18 @@ export default {
           console.log("失败");
           console.log(err);
         }, "/");
-    }, //连接 后台
+    }, 
+    // 断开连接
     disconnect() {
       if (this.stompClient) {
         this.stompClient.disconnect();
       }
-    } // 断开连接
+    } 
   }
 };
 </script>
 <style scoped>
+/* 仪表盘样式 */
 .myChart {
   display: block;
   width: 400px;
