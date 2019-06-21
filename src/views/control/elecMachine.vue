@@ -80,9 +80,13 @@
   </div>
 </template>
 <script>
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
 export default {
   data() {
     return {
+      stompClient: "",
+      timer: "",
       buttonSize: "large",
       elecCtrl: {
         speed: "middle",
@@ -95,12 +99,19 @@ export default {
         start: "",
         end: ""
       },
+      realSpeed: 300,
       time: [],
       speed: []
     };
   },
   mounted() {
+    this.initWebSocket();//websocket初始化
     this.init();
+  },
+   beforeDestroy() {
+    // 页面离开时断开连接,清除定时器
+    this.disconnect();
+    clearInterval(this.timer);
   },
   beforeMount() {
     //默认显示电机的历史记录从昨天的此刻到此刻的时间点的数据
@@ -117,7 +128,7 @@ export default {
             name: "设备参数",
             type: "gauge",
             detail: { formatter: "{value}r/min" },
-            data: [{ value: 300, name: "转速" }],
+            data: [{ value: this.realSpeed, name: "转速" }],
             min: 200,
             max: 700,
             title: {
@@ -252,6 +263,9 @@ export default {
           if (res.data.code >= 300) {
             this.$Message.error(res.data.msg);
           } else {
+            if(res.data.data.length === 0){
+              this.$Message.error("数据库中没有数据！");
+            }
             for (let i = 0; i < res.data.data.length; i++) {
               let date = new Date(res.data.data[i].createTime);
               let f =
@@ -310,9 +324,9 @@ export default {
             });
           }
         })
-        .catch(err => {
-          console.log(err);
-        });
+        // .catch(error => {
+        //   console.log(error);
+        // });
     },
     // 根据用户所选择的两个时间点刷选出相应的数据
     handleQuery() {
@@ -400,6 +414,46 @@ export default {
         .catch(err => {
           console.log(err);
         });
+    },
+    //websocket初始化
+    initWebSocket() {
+      this.connection();
+    },
+        //连接 后台
+    connection() {
+      // 建立连接对象
+      let socket = new SockJS("http://119.23.243.252:8080/ws");
+      // 获取STOMP子协议的客户端对象
+      this.stompClient = Stomp.over(socket);
+      // 向服务器发起websocket连接
+      this.stompClient.connect("guest", "guest", () => {
+          this.stompClient.subscribe("/topic/msg", msg => {
+            // 订阅服务端提供的某个topic
+            let body = JSON.parse(msg.body); //字符串转对象
+            console.log("获取成功");
+            console.log(body); // msg.body存放的是服务端发送的信息
+              this.realSpeed = body.motorSpeed;
+              //获取到数据后重新绘制仪表盘 
+              let dashBoard = this.$echarts.init(document.getElementById("dashBoard"));
+              dashBoard.setOption({
+              series: [
+                {
+                  data: [{ value: this.realSpeed, name: "转速" }]
+                }
+              ]
+              });
+          });
+        },err => {
+          // 连接发生错误时的处理函数
+          console.log("失败");
+          console.log(err);
+        }, "/");
+    }, 
+    // 断开连接
+    disconnect() {
+      if (this.stompClient) {
+        this.stompClient.disconnect();
+      }
     }
   }
 };

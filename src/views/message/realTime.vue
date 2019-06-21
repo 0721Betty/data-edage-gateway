@@ -240,11 +240,16 @@ export default {
             console.log("获取成功");
             console.log(body); // msg.body存放的是服务端发送给我们的信息
               // let td = parseFloat(body.temperature) + Math.random()*10;
-              this.tempValue = body.temperature;
+              if(body.temperature>50){
+                this.$Message.warning({
+                    content: '温度过高',
+                    duration: 60,
+                    closable: true
+                });
+              }else{
+                this.tempValue = body.temperature;
+              }
               // console.log(this.tempValue);
-
-
-              
               //获取到数据后重新绘制仪表盘 
               let temp = this.$echarts.init(document.getElementById("temp"));
               let humi = this.$echarts.init(document.getElementById("humi"));

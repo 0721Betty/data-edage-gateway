@@ -11,19 +11,16 @@
       </Col>
       <Col span="3">
         <div class="user">
-          <Dropdown>
+          <Dropdown @on-click="handleClick">
             <a href="javascript:void(0)">
               <Avatar src="http://www.zhongaigou.com/UploadFiles/2014/cabie.jpg"/>&nbsp
-              <span>个人中心&nbsp</span>
+              <span>{{ adminName }}&nbsp</span>
               <Icon type="ios-arrow-down"></Icon>
             </a>
             <DropdownMenu slot="list">
-              <DropdownItem>
-                <router-link to="/tips">系统消息</router-link>
-              </DropdownItem>
-              <DropdownItem>
-                <router-link to="/login">退出登录</router-link>
-              </DropdownItem>
+              <DropdownItem name="personal">个人信息</DropdownItem>
+              <DropdownItem name="loginOut">退出登录</DropdownItem>
+              <DropdownItem name="empty">注销账号</DropdownItem>
             </DropdownMenu>
           </Dropdown>
         </div>
@@ -33,6 +30,41 @@
 </template>
 <script>
 export default {
+  data() {
+    return {
+      adminName: ""
+    };
+  },
+  beforeMount() {
+    this.getUserName();
+  },
+  methods: {
+    handleClick(name) {
+      if (name === "loginOut") {
+        this.$router.push("/login");
+      } else if (name === "personal") {
+        this.$router.push("/home/personal");
+      } else if (name === "empty") {
+        this.$axios
+          .delete("/api/admin", {
+            headers: { token: localStorage.getItem("token") }
+          })
+          .then(res => {
+          });
+        alert("账号注销成功！");
+        this.$router.push("/login");
+      }
+    },
+    getUserName() {
+      this.$axios
+        .get("/api/admin", {
+          headers: { token: localStorage.getItem("token") }
+        })
+        .then(res => {
+          this.adminName = res.data.data.name;
+        });
+    }
+  }
 };
 </script>
 

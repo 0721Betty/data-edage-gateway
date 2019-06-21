@@ -71,5 +71,8 @@ export default {
   padding: 0px 20px;
   margin-top: 10px;
 }
+.ivu-divider, .ivu-divider-vertical{
+  margin: 0;
+}
 </style>
 

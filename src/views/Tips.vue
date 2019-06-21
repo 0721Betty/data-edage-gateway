@@ -1,14 +1,15 @@
 <template>
   <div>
     <div class="success" v-if="this.msg === ''">
-      <Alert type="success" show-icon>系统正常运行</Alert>
+      <Alert type="success" show-icon closable>系统正常运行</Alert>
     </div>
     <div class="warning" v-else>
-      <Alert type="warning" show-icon>
+      <Alert type="warning" show-icon closable>
         系统警告
         <template slot="desc">
           <p ref="warn">{{ msg }}</p>
         </template>
+        <span slot="close">不再提示</span>
       </Alert>
     </div>
     <div class="adjust">

@@ -67,13 +67,12 @@ export default {
           this.$axios
             .post("/api/account", this.loginUser)
             .then(res => {
-              let token = res.data.data.token;
-              // console.log(token);
               if (res.data.code > 300) {
                 // 登录失败，账号或密码错误
                 this.$Message.error(res.data.msg);
               }else{
                 // 登录成功
+                let token = res.data.data.token;
                 localStorage.setItem("token", token);
                 this.$Message.success("登录成功！欢迎您！");
                 this.$router.push("/home");

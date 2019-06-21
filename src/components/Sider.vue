@@ -27,8 +27,8 @@
         </MenuItem>
       </Submenu>
       <MenuItem name="3">
-            <Icon type="md-chatboxes" />系统提示
-        </MenuItem>
+        <Icon type="md-chatboxes" />系统中心
+      </MenuItem>     
     </Menu>
   </div>
 </template>
@@ -40,29 +40,29 @@ export default {
   data() {
     return {
       theme1: 'light',
-      activeNav: '1-1',
-      openKeys: ['1']
+      activeNav: '',
+      openKeys: [''],
     };
   },
   beforeMount(){
-    var keys = getOpenKeys(window.location.href);
+    let keys = getOpenKeys(window.location.href);
     this.openKeys = keys.toString().split('');
     this.activeNav = getActiveNav(window.location.href);
   },
   methods: {
 		handleRouter(name) {
       // 设备信息展示页面路由跳转
-			if (name === '1-1') this.$router.push('/msg1')
-			if (name === '1-2') this.$router.push('/msg2')
+			if (name === '1-1') this.$router.push('/home/msg1')
+			if (name === '1-2') this.$router.push('/home/msg2')
 
       // 设备控制页面路由跳转
-      if (name === '2-1') this.$router.push('/ctrl1')
-			if (name === '2-2') this.$router.push('/ctrl2')
-			if (name === '2-3') this.$router.push('/ctrl3')
+      if (name === '2-1') this.$router.push('/home/ctrl1')
+			if (name === '2-2') this.$router.push('/home/ctrl2')
+			if (name === '2-3') this.$router.push('/home/ctrl3')
 
-      // 系统提示页面路由跳转
-      if(name === '3') this.$router.push('/tips')
-		}
+      // 系统提示页面路由跳转，并且显示小红点
+      if(name === '3') this.$router.push('/home/tips');
+    },
 	},
 };
 </script>

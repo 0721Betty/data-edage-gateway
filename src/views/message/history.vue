@@ -53,6 +53,11 @@ export default {
   },
   methods: {
     init() {
+      // 全局配置this.$Message
+      this.$Message.config({
+        top: 100, //距离顶部100px
+        duration: 10 //显示10秒
+      });
       let history = this.$echarts.init(document.getElementById("history"));
       history.showLoading({
         text: "加载中",
@@ -163,6 +168,26 @@ export default {
         ]
       });
     },
+     // 格式化时间
+    formatTime(date) {
+      let f =
+        date.getMinutes() >= 10 ? date.getMinutes() : "0" + date.getMinutes(); //分
+      let s =
+        date.getSeconds() >= 10 ? date.getSeconds() : "0" + date.getSeconds(); //秒
+      return (
+        date.getFullYear() +
+        "年" +
+        (date.getMonth()+1) +
+        "月" +
+        date.getDate() +
+        "日" +
+        date.getHours() +
+        ":" +
+        f +
+        ":" +
+        s
+      );
+    },
     defaultHistory() {
       let now = new Date();
       let yesterday =
@@ -187,6 +212,9 @@ export default {
           if (res.data.code >= 300) {
             this.$Message.error(res.data.msg);
           } else {
+            if (res.data.data.length === 0) {
+              this.$Message.error("数据库中没有数据！");
+            }
             for (let i = 0; i < res.data.data.length; i++) {
               let date = new Date(res.data.data[i].createTime);
               let f =
@@ -316,28 +344,33 @@ export default {
           } else {
             for (let i = 0; i < res.data.data.length; i++) {
               let date = new Date(res.data.data[i].createTime);
-              let f =
-                date.getMinutes() >= 10
-                  ? date.getMinutes()
-                  : "0" + date.getMinutes(); //分
-              let s =
-                date.getSeconds() >= 10
-                  ? date.getSeconds()
-                  : "0" + date.getSeconds(); //秒
+              // let f =
+              //   date.getMinutes() >= 10
+              //     ? date.getMinutes()
+              //     : "0" + date.getMinutes(); //分
+              // let s =
+              //   date.getSeconds() >= 10
+              //     ? date.getSeconds()
+              //     : "0" + date.getSeconds(); //秒
 
-              this.time.push(
-                date.getFullYear() +
-                  "年" +
-                  (date.getMonth() + 1) +
-                  "月" +
-                  date.getDate() +
-                  "日" +
-                  date.getHours() +
-                  ":" +
-                  f +
-                  ":" +
-                  s
-              );
+              // ！！！！！待测试formatTime()函数有没有用
+
+
+              this.time.push(this.$options.methods.formatTime(date));
+
+              // this.time.push(
+              //   date.getFullYear() +
+              //     "年" +
+              //     (date.getMonth() + 1) +
+              //     "月" +
+              //     date.getDate() +
+              //     "日" +
+              //     date.getHours() +
+              //     ":" +
+              //     f +
+              //     ":" +
+              //     s
+              // );
               this.temp.push(
                 parseFloat(res.data.data[i].temperature) + Math.random() * 10
               );
