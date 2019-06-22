@@ -219,11 +219,11 @@ export default {
             name: "电机转速",
             type: "line",
             stack: "总量",
-            label: {
-              normal: {
-                show: true
-              }
-            },
+            // label: {
+            //   normal: {
+            //     show: true
+            //   }
+            // },
             data: this.speed
           }
         ]
@@ -290,7 +290,7 @@ export default {
                   s
               );
               this.speed.push(
-                parseFloat(res.data.data[i].motorSpeed) + Math.random() * 10
+                (parseFloat(res.data.data[i].motorSpeed) + Math.random() * 10).toFixed(0)
               );
             }
             let brokenLine = this.$echarts.init(

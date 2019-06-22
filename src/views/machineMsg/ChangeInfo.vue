@@ -69,8 +69,6 @@ export default {
                 }else{
                     this.$Message.error("修改失败！");
                 }
-                console.log(res);
-                console.log(this.machineInfo.name);
               }
             )
             .catch(error => {
@@ -86,12 +84,12 @@ export default {
 };
 </script>
 <style scoped>
-/* .wrapper {
+.wrapper {
   width: 100%;
   height: 100%;
   background: url("../../assets/bkg.png") no-repeat;
   border: 1px solid #fff;
-} */
+}
 .inner {
   width: 450px;
   height: 372px;

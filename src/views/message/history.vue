@@ -239,22 +239,22 @@ export default {
                   s
               );
               this.temp.push(
-                parseFloat(res.data.data[i].temperature) + Math.random() * 10
+                (parseFloat(res.data.data[i].temperature) + Math.random() * 10).toFixed(1)
               );
               this.humi.push(
-                parseFloat(res.data.data[i].humidity) + Math.random() * 10
+                (parseFloat(res.data.data[i].humidity) + Math.random() * 10).toFixed(1)
               );
               this.volt.push(
-                parseFloat(res.data.data[i].voltage) + Math.random() * 10
+                (parseFloat(res.data.data[i].voltage) + Math.random() * 10).toFixed(3)
               );
               this.elec.push(
-                parseFloat(res.data.data[i].electric) + Math.random() * 10
+                (parseFloat(res.data.data[i].electric) + Math.random() * 10).toFixed(3)
               );
               this.press.push(
-                parseFloat(res.data.data[i].weight) + Math.random() * 10
+                (parseFloat(res.data.data[i].weight) + Math.random() * 10).toFixed(3)
               );
               this.power.push(
-                parseFloat(res.data.data[i].power) + Math.random() * 10
+                (parseFloat(res.data.data[i].power) + Math.random() * 10).toFixed(3)
               );
             }
             let history = this.$echarts.init(

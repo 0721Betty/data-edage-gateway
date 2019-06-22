@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <!-- 个人信息页面 -->
-    <Card class="inner">
+    <Card class="inner move">
       <p slot="title" class="title">
         <Icon type="ios-card" />个人信息
       </p>
@@ -118,6 +118,23 @@ export default {
 }
 .changeBtn {
   margin-left: 118px;
+}
+.move{
+  animation: animated 0.5s;
+}
+@keyframes animated {
+  0%  {
+    top: 0;
+    left: 0;
+  }
+  50% {
+    top: 0px;
+    left: -400px;
+  }
+  100% {
+    top: 0px;
+    left: 200px;
+  } 
 }
 </style>
 

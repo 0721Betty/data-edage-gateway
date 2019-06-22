@@ -1,7 +1,7 @@
 <template>
   <!-- 网站首页 显示登录注册页面 -->
   <!-- 简要的介绍我们这个网站是干什么的 -->
-  <div class="wrapper">
+  <div>
     <Row class-name="head">
       <Col span="3">
         <div class="logo">

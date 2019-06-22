@@ -2,7 +2,7 @@
   <!-- 设备信息页面 -->
   <div class="wrapper">
     <div class="excel">
-      <Table border :columns="columns" :data="data1"></Table>
+      <Table border :columns="columns" :data="data1" class="move"></Table>
       <router-link to="/home/changeInfo" tag="span">
         <Button class="changeBtn" type="primary">修改</Button>
       </router-link>
@@ -70,6 +70,13 @@ export default {
 };
 </script>
 <style scoped>
+.wrapper {
+  width: 100%;
+  height: 100%;
+  background: url("../../assets/bkg.png") no-repeat;
+  border: 1px solid #fff;
+  animation: animated 0.5s;
+}
 .excel {
   width: 1003px;
   margin: 100px auto;
@@ -77,5 +84,23 @@ export default {
 .changeBtn {
   margin: 20px 474px;
 }
+.move {
+  animation: animated 0.5s;
+}
+@keyframes animated {
+  0%  {
+    top: 0;
+    left: 0;
+  }
+  50% {
+    top: 0px;
+    left: -400px;
+  }
+  100% {
+    top: 0px;
+    left: 200px;
+  } 
+}
+
 </style>
 

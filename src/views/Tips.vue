@@ -65,7 +65,7 @@
 export default {
   data() {
     return {
-      msg: "温度过高，电机转速过快！！！",
+      msg: "",
       timer: null,
       rotateVal: 0,
       plc: {
