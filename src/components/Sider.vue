@@ -27,6 +27,9 @@
         </MenuItem>
       </Submenu>
       <MenuItem name="3">
+        <Icon type="ios-folder-open" />设备信息
+      </MenuItem>    
+      <MenuItem name="4">
         <Icon type="md-chatboxes" />系统中心
       </MenuItem>     
     </Menu>
@@ -60,8 +63,10 @@ export default {
 			if (name === '2-2') this.$router.push('/home/ctrl2')
 			if (name === '2-3') this.$router.push('/home/ctrl3')
 
-      // 系统提示页面路由跳转，并且显示小红点
-      if(name === '3') this.$router.push('/home/tips');
+      // 设备信息页面跳转
+      if (name === '3') this.$router.push('/home/machineInfo')
+      // 系统提示页面路由跳转
+      if(name === '4') this.$router.push('/home/tips');
     },
 	},
 };

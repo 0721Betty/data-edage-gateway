@@ -12,6 +12,8 @@ import CelecMachine from '../views/control/ElecMachine.vue'
 import CslideTable from '../views/control/SlideTable.vue'
 import CpushRod from '../views/control/PushRod.vue'
 
+import machineInfo from '../views/machineMsg/machineInfo.vue'
+import changeInfo from '../views/machineMsg/ChangeInfo.vue'
 import tips from '../views/Tips.vue'
 import personal from '../views/adminMsg/Personal.vue'
 import modifyInfo  from '../views/adminMsg/ModifyInfo.vue'
@@ -90,6 +92,20 @@ const routes = [
         component: CpushRod,
         meta: {
           title: '推杆控制页面'
+        }
+      },
+      {
+        path: '/home/machineInfo',
+        component: machineInfo,
+        meta: {
+          title: '设备信息页面'
+        }
+      },
+      {
+        path: '/home/changeInfo',
+        component: changeInfo,
+        meta: {
+          title: '设备信息修改页面'
         }
       },
       {

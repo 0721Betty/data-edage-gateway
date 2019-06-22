@@ -3,7 +3,7 @@
     <!-- 个人信息修改页面 -->
     <Card class="inner">
       <p slot="title" class="title">
-        <Icon type="md-contact" class="photo"/>个人信息修改
+        <Icon type="ios-card" />个人信息修改
       </p>
       <Form ref="admin" :model="admin" :rules="rules" :label-width="70">
         <FormItem label="姓名" prop="name">
@@ -18,9 +18,11 @@
         <FormItem style="margin-left:53px">
           <Button type="primary" @click="handleSubmit('admin')">提交</Button>
           <Button type="info" @click="handleReset('admin')" class="reset">重置</Button>
+          <router-link to="/home/personal" tag="span">
           <Button class="personal" type="success">
-            <router-link to="/home/personal" tag="span">返回</router-link>
+            返回
           </Button>
+          </router-link>
         </FormItem>
       </Form>
     </Card>
@@ -87,15 +89,15 @@ export default {
           this.$axios
           .put("/api/admin",this.admin,{headers: { token: localStorage.getItem("token")}})
           .then(res => {
-            if(res.data.code >= 300){
-              // 注册账号失败，账号已经存在
-              this.$Message.error(res.data.msg);
-            }else{
-              this.$Message.success("修改成功！");
-              this.$router.push('/home/personal');//注册成功后跳转到login页面
-            }  
+              if(res.data.data.row > 0){
+                // 根据res.data.data.row判断修改成功与否
+                this.$Message.success("修改成功！");
+                this.$router.push('/home/personal');//注册成功后跳转到login页面
+              }else{
+                this.$Message.error("修改失败！");
+              }   
           })
-          .catch(function(error){
+          .catch(error => {
             console.log(error);
           })
         } else {

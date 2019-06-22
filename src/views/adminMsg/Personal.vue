@@ -3,7 +3,7 @@
     <!-- 个人信息页面 -->
     <Card class="inner">
       <p slot="title" class="title">
-        <Icon type="md-contact" class="photo"/>个人信息
+        <Icon type="ios-card" />个人信息
       </p>
       <Form ref="admin" :model="admin" :label-width="60">
         <FormItem label="ID" prop="adminId">
@@ -25,9 +25,11 @@
           <Input v-model="admin.updateTime"></Input>
         </FormItem>
         <FormItem>
+          <router-link to="/home/modifyInfo" tag="span">
           <Button class="changeBtn" type="primary">
-            <router-link to="/home/modifyInfo" tag="span">修改</router-link>
+            修改
           </Button>
+          </router-link>
         </FormItem>
       </Form>
     </Card>

@@ -28,10 +28,7 @@ _axios.interceptors.request.use(
     config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
     config.headers['token'] = localStorage.getItem('token');
 
-    // if(localStorage.token){
-    // !!!!!  // 设置统一的请求header
-    //   config.headers.Authorization = localStorage.token;
-    // }
+    
     return config;
   },
   function(error) {

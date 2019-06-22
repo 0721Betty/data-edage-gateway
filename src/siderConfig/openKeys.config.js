@@ -6,9 +6,11 @@ let openConfig = {
     '/home/ctrl1': '2',
     '/home/ctrl2': '2',
     '/home/ctrl3': '2',
-    '/home/tips' : '3',
+    '/home/machineInfo': '3',
+    '/home/tips' : '4',
     '/home/personal' : '',
     '/home/modifyInfo' : '',
+    '/home/changeInfo' : '3'
 }
 function getOpenKeys(href){
     let key = href.split('#')[1];
