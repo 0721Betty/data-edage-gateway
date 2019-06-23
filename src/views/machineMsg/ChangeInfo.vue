@@ -3,10 +3,10 @@
     <!-- 设备信息修改页面 -->
     <Card class="inner">
       <p slot="title" class="title">
-        <Icon type="ios-card"/>设备信息修改
+        <Icon type="ios-create" />设备信息修改
       </p>
       <Form ref="machineInfo" :model="machineInfo" :label-width="60">
-        <FormItem label="ID" prop="machineId">
+        <FormItem label="ID 编号" prop="machineId">
           <Input v-model="machineId" placeholder="请输入设备相应的Id对其信息进行修改"></Input>
         </FormItem>
         <FormItem label="设备名称" prop="name">
@@ -18,7 +18,7 @@
         <FormItem label="设备描述" prop="desc">
           <Input v-model="machineInfo.desc" type="textarea"></Input>
         </FormItem>
-        <FormItem style="margin-left:53px">
+        <FormItem style="margin-left:57px">
           <Button type="primary" @click="handleSubmit('machineInfo')">提交</Button>
           <Button type="info" @click="handleReset('machineInfo')" class="reset">重置</Button>
           <router-link to="/home/machineInfo" tag="span">
@@ -33,29 +33,21 @@
 export default {
   data() {
     return {
-        machineId: "",
+      machineId: "",
       machineInfo: {
         name: "",
         type: "",
         desc: ""
       },
-    //   rules: {
-    //     machineId: [
-    //       {
-    //         required: true,
-    //         message: "设备Id不能为空",
-    //         trigger: "blur"
-    //       }
-    //     ]
-    //   }
     };
   },
   methods: {
     handleSubmit(name) {
-      console.log(this.machineId);
       this.$refs[name].validate(valid => {
         if (valid) {
-          this.$axios
+          if(this.machineId !== ""){
+            // 当输入的ID号不为空时执行下面的语句
+            this.$axios
             .put(
               `/api/machine/${this.machineId}`,
               this.machineInfo,
@@ -74,6 +66,9 @@ export default {
             .catch(error => {
               console.log(error);
             });
+          }else{
+            this.$Message.error("ID不能为空！");
+          }  
         }
       });
     },
@@ -93,7 +88,7 @@ export default {
 .inner {
   width: 450px;
   height: 372px;
-  margin: 115px auto;
+  margin: 100px auto;
 }
 .ivu-input-wrapper {
   width: 85%;

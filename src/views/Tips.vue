@@ -49,10 +49,10 @@
                   <Checkbox label="推杆"></Checkbox>
                 </CheckboxGroup>
               </FormItem>
-              <FormItem>
+              <!-- <FormItem>
                 <Button type="primary" @click="handleSubmit()">确定</Button>
                 <Button style="margin-left: 8px" @click="handleCancel('plc')">取消</Button>
-              </FormItem>
+              </FormItem> -->
             </Form>
           </Card>
         </Col>
@@ -90,13 +90,13 @@ export default {
     close() {
       clearInterval(this.timer);
     },
-    handleCancel(name) {
-      this.$refs[name].resetFields();
-    },
-    handleSubmit(){
-      console.log(this.plc);
+    // handleCancel(name) {
+    //   this.$refs[name].resetFields();
+    // },
+    // handleSubmit(){
+    //   console.log(this.plc);
       
-    }
+    // }
   }
 };
 </script>

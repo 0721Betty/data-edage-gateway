@@ -26,9 +26,9 @@
         </FormItem>
         <FormItem>
           <router-link to="/home/modifyInfo" tag="span">
-          <Button class="changeBtn" type="primary">
-            修改
-          </Button>
+            <Button class="changeBtn" type="primary">
+              修改
+            </Button>
           </router-link>
         </FormItem>
       </Form>
@@ -107,6 +107,7 @@ export default {
   height: 470px;
   margin: 50px auto;
 }
+/* input输入框的宽度 */
 .ivu-input-wrapper {
   width: 85%;
 }
@@ -119,21 +120,22 @@ export default {
 .changeBtn {
   margin-left: 118px;
 }
+/* 让card出现的时候有动画效果 */
 .move{
   animation: animated 0.5s;
 }
 @keyframes animated {
   0%  {
     top: 0;
-    left: 0;
+    left: 0px;
   }
   50% {
     top: 0px;
-    left: -400px;
+    left: 1000px;
   }
   100% {
     top: 0px;
-    left: 200px;
+    left: 600px;
   } 
 }
 </style>

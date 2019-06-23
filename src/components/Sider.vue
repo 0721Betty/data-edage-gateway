@@ -6,10 +6,10 @@
           <Icon type="ios-stats"/>设备数据
         </template>
         <MenuItem name="1-1">
-          <Icon type="ios-flash"/>实时数据
+          <Icon type="ios-clock" />实时数据
         </MenuItem>
         <MenuItem name="1-2">
-          <Icon type="ios-cube"/>历史数据
+          <Icon type="ios-calendar" />历史数据
         </MenuItem>
       </Submenu>
       <Submenu name="2">
@@ -20,17 +20,14 @@
           <Icon type="ios-flash"/>电机
         </MenuItem>
         <MenuItem name="2-2">
-          <Icon type="ios-cube"/>滑台
-        </MenuItem>
-        <MenuItem name="2-3">
-          <Icon type="ios-build"/>推杆
+          <Icon type="ios-cube"/>其他
         </MenuItem>
       </Submenu>
       <MenuItem name="3">
         <Icon type="ios-folder-open" />设备信息
       </MenuItem>    
       <MenuItem name="4">
-        <Icon type="md-chatboxes" />系统中心
+       <Icon type="md-chatbubbles" />系统中心
       </MenuItem>     
     </Menu>
   </div>
@@ -61,8 +58,7 @@ export default {
       // 设备控制页面路由跳转
       if (name === '2-1') this.$router.push('/home/ctrl1')
 			if (name === '2-2') this.$router.push('/home/ctrl2')
-			if (name === '2-3') this.$router.push('/home/ctrl3')
-
+	
       // 设备信息页面跳转
       if (name === '3') this.$router.push('/home/machineInfo')
       // 系统提示页面路由跳转

@@ -9,8 +9,7 @@ import realTime from '../views/message/RealTime.vue'
 import history from '../views/message/History.vue'
 
 import CelecMachine from '../views/control/ElecMachine.vue'
-import CslideTable from '../views/control/SlideTable.vue'
-import CpushRod from '../views/control/PushRod.vue'
+import Cother from '../views/control/Other.vue'
 
 import machineInfo from '../views/machineMsg/machineInfo.vue'
 import changeInfo from '../views/machineMsg/ChangeInfo.vue'
@@ -82,16 +81,9 @@ const routes = [
       },
       {
         path: '/home/ctrl2',
-        component: CslideTable,
+        component: Cother,
         meta: {
-          title: '滑台控制页面'
-        }
-      },
-      {
-        path: '/home/ctrl3',
-        component: CpushRod,
-        meta: {
-          title: '推杆控制页面'
+          title: '滑台和推杆控制页面'
         }
       },
       {

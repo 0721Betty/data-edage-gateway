@@ -26,7 +26,7 @@
 import HeadBar from "../components/Header.vue";
 import SideBar from "../components/Sider";
 export default {
-  name: 'main',
+  name: 'home',
   components: {
     HeadBar,
     SideBar

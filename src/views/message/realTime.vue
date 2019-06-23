@@ -111,7 +111,7 @@ export default {
           {
             name: "设备参数",
             type: "gauge",
-            detail: { formatter: "{value}%rh" },
+            detail: { formatter: "{value}%RH" },
             data: [{ value: this.humiValue, name: "湿度" }],
             title: {
               color: "#08acf8"
@@ -239,18 +239,11 @@ export default {
             let body = JSON.parse(msg.body); //字符串转对象
             console.log("获取成功");
             console.log(body); // msg.body存放的是服务端发送给我们的信息
-              let td = parseFloat(body.temperature) + Math.random()*10;
-              if(body.temperature>50){
-                this.$Message.warning({
-                    content: '温度过高',
-                    duration: 60,
-                    closable: true
-                });
-              }else{
-                this.tempValue = td;
+            
+
+              this.tempValue = parseFloat(body.temperature) + Math.random()*10;
                 // this.tempValue = body.temperature;
 
-              }
               // console.log(this.tempValue);
               //获取到数据后重新绘制仪表盘 
               let temp = this.$echarts.init(document.getElementById("temp"));

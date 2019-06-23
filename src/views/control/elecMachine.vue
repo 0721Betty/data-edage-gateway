@@ -31,43 +31,67 @@
       </Col>
     </Row>
     <br>
-    <!-- 电机控制 -->
+    <!-- 电机开关转向速度信息 -->
     <Row>
       <Col span="24">
         <Card>
           <p slot="title">
-            <Icon type="md-cog"></Icon>控制电机的转速转向
+            <Icon type="md-cog"></Icon>电机的状态
           </p>
           <Form ref="elecCtrl" :model="elecCtrl">
-            <FormItem label="转速" prop="speed">
-              <RadioGroup v-model="elecCtrl.speed">
-                <Radio label="slow">慢速
-                </Radio>
-                <Radio label="middle">中速
-                </Radio>
-                <Radio label="fast">快速
-                </Radio>
-              </RadioGroup>
-            </FormItem>
-            <FormItem label="转向" prop="turn">
-              <RadioGroup v-model="elecCtrl.turn">
-                <Radio label="clockWise">
-                  <Icon type="ios-redo"/>顺时针
-                </Radio>
-                <Radio label="antiClockWise">
-                  <Icon type="ios-undo"/>逆时针
-                </Radio>
-              </RadioGroup>
-            </FormItem>
             <FormItem label="运行状态">
               <i-switch v-model="elecCtrl.switch" size="large">
                 <span slot="open">On</span>
                 <span slot="close">Off</span>
               </i-switch>
             </FormItem>
+            <FormItem label="转向" prop="turn">
+              <RadioGroup v-model="elecCtrl.turn">
+                <Radio label="1">
+                  <Icon type="ios-redo"/>顺时针
+                </Radio>
+                <Radio label="0">
+                  <Icon type="ios-undo"/>逆时针
+                </Radio>
+              </RadioGroup>
+            </FormItem>
+            <FormItem label="转速" prop="speed">
+              <RadioGroup v-model="elecCtrl.speed">
+                <Radio label="slow">慢速</Radio>
+                <Radio label="middle">中速</Radio>
+                <Radio label="fast">快速</Radio>
+              </RadioGroup>
+            </FormItem>
             <FormItem style="margin-left:36px">
-              <Button type="primary" @click="handleSubmit()">确定</Button>
-              <Button style="margin-left: 8px" @click="handleCancel('elecCtrl')">取消</Button>
+              <Button type="primary" @click="modal = true">修改</Button>
+              <!-- 弹框设置电机的状态 -->
+              <Modal title="设置电机的状态" v-model="modal" :mask-closable="false" @on-ok="control">
+                <Form ref="changeForm" :model="changeForm">
+                  <FormItem label="运行状态">
+                    <i-switch v-model="changeForm.switch" size="large">
+                      <span slot="open">On</span>
+                      <span slot="close">Off</span>
+                    </i-switch>
+                  </FormItem>
+                  <FormItem label="转向" prop="turn">
+                    <RadioGroup v-model="changeForm.turn">
+                      <Radio label="1">
+                        <Icon type="ios-redo"/>顺时针
+                      </Radio>
+                      <Radio label="0">
+                        <Icon type="ios-undo"/>逆时针
+                      </Radio>
+                    </RadioGroup>
+                  </FormItem>
+                  <FormItem label="转速" prop="speed">
+                    <RadioGroup v-model="changeForm.speed">
+                      <Radio label="slow">慢速</Radio>
+                      <Radio label="middle">中速</Radio>
+                      <Radio label="fast">快速</Radio>
+                    </RadioGroup>
+                  </FormItem>
+                </Form>
+              </Modal>
             </FormItem>
             <!-- 电机图片 -->
             <div class="photo">
@@ -89,8 +113,8 @@ export default {
       timer: "",
       buttonSize: "large",
       elecCtrl: {
-        speed: "middle",
-        turn: "clockWise",
+        // speed: "middle",
+        turn: "1",
         switch: true
       },
       buttonSize1: "small",
@@ -101,14 +125,20 @@ export default {
       },
       realSpeed: 300,
       time: [],
-      speed: []
+      speed: [],
+      modal: false,
+      changeForm: {
+        switch: "",
+        turn: "",
+        speed: ""
+      }
     };
   },
   mounted() {
-    this.initWebSocket();//websocket初始化
+    this.initWebSocket(); //websocket初始化
     this.init();
   },
-   beforeDestroy() {
+  beforeDestroy() {
     // 页面离开时断开连接,清除定时器
     this.disconnect();
     clearInterval(this.timer);
@@ -120,7 +150,9 @@ export default {
   methods: {
     init() {
       let dashBoard = this.$echarts.init(document.getElementById("dashBoard"));
-      let brokenLine = this.$echarts.init(document.getElementById("brokenLine"));
+      let brokenLine = this.$echarts.init(
+        document.getElementById("brokenLine")
+      );
       // 电机的仪表盘，显示实时数据
       dashBoard.setOption({
         series: [
@@ -167,7 +199,7 @@ export default {
           }
         },
         legend: {
-          data: ["电机转速默认显示昨天的此刻到此刻的数据"]
+          data: ["电机转速"]
         },
         toolbox: {
           feature: {
@@ -219,23 +251,14 @@ export default {
             name: "电机转速",
             type: "line",
             stack: "总量",
-            // label: {
-            //   normal: {
-            //     show: true
-            //   }
-            // },
             data: this.speed
           }
         ]
       });
     },
-    // 取消用户的勾选
-    handleCancel(name) {
-      this.$refs[name].resetFields();
-    },
     // 向后端提交用户对电机操作的请求
-    handleSubmit() {
-      console.log(this.elecCtrl);
+    control(){
+      console.log(this.changeForm);
     },
     // 让折线图默认显示昨天的此刻到此刻的数据
     defaultHistory() {
@@ -252,7 +275,7 @@ export default {
         now.getMinutes() +
         ":" +
         now.getSeconds();
-      let defaultEnd = Number(now);//默认结束时间为此刻的时间
+      let defaultEnd = Number(now); //默认结束时间为此刻的时间
       let defaultStart = Number(new Date(yesterday)); //先将昨天的时间变为格式化之前的默认时间样式然后变为时间戳
       // 发送请求获取数据进行渲染
       this.$axios
@@ -263,7 +286,7 @@ export default {
           if (res.data.code >= 300) {
             this.$Message.error(res.data.msg);
           } else {
-            if(res.data.data.length === 0){
+            if (res.data.data.length === 0) {
               this.$Message.error("数据库中没有数据！");
             }
             for (let i = 0; i < res.data.data.length; i++) {
@@ -290,7 +313,10 @@ export default {
                   s
               );
               this.speed.push(
-                (parseFloat(res.data.data[i].motorSpeed) + Math.random() * 10).toFixed(0)
+                (
+                  parseFloat(res.data.data[i].motorSpeed) +
+                  Math.random() * 10
+                ).toFixed(0)
               );
             }
             let brokenLine = this.$echarts.init(
@@ -323,10 +349,10 @@ export default {
               ]
             });
           }
-        })
-        // .catch(error => {
-        //   console.log(error);
-        // });
+        });
+      // .catch(error => {
+      //   console.log(error);
+      // });
     },
     // 根据用户所选择的两个时间点刷选出相应的数据
     handleQuery() {
@@ -419,36 +445,44 @@ export default {
     initWebSocket() {
       this.connection();
     },
-        //连接 后台
+    //连接 后台
     connection() {
       // 建立连接对象
       let socket = new SockJS("http://119.23.243.252:8080/ws");
       // 获取STOMP子协议的客户端对象
       this.stompClient = Stomp.over(socket);
       // 向服务器发起websocket连接
-      this.stompClient.connect("guest", "guest", () => {
+      this.stompClient.connect(
+        "guest",
+        "guest",
+        () => {
           this.stompClient.subscribe("/topic/msg", msg => {
             // 订阅服务端提供的某个topic
             let body = JSON.parse(msg.body); //字符串转对象
             console.log("获取成功");
             console.log(body); // msg.body存放的是服务端发送的信息
-              this.realSpeed = body.motorSpeed;
-              //获取到数据后重新绘制仪表盘 
-              let dashBoard = this.$echarts.init(document.getElementById("dashBoard"));
-              dashBoard.setOption({
+            this.realSpeed = body.motorSpeed;
+            //获取到数据后重新绘制仪表盘
+            let dashBoard = this.$echarts.init(
+              document.getElementById("dashBoard")
+            );
+            dashBoard.setOption({
               series: [
                 {
                   data: [{ value: this.realSpeed, name: "转速" }]
                 }
               ]
-              });
+            });
           });
-        },err => {
+        },
+        err => {
           // 连接发生错误时的处理函数
           console.log("失败");
           console.log(err);
-        }, "/");
-    }, 
+        },
+        "/"
+      );
+    },
     // 断开连接
     disconnect() {
       if (this.stompClient) {
@@ -481,9 +515,6 @@ export default {
 .selectTime {
   margin-top: 32px;
   text-align: center;
-}
-.sure {
-  margin-left: 8px;
 }
 </style>
 

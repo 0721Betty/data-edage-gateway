@@ -5,7 +5,6 @@ let navConfig = {
     '/home/msg2': '1-2',
     '/home/ctrl1': '2-1',
     '/home/ctrl2': '2-2',
-    '/home/ctrl3': '2-3',
     '/home/machineInfo': '3',
     '/home/tips' : '4',
     '/home/personal' : '',
