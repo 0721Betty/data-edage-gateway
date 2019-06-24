@@ -1,11 +1,23 @@
 <template>
-<!-- 实时数据页面 -->
-  <div>
+  <!-- 实时数据页面 -->
+  <div class="wrapper">
     <Row :gutter="20">
       <!-- 温度 -->
       <Col span="8">
         <Card>
           <div id="temp" class="myChart"></div>
+          <!-- <div class="choose">
+            <Form :label-width="80">
+              <FormItem style="margin-right:95px">
+                MIN:&nbsp&nbsp&nbsp<Input type="number"></Input>&nbsp
+                MAX:&nbsp&nbsp&nbsp<Input type="number"></Input>
+              </FormItem>
+              <FormItem style="margin-right:132px">
+                <Button type="info">确定</Button>
+                <Button type="primary" style="margin-left:8px">取消</Button>
+              </FormItem>
+            </Form>
+          </div> -->
         </Card>
       </Col>
       <!-- 湿度 -->
@@ -50,20 +62,21 @@ import Stomp from "stompjs";
 export default {
   data() {
     return {
+      // WebSocket
       stompClient: "",
       timer: "",
       // 上述仪表盘默认值
       tempValue: 25.5,
       humiValue: 40.1,
-      voltValue: 20.625,
+      voltValue: 23.625,
       elecValue: 2.333,
-      pressValue: 80.354,
-      powerValue: 110
+      pressValue: 4.354,
+      powerValue: 108
     };
   },
   mounted() {
-    this.initWebSocket();//websocket初始化
-    this.init();//仪表盘初始化
+    this.initWebSocket(); //websocket初始化
+    this.init(); //仪表盘初始化
   },
   beforeDestroy() {
     // 页面离开时断开连接,清除定时器
@@ -89,18 +102,18 @@ export default {
             detail: { formatter: "{value}℃" },
             data: [{ value: this.tempValue, name: "温度" }],
             min: 10,
-            max: 60,
+            max: 70,
             title: {
               color: "#08acf8"
             },
-            splitNumber: 5, //分成5份
+            splitNumber: 6, //分成6份
             fontWeight: "normal",
             radius: "100%", //仪表盘大小
             axisLine: {
               // 坐标轴线
               lineStyle: {
                 // 属性lineStyle控制线条样式
-                color: [[4 / 5, "#91c7ae"], [1, "#c23531"]]
+                color: [[5 / 6, "#91c7ae"], [1, "#c23531"]]
               }
             }
           }
@@ -116,8 +129,8 @@ export default {
             title: {
               color: "#08acf8"
             },
-            min: 30,
-            max: 60,
+            min: 40,
+            max: 70,
             splitNumber: 6,
             fontWeight: "normal",
             radius: "100%",
@@ -139,14 +152,14 @@ export default {
             title: {
               color: "#08acf8"
             },
-            min: 5,
-            max: 30,
-            splitNumber: 5,
+            min: 20,
+            max: 28,
+            splitNumber: 8,
             fontWeight: "normal",
             radius: "100%",
             axisLine: {
               lineStyle: {
-                color: [[0.76, "#91c7ae"], [1, "#c23531"]]
+                color: [[5/8, "#91c7ae"], [1, "#c23531"]]
               }
             }
           }
@@ -163,13 +176,13 @@ export default {
               color: "#08acf8"
             },
             min: 0,
-            max: 6,
-            splitNumber: 6,
+            max: 5,
+            splitNumber: 10,
             fontWeight: "normal",
             radius: "100%",
             axisLine: {
               lineStyle: {
-                color: [[5 / 6, "#91c7ae"], [1, "#c23531"]]
+                color: [[4 / 5, "#91c7ae"], [1, "#c23531"]]
               }
             }
           }
@@ -186,13 +199,13 @@ export default {
               color: "#08acf8"
             },
             min: 0,
-            max: 110,
-            splitNumber: 11,
+            max: 6,
+            splitNumber: 6,
             fontWeight: "normal",
             radius: "100%",
             axisLine: {
               lineStyle: {
-                color: [[10 / 11, "#91c7ae"], [1, "#c23531"]]
+                color: [[5 / 6, "#91c7ae"], [1, "#c23531"]]
               }
             }
           }
@@ -215,7 +228,7 @@ export default {
             radius: "100%",
             axisLine: {
               lineStyle: {
-                color: [[11 / 15, "#91c7ae"], [1, "#c23531"]]
+                color: [[18 / 25, "#91c7ae"], [1, "#c23531"]]
               }
             }
           }
@@ -233,80 +246,86 @@ export default {
       // 获取STOMP子协议的客户端对象
       this.stompClient = Stomp.over(socket);
       // 向服务器发起websocket连接
-      this.stompClient.connect("guest", "guest", () => {
+      this.stompClient.connect(
+        "guest",
+        "guest",
+        () => {
           this.stompClient.subscribe("/topic/msg", msg => {
             // 订阅服务端提供的某个topic
-            let body = JSON.parse(msg.body); //字符串转对象
+            let body = JSON.parse(msg.body); //字符串转对象, msg.body存放的是服务端发送给我们的信息
             console.log("获取成功");
-            console.log(body); // msg.body存放的是服务端发送给我们的信息
-            
+            this.tempValue = body.temperature;
+            this.humiValue = body.humidity;
+            this.voltValue = body.voltage;
+            this.elecValue = body.electric;
+            this.pressValue = body.weight;
+            this.powerValue = body.power;
 
-              this.tempValue = parseFloat(body.temperature) + Math.random()*10;
-                // this.tempValue = body.temperature;
-
-              // console.log(this.tempValue);
-              //获取到数据后重新绘制仪表盘 
-              let temp = this.$echarts.init(document.getElementById("temp"));
-              let humi = this.$echarts.init(document.getElementById("humi"));
-              let volt = this.$echarts.init(document.getElementById("volt"));
-              let elec = this.$echarts.init(document.getElementById("elec"));
-              let press = this.$echarts.init(document.getElementById("press"));
-              let power = this.$echarts.init(document.getElementById("power"));
-              temp.setOption({
+            // this.tempValue = parseFloat(body.temperature) + Math.random() * 10;
+            //获取到数据后重新绘制仪表盘
+            let temp = this.$echarts.init(document.getElementById("temp"));
+            let humi = this.$echarts.init(document.getElementById("humi"));
+            let volt = this.$echarts.init(document.getElementById("volt"));
+            let elec = this.$echarts.init(document.getElementById("elec"));
+            let press = this.$echarts.init(document.getElementById("press"));
+            let power = this.$echarts.init(document.getElementById("power"));
+            temp.setOption({
               series: [
                 {
-                  data: [{ value: this.tempValue, name: "温度" }],
+                  data: [{ value: this.tempValue, name: "温度" }]
                 }
               ]
-              });
-              humi.setOption({
+            });
+            humi.setOption({
               series: [
                 {
-                  data: [{ value: this.humiValue, name: "湿度" }],
+                  data: [{ value: this.humiValue, name: "湿度" }]
                 }
               ]
-              });
-              volt.setOption({
+            });
+            volt.setOption({
               series: [
                 {
-                  data: [{ value: this.voltValue, name: "电压" }],
+                  data: [{ value: this.voltValue, name: "电压" }]
                 }
               ]
-              });
-              elec.setOption({
+            });
+            elec.setOption({
               series: [
                 {
-                  data: [{ value: this.elecValue, name: "电流" }],
+                  data: [{ value: this.elecValue, name: "电流" }]
                 }
               ]
-              });
-              press.setOption({
+            });
+            press.setOption({
               series: [
                 {
-                  data: [{ value: this.pressValue, name: "压力" }],
+                  data: [{ value: this.pressValue, name: "压力" }]
                 }
               ]
-              });
-              power.setOption({
+            });
+            power.setOption({
               series: [
                 {
-                  data: [{ value: this.powerValue, name: "功率" }],
+                  data: [{ value: this.powerValue, name: "功率" }]
                 }
               ]
-              });  
+            });
           });
-        },err => {
+        },
+        err => {
           // 连接发生错误时的处理函数
-          console.log("失败");
           console.log(err);
-        }, "/");
-    }, 
+        },
+        "/"
+      );
+    },
     // 断开连接
     disconnect() {
       if (this.stompClient) {
         this.stompClient.disconnect();
       }
-    } 
+    }
   }
 };
 </script>
@@ -316,5 +335,14 @@ export default {
   display: block;
   width: 400px;
   height: 300px;
+}
+/* .choose{
+  text-align: right;
+} */
+.wrapper{
+  margin-top: 10px;
+}
+.ivu-input-wrapper{
+  width: 30%;
 }
 </style>

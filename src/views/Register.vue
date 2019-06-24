@@ -19,12 +19,6 @@
       <FormItem label="邮箱" prop="email">
         <Input v-model="registerUser.email" placeholder="请输入你的邮箱"></Input>
       </FormItem>
-      <!-- <FormItem label="性别" prop="gender">
-        <RadioGroup v-model="registerUser.gender">
-          <Radio label="male">男</Radio>
-          <Radio label="female">女</Radio>
-        </RadioGroup>
-      </FormItem> -->
       <FormItem>
         <Button type="primary" @click="handleSubmit('registerUser')">提交</Button>
         <Button type="info" @click="handleReset('registerUser')" class="reset">重置</Button>
@@ -57,11 +51,8 @@ export default {
       registerUser: {
         name: "",
         password: "",
-        // pwdCheck: "",
-        // mobile: "",
         phone: "",
         email: "",
-        // gender: ""
       },
       ruleValidate: {
         name: [
@@ -127,13 +118,6 @@ export default {
             trigger: "blur"
           }
         ]
-        // gender: [
-        //   {
-        //     required: true,
-        //     message: "请选择性别",
-        //     trigger: "change"
-        //   }
-        // ]
       }
     };
   },

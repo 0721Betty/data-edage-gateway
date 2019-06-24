@@ -55,24 +55,19 @@
                 </Radio>
               </RadioGroup>
             </FormItem>
-            <FormItem label="转速" prop="speed">
+            <!-- <FormItem label="转速" prop="speed">
               <RadioGroup v-model="elecCtrl.speed">
                 <Radio label="slow">慢速</Radio>
                 <Radio label="middle">中速</Radio>
                 <Radio label="fast">快速</Radio>
               </RadioGroup>
-            </FormItem>
+            </FormItem>-->
             <FormItem style="margin-left:36px">
               <Button type="primary" @click="modal = true">修改</Button>
+              <Button type="info" @click="handleStop" style="margin-left: 8px">停止</Button>
               <!-- 弹框设置电机的状态 -->
               <Modal title="设置电机的状态" v-model="modal" :mask-closable="false" @on-ok="control">
                 <Form ref="changeForm" :model="changeForm">
-                  <FormItem label="运行状态">
-                    <i-switch v-model="changeForm.switch" size="large">
-                      <span slot="open">On</span>
-                      <span slot="close">Off</span>
-                    </i-switch>
-                  </FormItem>
                   <FormItem label="转向" prop="turn">
                     <RadioGroup v-model="changeForm.turn">
                       <Radio label="1">
@@ -85,9 +80,9 @@
                   </FormItem>
                   <FormItem label="转速" prop="speed">
                     <RadioGroup v-model="changeForm.speed">
-                      <Radio label="slow">慢速</Radio>
-                      <Radio label="middle">中速</Radio>
-                      <Radio label="fast">快速</Radio>
+                      <Radio label="slow">慢速（350~450r/min）</Radio>
+                      <Radio label="middle">中速（450~550r/min）</Radio>
+                      <Radio label="fast">快速（550~650r/min）</Radio>
                     </RadioGroup>
                   </FormItem>
                 </Form>
@@ -109,30 +104,41 @@ import Stomp from "stompjs";
 export default {
   data() {
     return {
+      // WebSocket
       stompClient: "",
       timer: "",
-      buttonSize: "large",
+      // 电机的实时状态信息
       elecCtrl: {
         // speed: "middle",
-        turn: "1",
-        switch: true
+        turn: "",
+        switch: ""
       },
+      // 查询按钮的大小
       buttonSize1: "small",
+      // 时间选择器的值
       value: "",
+      // 时间选择器的两个时间点变为时间戳
       timeSelect: {
         start: "",
         end: ""
       },
-      realSpeed: 300,
+      // 电机仪表盘的实时速度
+      realSpeed: 350,
+      // 电机折线图的时间（横轴）和速度（纵轴）
       time: [],
       speed: [],
+      // 电机控制信息对话框
       modal: false,
+      // 电机控制页面修改的值
       changeForm: {
-        switch: "",
         turn: "",
         speed: ""
       }
     };
+  },
+  beforeMount() {
+    //默认显示电机的历史记录从昨天的此刻到此刻的时间点的数据
+    this.defaultHistory();
   },
   mounted() {
     this.initWebSocket(); //websocket初始化
@@ -143,11 +149,27 @@ export default {
     this.disconnect();
     clearInterval(this.timer);
   },
-  beforeMount() {
-    //默认显示电机的历史记录从昨天的此刻到此刻的时间点的数据
-    this.defaultHistory();
-  },
   methods: {
+    // 格式化时间
+    formatTime(date) {
+      let f =
+        date.getMinutes() >= 10 ? date.getMinutes() : "0" + date.getMinutes(); //分
+      let s =
+        date.getSeconds() >= 10 ? date.getSeconds() : "0" + date.getSeconds(); //秒
+      return (
+        date.getFullYear() +
+        "年" +
+        (date.getMonth() + 1) +
+        "月" +
+        date.getDate() +
+        "日" +
+        date.getHours() +
+        ":" +
+        f +
+        ":" +
+        s
+      );
+    },
     init() {
       let dashBoard = this.$echarts.init(document.getElementById("dashBoard"));
       let brokenLine = this.$echarts.init(
@@ -161,17 +183,17 @@ export default {
             type: "gauge",
             detail: { formatter: "{value}r/min" },
             data: [{ value: this.realSpeed, name: "转速" }],
-            min: 200,
+            min: 300,
             max: 700,
             title: {
               color: "#08acf8"
             },
-            splitNumber: 10,
+            splitNumber: 8,
             fontWeight: "bloder",
             radius: "80%",
             axisLine: {
               lineStyle: {
-                color: [[4 / 5, "#91c7ae"], [1, "#c23531"]]
+                color: [[7 / 8, "#91c7ae"], [1, "#c23531"]]
               }
             }
           }
@@ -190,28 +212,22 @@ export default {
           text: "电机转速记录(单位r/min)"
         },
         tooltip: {
-          trigger: "axis",
-          axisPointer: {
-            type: "cross",
-            label: {
-              backgroundColor: "#6a7985"
-            }
-          }
+          trigger: "axis"
         },
         legend: {
           data: ["电机转速"]
-        },
-        toolbox: {
-          feature: {
-            saveAsImage: {},
-            restore: {}
-          }
         },
         grid: {
           left: "3%",
           right: "4%",
           bottom: "3%",
           containLabel: true
+        },
+        toolbox: {
+          feature: {
+            saveAsImage: {},
+            restore: {}
+          }
         },
         xAxis: [
           {
@@ -257,8 +273,108 @@ export default {
       });
     },
     // 向后端提交用户对电机操作的请求
-    control(){
-      console.log(this.changeForm);
+    handleStop() {
+      // 下发指令让电机停止
+      this.$axios
+        .get("/api/cmd/motor-stop", {
+          headers: { token: localStorage.getItem("token") }
+        })
+        .then(res => {
+          if (res.data.code < 300) {
+            this.$Message.success("指令下发成功！");
+          } else {
+            this.$Message.error("指令下发失败！");
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    control() {
+      // 向后端发送控制转速的指令
+      if (this.changeForm.turn === "1") {
+        // 正转
+        this.$axios
+          .get("/api/cmd/motor-forward", {
+            headers: { token: localStorage.getItem("token") }
+          })
+          .then(res => {
+            if (res.data.code < 300) {
+              this.$Message.success("指令下发成功！");
+            } else {
+              this.$Message.error("指令下发失败！");
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      } else if (this.changeForm.turn === "0") {
+        // 反转
+        this.$axios
+          .get("/api/cmd/motor-reverse", {
+            headers: { token: localStorage.getItem("token") }
+          })
+          .then(res => {
+            if (res.data.code < 300) {
+              this.$Message.success("指令下发成功！");
+            } else {
+              this.$Message.error("指令下发失败！");
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }
+      // 向后端发送控制速度的指令
+      if (this.changeForm.speed === "slow") {
+        // 慢速
+        this.$axios
+          .get("/api/cmd/motor-slow", {
+            headers: { token: localStorage.getItem("token") }
+          })
+          .then(res => {
+            if (res.data.code < 300) {
+              this.$Message.success("指令下发成功！");
+            } else {
+              this.$Message.error("指令下发失败！");
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      } else if (this.changeForm.speed === "middle") {
+        // 中速
+        this.$axios
+          .get("/api/cmd/motor-middle", {
+            headers: { token: localStorage.getItem("token") }
+          })
+          .then(res => {
+            if (res.data.code < 300) {
+              this.$Message.success("指令下发成功！");
+            } else {
+              this.$Message.error("指令下发失败！");
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      } else if (this.changeForm.speed === "fast") {
+        // 快速
+        this.$axios
+          .get("/api/cmd/motor-fast", {
+            headers: { token: localStorage.getItem("token") }
+          })
+          .then(res => {
+            if (res.data.code < 300) {
+              this.$Message.success("指令下发成功！");
+            } else {
+              this.$Message.error("指令下发失败！");
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }
     },
     // 让折线图默认显示昨天的此刻到此刻的数据
     defaultHistory() {
@@ -291,27 +407,7 @@ export default {
             }
             for (let i = 0; i < res.data.data.length; i++) {
               let date = new Date(res.data.data[i].createTime);
-              let f =
-                date.getMinutes() >= 10
-                  ? date.getMinutes()
-                  : "0" + date.getMinutes(); //分
-              let s =
-                date.getSeconds() >= 10
-                  ? date.getSeconds()
-                  : "0" + date.getSeconds(); //秒
-              this.time.push(
-                date.getFullYear() +
-                  "年" +
-                  (date.getMonth() + 1) +
-                  "月" +
-                  date.getDate() +
-                  "日" +
-                  date.getHours() +
-                  ":" +
-                  f +
-                  ":" +
-                  s
-              );
+              this.time.push(this.$options.methods.formatTime(date));
               this.speed.push(
                 (
                   parseFloat(res.data.data[i].motorSpeed) +
@@ -338,21 +434,12 @@ export default {
                   name: "电机转速",
                   type: "line",
                   stack: "总量",
-                  label: {
-                    normal: {
-                      show: true,
-                      position: "top"
-                    }
-                  },
                   data: this.speed
                 }
               ]
             });
           }
         });
-      // .catch(error => {
-      //   console.log(error);
-      // });
     },
     // 根据用户所选择的两个时间点刷选出相应的数据
     handleQuery() {
@@ -361,6 +448,7 @@ export default {
       this.timeSelect.start = Number(value1);
       this.timeSelect.end = Number(value2);
       // 清除默认的数据
+      this.time = [];
       this.speed = [];
       let brokenLine = this.$echarts.init(
         document.getElementById("brokenLine")
@@ -383,28 +471,7 @@ export default {
           } else {
             for (let i = 0; i < res.data.data.length; i++) {
               let date = new Date(res.data.data[i].createTime);
-              let f =
-                date.getMinutes() >= 10
-                  ? date.getMinutes()
-                  : "0" + date.getMinutes(); //分
-              let s =
-                date.getSeconds() >= 10
-                  ? date.getSeconds()
-                  : "0" + date.getSeconds(); //秒
-
-              this.time.push(
-                date.getFullYear() +
-                  "年" +
-                  (date.getMonth() + 1) +
-                  "月" +
-                  date.getDate() +
-                  "日" +
-                  date.getHours() +
-                  ":" +
-                  f +
-                  ":" +
-                  s
-              );
+              this.time.push(this.$options.methods.formatTime(date));
               this.speed.push(
                 parseFloat(res.data.data[i].motorSpeed) + Math.random() * 10
               );
@@ -460,8 +527,19 @@ export default {
             // 订阅服务端提供的某个topic
             let body = JSON.parse(msg.body); //字符串转对象
             console.log("获取成功");
-            console.log(body); // msg.body存放的是服务端发送的信息
-            this.realSpeed = body.motorSpeed;
+            this.realSpeed = body.motorSpeed; //仪表盘中电机的实时转速
+            this.elecCtrl.turn = body.motorDir; //电机转向，1为正转，0为反转
+            if (body.motorOpen === 1) {
+              // 电机关闭
+              this.elecCtrl.switch = false;
+            } else if (body.motorOpen === 0) {
+              // 电机开启
+              this.elecCtrl.switch = true;
+            }
+            console.log(this.elecCtrl.turn);
+            console.log(body.motorOpen);
+            console.log(this.elecCtrl.switch);
+
             //获取到数据后重新绘制仪表盘
             let dashBoard = this.$echarts.init(
               document.getElementById("dashBoard")
@@ -477,7 +555,6 @@ export default {
         },
         err => {
           // 连接发生错误时的处理函数
-          console.log("失败");
           console.log(err);
         },
         "/"
@@ -515,6 +592,9 @@ export default {
 .selectTime {
   margin-top: 32px;
   text-align: center;
+}
+.sure {
+  margin-left: 8px;
 }
 </style>
 

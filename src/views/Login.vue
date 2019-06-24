@@ -30,8 +30,8 @@ export default {
   data() {
     return {
       loginUser: {
-        name: "Betty",
-        password: "123456"
+        name: "",
+        password: ""
       },
       config: {
         remember: true
@@ -40,20 +40,20 @@ export default {
         name: [
           {
             required: true,
-            message: "Please fill in the user name",
+            message: "请输入用户名",
             trigger: "blur"
           }
         ],
         password: [
           {
             required: true,
-            message: "Please fill in the password.",
+            message: "请输入密码",
             trigger: "blur"
           },
           {
             type: "string",
             min: 6,
-            message: "The password length cannot be less than 6 bits",
+            message: "密码长度不小于6位",
             trigger: "blur"
           }
         ]

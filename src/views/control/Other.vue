@@ -2,8 +2,8 @@
   <!-- 滑台和推杆信息及控制页面 -->
   <div class="wrapper">
     <!-- 滑台信息 -->
-    <Row :gutter="60" class="contain">
-      <Col span="8" offset="3">
+    <Row class="contain code-row-bg" type="flex" justify="center" align="middle">
+      <Col span="8" offset="1">
         <Card style="width: 450px;">
           <p slot="title">
             <Icon type="md-cog"></Icon>滑台状态信息
@@ -17,15 +17,16 @@
             </FormItem>
             <FormItem label="方向" prop="direction">
               <RadioGroup v-model="slideTable.direction">
-                <Radio label="back">
+                <Radio label="0">
                   <Icon type="ios-arrow-back"></Icon>后退
                 </Radio>
-                <Radio label="forward">
+                <Radio label="1">
                   <Icon type="ios-arrow-forward"></Icon>前进
                 </Radio>
               </RadioGroup>
             </FormItem>
-            <FormItem label="速度" prop="speed">:
+            <FormItem label="速度" prop="speed">
+              :
               {{slideTable.speed}}mm/s
             </FormItem>
             <FormItem style="margin-left:36px">
@@ -56,18 +57,18 @@
           </div>
         </Card>
       </Col>
-      <Col span="8">
+      <Col span="8" offset="3">
         <!-- 推杆信息 -->
         <Card style="width: 450px;">
           <p slot="title">
             <Icon type="md-cog"></Icon>推杆状态信息
           </p>
           <Form ref="pushRod" :model="pushRod">
-            <FormItem label="推送距离" prop="distance">
+            <FormItem label="推送距离(单位cm)" prop="distance">
               <br>
               <Slider v-model="pushRod.distance" show-input show-stops :min="0" :max="20" :step="5"></Slider>
             </FormItem>
-            <FormItem >
+            <FormItem>
               <!-- 推杆控制 -->
               <Button type="primary" @click="modal2 = true">修改</Button>
               <Modal title="设置推杆推送距离" v-model="modal2" :mask-closable="false" @on-ok="pushSubmit">
@@ -89,7 +90,7 @@
           </Form>
           <!-- 推杆图片 -->
           <div class="pushPh">
-            <img src="../../assets/pushRod.png" alt="" title="推杆">
+            <img src="../../assets/pushRod.png" alt title="推杆">
           </div>
         </Card>
       </Col>
@@ -97,12 +98,17 @@
   </div>
 </template>
 <script>
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
 export default {
   data() {
     return {
+      // WebSocket
+      stompClient: "",
+      timer: "",
       // 滑台信息
       slideTable: {
-        switch: true,
+        switch: "",
         speed: "8",
         direction: ""
       },
@@ -123,12 +129,193 @@ export default {
       }
     };
   },
+  mounted() {
+    this.initWebSocket(); //websocket初始化
+  },
+  beforeDestroy() {
+    // 页面离开时断开连接,清除定时器
+    this.disconnect();
+    clearInterval(this.timer);
+  },
   methods: {
+    // 滑台指令下发
     slideSubmit() {
-      console.log(this.slideCg);
+      if (this.slideCg.switch === true) {
+        // 滑台打开
+        this.$axios
+          .get("/api/cmd/slide-open", {
+            headers: { token: localStorage.getItem("token") }
+          })
+          .then(res => {
+            console.log(res);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      } else if (this.slideCg.switch === false) {
+        // 滑台关闭
+        this.$axios
+          .get("/api/cmd/slide-close", {
+            headers: { token: localStorage.getItem("token") }
+          })
+          .then(res => {
+            console.log(res);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }
+      if (this.slideCg.speed === "slow") {
+        // 慢速
+        this.$axios
+          .get("/api/cmd/slide-slow", {
+            headers: { token: localStorage.getItem("token") }
+          })
+          .then(res => {
+            if (res.data.code < 300) {
+              this.$Message.success("指令下发成功！");
+            } else {
+              this.$Message.error("指令下发失败！");
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      } else if (this.slideCg.speed === "middle") {
+        // 中速
+        this.$axios
+          .get("/api/cmd/slide-middle", {
+            headers: { token: localStorage.getItem("token") }
+          })
+          .then(res => {
+            if (res.data.code < 300) {
+              this.$Message.success("指令下发成功！");
+            } else {
+              this.$Message.error("指令下发失败！");
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      } else if (this.slideCg.speed === "fast") {
+        // 快速
+        this.$axios
+          .get("/api/cmd/slide-fast", {
+            headers: { token: localStorage.getItem("token") }
+          })
+          .then(res => {
+            if (res.data.code < 300) {
+              this.$Message.success("指令下发成功！");
+            } else {
+              this.$Message.error("指令下发失败！");
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }
     },
-    pushSubmit(){
-      console.log(this.pushCg);
+    // 推杆指令下发
+    pushSubmit() {
+      if (this.pushCg.distance === 0) {
+        // 推杆距离为0cm
+        this.$axios
+          .get("/api/cmd/rod-dis-0", {
+            headers: { token: localStorage.getItem("token") }
+          })
+          .then(res => {
+            console.log(res);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      } else if (this.pushCg.distance === 5) {
+        // 推杆距离为5cm
+        this.$axios
+          .get("/api/cmd/rod-dis-5", {
+            headers: { token: localStorage.getItem("token") }
+          })
+          .then(res => {
+            console.log(res);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      } else if (this.pushCg.distance === 10) {
+        //  推送距离为10
+        this.$Message.error("请选择另外一个距离！传感器不足！");
+      } else if (this.pushCg.distance === 15) {
+        // 推杆距离为15cm
+        this.$axios
+          .get("/api/cmd/rod-dis-15", {
+            headers: { token: localStorage.getItem("token") }
+          })
+          .then(res => {
+            console.log(res);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      } else if (this.pushCg.distance === 20) {
+        // 推杆距离为20cm
+        this.$axios
+          .get("/api/cmd/rod-dis-20", {
+            headers: { token: localStorage.getItem("token") }
+          })
+          .then(res => {
+            console.log(res);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }
+    },
+    //websocket初始化
+    initWebSocket() {
+      this.connection();
+    },
+    //连接 后台
+    connection() {
+      // 建立连接对象
+      let socket = new SockJS("http://119.23.243.252:8080/ws");
+      // 获取STOMP子协议的客户端对象
+      this.stompClient = Stomp.over(socket);
+      // 向服务器发起websocket连接
+      this.stompClient.connect(
+        "guest",
+        "guest",
+        () => {
+          this.stompClient.subscribe("/topic/msg", msg => {
+            // 订阅服务端提供的某个topic
+            let body = JSON.parse(msg.body); //字符串转对象
+            console.log("获取成功");
+            // 滑台信息
+            if (body.slideOpen === 0) {
+              this.slideTable.switch = true; //滑台开启
+            } else if (body.slideOpen === 1) {
+              this.slideTable.switch = false; //滑台关闭
+            }
+            this.slideTable.turn = body.slideDir; //滑台方向
+            this.slideTable.speed = body.slideSpeed; //滑台速度
+
+            // 推杆距离
+            this.pushRod.distance = body.rodDistance; //推杆距离
+            console.log(this.slideTable + "-----" + this.pushRod.distance);
+          });
+        },
+        err => {
+          // 连接发生错误时的处理函数
+          console.log("失败");
+          console.log(err);
+        },
+        "/"
+      );
+    },
+    // 断开连接
+    disconnect() {
+      if (this.stompClient) {
+        this.stompClient.disconnect();
+      }
     }
   }
 };
@@ -140,24 +327,26 @@ export default {
   background: url("../../assets/bkg.png") no-repeat;
   border: 1px solid #fff;
 }
-.contain{
+.contain {
   margin-top: 100px;
 }
-.ivu-input{
-  width: 35%!important;
-}
+/* 滑台图片 */
 .slidePh {
   position: absolute;
   top: 103px;
   right: 60px;
 }
-.pushPh{
+/* 推杆图片 */
+.pushPh {
   position: absolute;
   top: 150px;
   right: 105px;
 }
 .ivu-icon-ios-calendar-outline:before {
   content: none;
+}
+.pushLayout{
+  margin-left: 10px;
 }
 </style>
 

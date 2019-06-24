@@ -29,12 +29,16 @@
 export default {
   data() {
     return {
+      // 查询按钮的大小
       buttonSize: "small",
+      // 时间选择框选择的时间的值
       value: "",
+      // 将选择的时间变为两个时间戳
       timeSelect: {
         start: "",
         end: ""
       },
+      //折线图中的数据 
       time: [],
       temp: [],
       humi: [],
@@ -44,12 +48,12 @@ export default {
       power: []
     };
   },
-  mounted() {
-    this.init();
-  },
   beforeMount() {
     //用户选择时间查询前默认展示昨天的此刻到现在此刻的时间
     this.defaultHistory();
+  },
+  mounted() {
+    this.init();//折线图初始化
   },
   methods: {
     init() {
@@ -73,6 +77,7 @@ export default {
           trigger: "axis",
           formatter:
             "{b}<br/>{a0}:{c0}℃<br/>{a1}:{c1}%rh<br/>{a2}:{c2}V<br/>{a3}:{c3}A<br/>{a4}:{c4}Kg<br/>{a5}:{c5}W",
+          // 可以选择性的查看某项数据的变化
           axisPointer: {
             type: "cross",
             label: {
@@ -217,27 +222,13 @@ export default {
             }
             for (let i = 0; i < res.data.data.length; i++) {
               let date = new Date(res.data.data[i].createTime);
-              let f =
-                date.getMinutes() >= 10
-                  ? date.getMinutes()
-                  : "0" + date.getMinutes(); //分
-              let s =
-                date.getSeconds() >= 10
-                  ? date.getSeconds()
-                  : "0" + date.getSeconds(); //秒
-              this.time.push(
-                date.getFullYear() +
-                  "年" +
-                  (date.getMonth() + 1) +
-                  "月" +
-                  date.getDate() +
-                  "日" +
-                  date.getHours() +
-                  ":" +
-                  f +
-                  ":" +
-                  s
-              );
+              this.time.push(this.$options.methods.formatTime(date));
+              // this.temp.push(res.data.data[i].temperature);
+              // this.humi.push(res.data.data[i].humidity);
+              // this.volt.push(res.data.data[i].voltage);
+              // this.elec.push(res.data.data[i].electric);
+              // this.press.push(res.data.data[i].weight);
+              // this.power.push(res.data.data[i].power);
               this.temp.push(
                 (parseFloat(res.data.data[i].temperature) + Math.random() * 10).toFixed(1)
               );
@@ -344,33 +335,7 @@ export default {
           } else {
             for (let i = 0; i < res.data.data.length; i++) {
               let date = new Date(res.data.data[i].createTime);
-              // let f =
-              //   date.getMinutes() >= 10
-              //     ? date.getMinutes()
-              //     : "0" + date.getMinutes(); //分
-              // let s =
-              //   date.getSeconds() >= 10
-              //     ? date.getSeconds()
-              //     : "0" + date.getSeconds(); //秒
-
-              // ！！！！！待测试formatTime()函数有没有用
-
-
               this.time.push(this.$options.methods.formatTime(date));
-
-              // this.time.push(
-              //   date.getFullYear() +
-              //     "年" +
-              //     (date.getMonth() + 1) +
-              //     "月" +
-              //     date.getDate() +
-              //     "日" +
-              //     date.getHours() +
-              //     ":" +
-              //     f +
-              //     ":" +
-              //     s
-              // );
               this.temp.push(
                 parseFloat(res.data.data[i].temperature) + Math.random() * 10
               );
@@ -389,6 +354,7 @@ export default {
               this.power.push(
                 parseFloat(res.data.data[i].power) + Math.random() * 10
               );
+              // this.temp.push(res.data.data[i].temperature);
               // this.humi.push(res.data.data[i].humidity);
               // this.volt.push(res.data.data[i].voltage);
               // this.elec.push(res.data.data[i].electric);
@@ -455,16 +421,10 @@ export default {
 };
 </script>
 <style scoped>
-.ivu-icon-ios-calendar-outline:before {
-  content: "";
-}
 .myChart {
   display: block;
   width: 1309px;
   height: 630px;
-}
-.ivu-icon-ios-calendar-outline:before {
-  content: none;
 }
 .selectTime {
   margin-top: 8px;

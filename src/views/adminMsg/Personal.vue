@@ -3,32 +3,17 @@
     <!-- 个人信息页面 -->
     <Card class="inner move">
       <p slot="title" class="title">
-        <Icon type="ios-card" />个人信息
+        <Icon type="ios-card"/>个人信息
       </p>
-      <Form ref="admin" :model="admin" :label-width="60">
-        <FormItem label="ID" prop="adminId">
-          <Input v-model="admin.adminId"></Input>
-        </FormItem>
-        <FormItem label="姓名" prop="name">
-          <Input v-model="admin.name"></Input>
-        </FormItem>
-        <FormItem label="手机号码" prop="phone">
-          <Input v-model="admin.phone"></Input>
-        </FormItem>
-        <FormItem label="邮箱" prop="email">
-          <Input v-model="admin.email"></Input>
-        </FormItem>
-        <FormItem label="注册时间" prop="createTime">
-          <Input v-model="admin.createTime"></Input>
-        </FormItem>
-        <FormItem label="修改时间" prop="updateTime">
-          <Input v-model="admin.updateTime"></Input>
-        </FormItem>
+      <Form ref="admin" :model="admin" :label-width="180" class="name">
+        <p>姓名：{{admin.name}}</p>
+        <p>手机号码：{{admin.phone}}</p>
+        <p>邮箱：{{admin.email}}</p>
+        <p>注册时间：{{admin.createTime}}</p>
+        <p>修改时间：{{admin.updateTime}}</p>
         <FormItem>
           <router-link to="/home/modifyInfo" tag="span">
-            <Button class="changeBtn" type="primary">
-              修改
-            </Button>
+            <Button class="changeBtn" type="primary">修改</Button>
           </router-link>
         </FormItem>
       </Form>
@@ -40,7 +25,6 @@ export default {
   data() {
     return {
       admin: {
-        adminId: "",
         name: "",
         phone: "",
         email: "",
@@ -62,7 +46,7 @@ export default {
       return (
         date.getFullYear() +
         "年" +
-        (date.getMonth()+1) +
+        (date.getMonth() + 1) +
         "月" +
         date.getDate() +
         "日" +
@@ -80,11 +64,11 @@ export default {
           headers: { token: localStorage.getItem("token") }
         })
         .then(res => {
-          this.admin.adminId = res.data.data.adminId;
           this.admin.name = res.data.data.name;
           this.admin.phone = res.data.data.phone;
           this.admin.email = res.data.data.email;
-          this.admin.createTime = this.$options.methods.formatTime(//vue中methods中一个方法调用前面已经存在的方法formatTime()
+          this.admin.createTime = this.$options.methods.formatTime(
+            //vue中methods中一个方法调用前面已经存在的方法formatTime()
             new Date(res.data.data.createTime)
           );
           this.admin.updateTime = this.$options.methods.formatTime(
@@ -103,13 +87,9 @@ export default {
   border: 1px solid #fff;
 }
 .inner {
-  width: 450px;
-  height: 470px;
+  width: 430px;
+  height: 425px;
   margin: 50px auto;
-}
-/* input输入框的宽度 */
-.ivu-input-wrapper {
-  width: 85%;
 }
 .title {
   font-size: 18px;
@@ -117,15 +97,20 @@ export default {
 .photo {
   font-size: 24px;
 }
-.changeBtn {
-  margin-left: 118px;
+p {
+  font-size: 16px;
+  text-align: center;
+  line-height: 57px;
+}
+.changeBtn{
+  margin-top: 8px;
 }
 /* 让card出现的时候有动画效果 */
-.move{
+.move {
   animation: animated 0.5s;
 }
 @keyframes animated {
-  0%  {
+  0% {
     top: 0;
     left: 0px;
   }
@@ -136,7 +121,7 @@ export default {
   100% {
     top: 0px;
     left: 600px;
-  } 
+  }
 }
 </style>
 
