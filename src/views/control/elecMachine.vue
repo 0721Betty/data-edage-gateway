@@ -55,13 +55,6 @@
                 </Radio>
               </RadioGroup>
             </FormItem>
-            <!-- <FormItem label="转速" prop="speed">
-              <RadioGroup v-model="elecCtrl.speed">
-                <Radio label="slow">慢速</Radio>
-                <Radio label="middle">中速</Radio>
-                <Radio label="fast">快速</Radio>
-              </RadioGroup>
-            </FormItem>-->
             <FormItem style="margin-left:36px">
               <Button type="primary" @click="modal = true">修改</Button>
               <Button type="info" @click="handleStop" style="margin-left: 8px">停止</Button>
@@ -109,7 +102,6 @@ export default {
       timer: "",
       // 电机的实时状态信息
       elecCtrl: {
-        // speed: "middle",
         turn: "",
         switch: ""
       },
@@ -527,19 +519,20 @@ export default {
             // 订阅服务端提供的某个topic
             let body = JSON.parse(msg.body); //字符串转对象
             console.log("获取成功");
-            this.realSpeed = body.motorSpeed; //仪表盘中电机的实时转速
-            this.elecCtrl.turn = body.motorDir; //电机转向，1为正转，0为反转
-            if (body.motorOpen === 1) {
+            if (body.motorOpen === "1") {
               // 电机关闭
               this.elecCtrl.switch = false;
-            } else if (body.motorOpen === 0) {
+            } else if (body.motorOpen === "0") {
               // 电机开启
               this.elecCtrl.switch = true;
             }
-            console.log(this.elecCtrl.turn);
-            console.log(body.motorOpen);
-            console.log(this.elecCtrl.switch);
-
+            this.elecCtrl.turn = body.motorDir; //电机转向，1为正转，0为反转
+            // this.realSpeed = body.motorSpeed; //实际情况下仪表盘中电机的实时转速
+            // 测试用的仪表盘中电机的实时转速
+            this.realSpeed = (
+              parseFloat(body.motorSpeed) +
+              Math.random() * 10
+            ).toFixed(3);
             //获取到数据后重新绘制仪表盘
             let dashBoard = this.$echarts.init(
               document.getElementById("dashBoard")

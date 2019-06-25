@@ -18,7 +18,7 @@
             <router-view></router-view>
           </Content>
         </Layout>
-        </Layout>
+      </Layout>
     </Layout>
   </div>
 </template>
@@ -26,7 +26,7 @@
 import HeadBar from "../components/Header.vue";
 import SideBar from "../components/Sider";
 export default {
-  name: 'home',
+  name: "home",
   components: {
     HeadBar,
     SideBar
@@ -46,17 +46,16 @@ export default {
   background-color: #caf0fd;
   height: 80px;
   line-height: 80px;
-  /* margin-bottom: 10px; */
   padding: 0;
 }
-.ivu-layout-sider{
+.ivu-layout-sider {
   background: #f5f7f9 !important;
   background-color: #e0f6fd !important;
   position: relative;
 }
-.ivu-layout-sider-children{
-  padding-top: 0!important;
-  margin-top: 0!important;
+.ivu-layout-sider-children {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
 }
 .sider {
   width: 200px;
@@ -68,10 +67,10 @@ export default {
   background-color: #e0f6fd;
 }
 .ivu-layout-content {
-  padding: 0px 20px;
-  margin-top: 10px;
+  padding: 20px 20px;
 }
-.ivu-divider, .ivu-divider-vertical{
+.ivu-divider,
+.ivu-divider-vertical {
   margin: 0;
 }
 </style>

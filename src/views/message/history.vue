@@ -337,22 +337,22 @@ export default {
               let date = new Date(res.data.data[i].createTime);
               this.time.push(this.$options.methods.formatTime(date));
               this.temp.push(
-                parseFloat(res.data.data[i].temperature) + Math.random() * 10
+                (parseFloat(res.data.data[i].temperature) + Math.random() * 10).toFixed(1)
               );
               this.humi.push(
-                parseFloat(res.data.data[i].humidity) + Math.random() * 10
+                (parseFloat(res.data.data[i].humidity) + Math.random() * 10).toFixed(1)
               );
               this.volt.push(
-                parseFloat(res.data.data[i].voltage) + Math.random() * 10
+                (parseFloat(res.data.data[i].voltage) + Math.random() * 10).toFixed(3)
               );
               this.elec.push(
-                parseFloat(res.data.data[i].electric) + Math.random() * 10
+                (parseFloat(res.data.data[i].electric) + Math.random() * 10).toFixed(3)
               );
               this.press.push(
-                parseFloat(res.data.data[i].weight) + Math.random() * 10
+                (parseFloat(res.data.data[i].weight) + Math.random() * 10).toFixed(3)
               );
               this.power.push(
-                parseFloat(res.data.data[i].power) + Math.random() * 10
+                (parseFloat(res.data.data[i].power) + Math.random() * 10).toFixed(3)
               );
               // this.temp.push(res.data.data[i].temperature);
               // this.humi.push(res.data.data[i].humidity);
@@ -424,7 +424,7 @@ export default {
 .myChart {
   display: block;
   width: 1309px;
-  height: 630px;
+  height: 600px;
 }
 .selectTime {
   margin-top: 8px;

@@ -2,10 +2,13 @@
   <!-- 设备信息页面 -->
   <div class="wrapper">
     <div class="excel">
-      <Table border :columns="columns" :data="data1" class="move"></Table>
-      <router-link to="/home/changeInfo" tag="span">
-        <Button class="changeBtn" type="primary">修改</Button>
-      </router-link>
+      <Table border :columns="columns" :data="data1" class="move">
+        <template slot-scope="{ row, index }" slot="action">
+          <router-link to="/home/changeInfo" tag="span">
+            <Button type="info" size="small">修改</Button>
+          </router-link>
+        </template>
+      </Table>
     </div>
   </div>
 </template>
@@ -36,6 +39,12 @@ export default {
           title: "设备描述",
           key: "describe",
           width: 400,
+          align: "center"
+        },
+        {
+          title: "操作",
+          slot: "action",
+          width: 100,
           align: "center"
         }
       ],
@@ -78,7 +87,7 @@ export default {
   animation: animated 0.5s;
 }
 .excel {
-  width: 1003px;
+  width: 1103px;
   margin: 100px auto;
 }
 .changeBtn {
@@ -88,7 +97,7 @@ export default {
   animation: animated 0.5s;
 }
 @keyframes animated {
-  0%  {
+  0% {
     top: 0;
     left: 0;
   }
@@ -99,8 +108,7 @@ export default {
   100% {
     top: 0px;
     left: 200px;
-  } 
+  }
 }
-
 </style>
 

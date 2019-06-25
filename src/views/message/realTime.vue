@@ -254,14 +254,24 @@ export default {
             // 订阅服务端提供的某个topic
             let body = JSON.parse(msg.body); //字符串转对象, msg.body存放的是服务端发送给我们的信息
             console.log("获取成功");
-            this.tempValue = body.temperature;
-            this.humiValue = body.humidity;
-            this.voltValue = body.voltage;
-            this.elecValue = body.electric;
-            this.pressValue = body.weight;
-            this.powerValue = body.power;
+            // 实际过程中用的代码
+            // this.tempValue = body.temperature;
+            // this.humiValue = body.humidity;
+            // this.voltValue = body.voltage;
+            // this.elecValue = body.electric;
+            // this.pressValue = body.weight;
+            // this.powerValue = body.power;
 
-            // this.tempValue = parseFloat(body.temperature) + Math.random() * 10;
+
+            // 测试用的随机代码
+            this.tempValue = (parseFloat(body.temperature) + Math.random() * 10).toFixed(1);
+            this.humiValue = (parseFloat(body.humidity) + Math.random() * 10).toFixed(1);
+            this.voltValue = (parseFloat(body.voltage) + Math.random() * 10).toFixed(3);
+            this.elecValue = (parseFloat(body.electric) + Math.random() * 10).toFixed(3);
+            this.pressValue = (parseFloat(body.weight) + Math.random() * 10).toFixed(3);
+            this.powerValue = (parseFloat(body.power) + Math.random() * 10).toFixed(3);
+
+
             //获取到数据后重新绘制仪表盘
             let temp = this.$echarts.init(document.getElementById("temp"));
             let humi = this.$echarts.init(document.getElementById("humi"));
@@ -335,12 +345,6 @@ export default {
   display: block;
   width: 400px;
   height: 300px;
-}
-/* .choose{
-  text-align: right;
-} */
-.wrapper{
-  margin-top: 10px;
 }
 .ivu-input-wrapper{
   width: 30%;

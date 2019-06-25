@@ -1,40 +1,43 @@
 <template>
   <div class="wrapper">
-    <div class="success" v-if="this.tempWarn === '' && this.humiWarn === '' && this.pressWarn === ''">
+    <div
+      class="success"
+      v-if="this.tempWarn === '' && this.humiWarn === '' && this.pressWarn === ''"
+    >
       <Alert type="success" show-icon closable>系统正常运行</Alert>
     </div>
-      <Alert type="warning" show-icon closable v-if="this.tempWarn != ''">
-        系统温度报警
-        <template slot="desc">
-          <p ref="warn">{{ tempWarn }}</p>
-        </template>
-        <span slot="close">不再提示</span>
-      </Alert>
-      <Alert type="warning" show-icon closable v-if="this.humiWarn != ''">
-        系统湿度报警
-        <template slot="desc">
-          <p ref="warn">{{ humiWarn }}</p>
-        </template>
-        <span slot="close">不再提示</span>
-      </Alert>
-      <Alert type="warning" show-icon closable v-if="this.pressWarn != ''">
-        系统承重报警
-        <template slot="desc">
-          <p ref="warn">{{ pressWarn }}</p>
-        </template>
-        <span slot="close">不再提示</span>
-      </Alert>
-    
+    <Alert type="warning" show-icon closable v-if="this.tempWarn != ''">
+      系统温度报警
+      <template slot="desc">
+        <p ref="warn">{{ tempWarn }}</p>
+      </template>
+      <span slot="close">不再提示</span>
+    </Alert>
+    <Alert type="warning" show-icon closable v-if="this.humiWarn != ''">
+      系统湿度报警
+      <template slot="desc">
+        <p ref="warn">{{ humiWarn }}</p>
+      </template>
+      <span slot="close">不再提示</span>
+    </Alert>
+    <Alert type="warning" show-icon closable v-if="this.pressWarn != ''">
+      系统承重报警
+      <template slot="desc">
+        <p ref="warn">{{ pressWarn }}</p>
+      </template>
+      <span slot="close">不再提示</span>
+    </Alert>
+
     <div class="adjust">
       <Row :gutter="20">
         <Col span="8" :offset="4">
           <p class="text">温度过高时请开启散热扇</p>
           <br>
           <div class="choose">
-          <i-switch size="large" @on-change="change" v-model="switch1">
-            <span slot="open">ON</span>
-            <span slot="close">OFF</span>
-          </i-switch>
+            <i-switch size="large" @on-change="change" v-model="switch1">
+              <span slot="open">ON</span>
+              <span slot="close">OFF</span>
+            </i-switch>
           </div>
           <div class="fan">
             <img src="../../src/assets/fan.png" alt ref="img">
@@ -100,22 +103,20 @@ export default {
       }
     };
   },
-  mounted() {
+  beforeMount() {
     this.initWebSocket(); //websocket初始化
-    // if(this.switch1 === true){
-    //    this.fanTimer = setInterval(() => {
-    //     this.rotateVal += 3;
-    //     // 设置旋转属性(顺时针)
-    //     this.$refs.img.style.transform = "rotate(" + this.rotateVal + "deg)";
-    //     // 设置旋转属性(逆时针)
-    //     //img.style.transform = 'rotate(-' + rotateVal + 'deg)'
-    //     // 设置旋转时的动画  匀速0.1s
-    //     this.$refs.img.style.transition = "0.1s linear";
-    //   }, 1);
-    // }else{
-    //   clearInterval(this.fanTimer);
-    //   this.rotateVal = 0;
-    // }
+    if (this.switch1 === true) {
+      this.fanTimer = setInterval(() => {
+        this.rotateVal += 3;
+        // 设置旋转属性(顺时针)
+        this.$refs.img.style.transform = "rotate(" + this.rotateVal + "deg)";
+        // 设置旋转时的动画  匀速0.1s
+        this.$refs.img.style.transition = "0.1s linear";
+      }, 1);
+    } else if (this.switch1 === false) {
+      clearInterval(this.fanTimer);
+      this.rotateVal = 0;
+    }
   },
   beforeDestroy() {
     // 页面离开时断开连接,清除定时器
@@ -142,21 +143,20 @@ export default {
             // 订阅服务端提供的某个topic
             let body = JSON.parse(msg.body); //字符串转对象, msg.body存放的是服务端发送给我们的信息
             console.log("获取成功");
-            if(body.temperatureWarn === "1"){
-              this.tempWarn = "设备温度过高！请开启散热扇！"
+            if (body.temperatureWarn === "1") {
+              this.tempWarn = "设备温度过高！请开启散热扇！";
             }
-            if(body.humidityWarn === "1"){
-              this.humiWarn = "设备湿度过高"
+            if (body.humidityWarn === "1") {
+              this.humiWarn = "设备湿度过高！";
             }
-            if(body.weightWarn === "1"){
-              this.pressWarn = "设备受重超载"
+            if (body.weightWarn === "1") {
+              this.pressWarn = "设备受重超载！";
             }
-            if(body.fan === "1"){
-              this.switch1 = false;//关
-            }else if(body.fan === 0){
-              this.switch1 = true;//开
+            if (body.fan === "1") {
+              this.switch1 = false; //风扇关闭
+            } else if (body.fan === "0") {
+              this.switch1 = true; //风扇打开
             }
-            console.log(this.switch1);
           });
         },
         err => {
@@ -176,45 +176,45 @@ export default {
       if (switch1 === true) {
         // 散热扇旋转，并且向后端发送指令开启扇热扇
         this.$axios
-        .get("/api/cmd/fan-open", {
-          headers: { token: localStorage.getItem("token") }
-        })
-        .then(res => {
-          if (res.data.code < 300) {
-            this.$Message.success("指令下发成功！");
-          } else {
-            this.$Message.error("指令下发失败！");
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        })
+          .get("/api/cmd/fan-open", {
+            headers: { token: localStorage.getItem("token") }
+          })
+          .then(res => {
+            if (res.data.code < 300) {
+              this.$Message.success("指令下发成功！");
+            } else {
+              this.$Message.error("指令下发失败！");
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
         // 散热扇打开
         this.fanTimer = setInterval(() => {
-        this.rotateVal += 3;
-        // 设置旋转属性(顺时针)
-        this.$refs.img.style.transform = "rotate(" + this.rotateVal + "deg)";
-        // 设置旋转属性(逆时针)
-        //img.style.transform = 'rotate(-' + rotateVal + 'deg)'
-        // 设置旋转时的动画  匀速0.1s
-        this.$refs.img.style.transition = "0.1s linear";
-      }, 1);
+          this.rotateVal += 3;
+          // 设置旋转属性(顺时针)
+          this.$refs.img.style.transform = "rotate(" + this.rotateVal + "deg)";
+          // 设置旋转属性(逆时针)
+          //img.style.transform = 'rotate(-' + rotateVal + 'deg)'
+          // 设置旋转时的动画  匀速0.1s
+          this.$refs.img.style.transition = "0.1s linear";
+        }, 1);
       } else if (switch1 === false) {
         // 扇热扇停止，并且向后端发送关闭指令
         this.$axios
-        .get("/api/cmd/fan-close", {
-          headers: { token: localStorage.getItem("token") }
-        })
-        .then(res => {
-          if (res.data.code < 300) {
-            this.$Message.success("指令下发成功！");
-          } else {
-            this.$Message.error("指令下发失败！");
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        })
+          .get("/api/cmd/fan-close", {
+            headers: { token: localStorage.getItem("token") }
+          })
+          .then(res => {
+            if (res.data.code < 300) {
+              this.$Message.success("指令下发成功！");
+            } else {
+              this.$Message.error("指令下发失败！");
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
         // 扇热扇关闭
         clearInterval(this.fanTimer);
         this.rotateVal = 0;
@@ -237,7 +237,7 @@ export default {
   color: #08acf8;
   font-size: 16px;
 }
-.choose{
+.choose {
   margin-left: 60px;
 }
 .fan {

@@ -15,13 +15,13 @@
                 <span slot="close">Off</span>
               </i-switch>
             </FormItem>
-            <FormItem label="方向" prop="direction">
-              <RadioGroup v-model="slideTable.direction">
+            <FormItem label="方向" prop="turn">
+              <RadioGroup v-model="slideTable.turn">
                 <Radio label="0">
-                  <Icon type="ios-arrow-back"></Icon>后退
+                  <Icon type="md-rewind" />后退
                 </Radio>
                 <Radio label="1">
-                  <Icon type="ios-arrow-forward"></Icon>前进
+                  <Icon type="md-fastforward" />前进
                 </Radio>
               </RadioGroup>
             </FormItem>
@@ -109,8 +109,8 @@ export default {
       // 滑台信息
       slideTable: {
         switch: "",
-        speed: "8",
-        direction: ""
+        speed: "",
+        turn: ""
       },
       // 推杆信息
       pushRod: {
@@ -290,17 +290,21 @@ export default {
             let body = JSON.parse(msg.body); //字符串转对象
             console.log("获取成功");
             // 滑台信息
-            if (body.slideOpen === 0) {
+            if (body.slideOpen === "0") {
               this.slideTable.switch = true; //滑台开启
-            } else if (body.slideOpen === 1) {
+            } else if (body.slideOpen === "1") {
               this.slideTable.switch = false; //滑台关闭
             }
+            // if(body.slideDir === "1"){
+            //   this.slideTable.direction = "1";
+            // }else if(body.slideDir === "0"){
+            //   this.slideTable.direction = "0";
+            // }
+
             this.slideTable.turn = body.slideDir; //滑台方向
             this.slideTable.speed = body.slideSpeed; //滑台速度
 
-            // 推杆距离
             this.pushRod.distance = body.rodDistance; //推杆距离
-            console.log(this.slideTable + "-----" + this.pushRod.distance);
           });
         },
         err => {
@@ -345,7 +349,7 @@ export default {
 .ivu-icon-ios-calendar-outline:before {
   content: none;
 }
-.pushLayout{
+.pushLayout {
   margin-left: 10px;
 }
 </style>

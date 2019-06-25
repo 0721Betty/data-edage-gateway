@@ -6,9 +6,10 @@
         <Icon type="ios-create" />&nbsp设备信息修改
       </p>
       <Form ref="machineInfo" :model="machineInfo" :label-width="60">
-        <FormItem label="ID 编号" prop="machineId">
-          <Input v-model="machineId" placeholder="请输入设备相应的Id对其信息进行修改"></Input>
-        </FormItem>
+        <!-- <FormItem label="ID 编号" prop="machineId">
+          <p>{{}}</p>
+          <Input v-model="machineId"></Input>
+        </FormItem> -->
         <FormItem label="设备名称" prop="name">
           <Input v-model="machineInfo.name"></Input>
         </FormItem>
@@ -41,12 +42,23 @@ export default {
       },
     };
   },
+  mounted(){
+    this.getMachineId()
+  },
   methods: {
+    // 先获取到设备的id，发起修改请求的时候需要加上对应的id
+     getMachineId() {
+      this.$axios
+        .get("/api/machine", {
+          headers: { token: localStorage.getItem("token") }
+        })
+        .then(res => {
+          this.machineId = res.data.data[0].machineId
+        });
+    },
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          if(this.machineId !== ""){
-            // 当输入的ID号不为空时执行下面的语句
             this.$axios
             .put(
               `/api/machine/${this.machineId}`,
@@ -65,10 +77,7 @@ export default {
             )
             .catch(error => {
               console.log(error);
-            });
-          }else{
-            this.$Message.error("ID不能为空！");
-          }  
+            }); 
         }
       });
     },
@@ -88,7 +97,7 @@ export default {
 .inner {
   width: 450px;
   height: 372px;
-  margin: 100px auto;
+  margin: 95px auto;
 }
 .ivu-input-wrapper {
   width: 85%;

@@ -5,7 +5,7 @@
     <Row class-name="head">
       <Col span="3">
         <div class="logo">
-          <img src="../assets/logo.png" alt>
+          <img src="../assets/logo.png" alt="">
         </div>
       </Col>
       <Col span="18">
@@ -22,7 +22,7 @@
     </Row>
     <div class="contain">
       <div class="btns">
-        <router-link to="/register" class="btn">注册</router-link>
+        <router-link to="/register" class="btn">注册</router-link>&nbsp
         <router-link to="/login">登录</router-link>
       </div>
       <router-view></router-view>
