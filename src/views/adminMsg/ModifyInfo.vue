@@ -3,7 +3,7 @@
     <!-- 个人信息修改页面 -->
     <Card class="inner">
       <p slot="title" class="title">
-        <Icon type="ios-card" />个人信息修改
+        <Icon type="ios-card" />&nbsp个人信息修改
       </p>
       <Form ref="admin" :model="admin" :rules="rules" :label-width="70">
         <FormItem label="姓名" prop="name">
@@ -128,6 +128,7 @@ export default {
 }
 .title {
   font-size: 18px;
+  text-align: center;
 }
 .photo {
   font-size: 24px;

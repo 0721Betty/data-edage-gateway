@@ -3,20 +3,22 @@
     <!-- 个人信息页面 -->
     <Card class="inner move">
       <p slot="title" class="title">
-        <Icon type="ios-card"/>个人信息
+        <Icon type="ios-card"/>&nbsp个人信息
       </p>
-      <Form ref="admin" :model="admin" :label-width="180" class="name">
-        <p>姓名：{{admin.name}}</p>
-        <p>手机号码：{{admin.phone}}</p>
-        <p>邮箱：{{admin.email}}</p>
-        <p>注册时间：{{admin.createTime}}</p>
-        <p>修改时间：{{admin.updateTime}}</p>
-        <FormItem>
+      <!-- <Form ref="admin" :model="admin" :label-width="180" class="name"> -->
+        <div class="admin">
+        <p><Icon type="md-person" />&nbsp姓&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp名：{{admin.name}}</p>
+         <p><Icon type="md-mail" />&nbsp邮&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp箱：{{admin.email}}</p>
+        <p><Icon type="md-phone-portrait" />&nbsp手机号码：{{admin.phone}}</p>
+        <p><Icon type="ios-time" />&nbsp注册时间：{{admin.createTime}}</p>
+        <p><Icon type="md-clock" />&nbsp修改时间：{{admin.updateTime}}</p>
+        <!-- <FormItem> -->
           <router-link to="/home/modifyInfo" tag="span">
             <Button class="changeBtn" type="primary">修改</Button>
           </router-link>
-        </FormItem>
-      </Form>
+          </div>
+        <!-- </FormItem> -->
+      <!-- </Form> -->
     </Card>
   </div>
 </template>
@@ -89,21 +91,26 @@ export default {
 .inner {
   width: 430px;
   height: 425px;
-  margin: 50px auto;
+  margin: 70px auto;
 }
 .title {
   font-size: 18px;
+  text-align: center;
 }
 .photo {
   font-size: 24px;
 }
 p {
   font-size: 16px;
-  text-align: center;
+  text-align: left;
   line-height: 57px;
 }
 .changeBtn{
   margin-top: 8px;
+  margin-left: 115px;
+}
+.admin{
+  margin-left: 60px;
 }
 /* 让card出现的时候有动画效果 */
 .move {
@@ -111,12 +118,12 @@ p {
 }
 @keyframes animated {
   0% {
-    top: 0;
+    top: 0px;
     left: 0px;
   }
   50% {
     top: 0px;
-    left: 1000px;
+    left: 3000px;
   }
   100% {
     top: 0px;

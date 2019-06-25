@@ -13,12 +13,9 @@
       </Col>
       <Col span="3">
         <div class="nav" @mouseover="over" @mouseout="out">
-          <img src="../assets/we.png" alt>
-          <a href="javascript:;">关于我们</a>
+          <img src="../assets/we.png" alt class="about">&nbsp<a href="javascript:;">关于我们</a>
           <div ref="text" class="text">
-            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp本产品主要针对工业应用领域的数据采集，
-            开发可以连接多种 PLC、多种传感器，能够控制
-            生产过程中使用的电机、开关、指示灯等的设备。该设备可以作为数据采集终端，也可以作为数据采集和处理的边缘网关使用。
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp本产品主要针对工业应用领域的数据采集，开发可以连接多种 PLC、多种传感器，能够控制生产过程中使用的电机、开关、指示灯等的设备。该设备可以作为数据采集终端，也可以作为数据采集和处理的边缘网关使用。
           </div>
         </div>
       </Col>
@@ -115,7 +112,7 @@ export default {
 }
 .text {
   display: none;
-  width: 400px;
+  width: 387px;
   height: 120px;
   font-size: 18px;
   border-radius: 8px;
@@ -125,5 +122,8 @@ export default {
   position: absolute;
   right: 66px;
   color: #50a3e7;
+}
+.about{
+  vertical-align: middle;
 }
 </style>
