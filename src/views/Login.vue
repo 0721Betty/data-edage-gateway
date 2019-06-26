@@ -26,6 +26,7 @@
 </template>
 
 <script>
+const Base64 = require("js-base64").Base64;
 export default {
   data() {
     return {
@@ -34,7 +35,7 @@ export default {
         password: ""
       },
       config: {
-        remember: true
+        remember: ""
       },
       ruleInline: {
         name: [
@@ -60,8 +61,20 @@ export default {
       }
     };
   },
+  created() {
+    // 在页面加载时从cookie获取登录信息
+    let name = this.getCookie("name");
+    let password = Base64.decode(this.getCookie("password"));//对存入cookie中的密码解密
+    // 如果用户名存在赋值给表单，并且将记住密码勾选
+    if (name) {
+      this.loginUser.name = name;
+      this.loginUser.password = password;
+      this.config.remember = true;
+    }
+  },
   methods: {
     handleSubmit(name) {
+      console.log(this.config.remember);
       this.$refs[name].validate(valid => {
         if (valid) {
           this.$axios
@@ -70,13 +83,15 @@ export default {
               if (res.data.code > 300) {
                 // 登录失败，账号或密码错误
                 this.$Message.error(res.data.msg);
-              }else{
+              } else {
                 // 登录成功
                 let token = res.data.data.token;
                 localStorage.setItem("token", token);
                 this.$Message.success("登录成功！欢迎您！");
                 this.$router.push("/home");
-               }
+                // 储存登录信息(账号密码存到cookie中)
+                this.setUserInfo();
+              }
             })
             .catch(err => {
               console.log(err);
@@ -88,6 +103,43 @@ export default {
     },
     handleCancel(name) {
       this.$refs[name].resetFields();
+    },
+    // 储存表单信息
+    setUserInfo() {
+      // 判断用户是否勾选记住密码，如果勾选，向cookie中储存登录信息，密码经过Base64加密
+      // 如果没有勾选，储存的信息为空
+      if (this.config.remember) {
+        this.setCookie("name", this.loginUser.name);
+        // base64加密密码
+        let passWord = Base64.encode(this.loginUser.password);//对存入cookie中的密码加密
+        this.setCookie("password", passWord);
+      } else {
+        this.setCookie("name", "");
+        this.setCookie("password", "");
+      }
+    },
+    // 获取cookie
+    getCookie(key) {
+      if (document.cookie.length > 0) {
+        var start = document.cookie.indexOf(key + "=");
+        if (start !== -1) {
+          start = start + key.length + 1;
+          var end = document.cookie.indexOf(";", start);
+          if (end === -1) end = document.cookie.length;
+          return unescape(document.cookie.substring(start, end));
+        }
+      }
+      return "";
+    },
+    // 保存cookie
+    setCookie(cName, value, expiredays) { //expiredays是保留的天数
+      var exdate = new Date();
+      exdate.setDate(exdate.getDate() + expiredays);
+      document.cookie =
+        cName +
+        "=" +
+        decodeURIComponent(value) +
+        (expiredays == null ? "" : ";expires=" + exdate.toGMTString());
     }
   }
 };
