@@ -3,7 +3,7 @@
     <p slot="title" class="title">
       <Icon type="md-happy" class="photo"></Icon>管理员登录
     </p>
-    <Form ref="loginUser" :model="loginUser" :rules="ruleInline">
+    <Form ref="loginUser" :model="loginUser" :rules="ruleInline" style="width: 240px;margin-left:43px;margin-top:8px;">
       <FormItem prop="name">
         <Input type="text" v-model="loginUser.name" placeholder="请输入姓名">
           <Icon type="ios-person-outline" slot="prepend"></Icon>
@@ -19,7 +19,7 @@
       </FormItem>
       <FormItem>
         <Button type="primary" @click="handleSubmit('loginUser')">登录</Button>
-        <Button type="info" @click="handleCancel('loginUser')" class="cancel">取消</Button>
+        <Button type="info" @click="handleCancel('loginUser')" class="cancel">重置</Button>
       </FormItem>
     </Form>
   </Card>
@@ -103,6 +103,8 @@ export default {
     },
     handleCancel(name) {
       this.$refs[name].resetFields();
+      this.config.remember = false;
+      this.loginUser = "";
     },
     // 储存表单信息
     setUserInfo() {
@@ -154,9 +156,9 @@ export default {
   font-size: 18px;
 }
 .photo {
-  font-size: 24px;
+  font-size: 22px;
 }
 .cancel {
-  margin-left: 8px;
+  margin-left: 12px;
 }
 </style>

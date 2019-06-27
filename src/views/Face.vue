@@ -8,8 +8,11 @@
           <img src="../assets/logo.png" alt="">
         </div>
       </Col>
-      <Col span="18">
+      <Col span="16">
         <div class="name">Data Edge Gateway</div>
+      </Col>
+      <Col span="2">
+      <span @click="download"><Icon type="ios-navigate" class="photo"/>&nbsp下载App</span>
       </Col>
       <Col span="3">
         <div class="nav" @mouseover="over" @mouseout="out">
@@ -22,8 +25,8 @@
     </Row>
     <div class="contain">
       <div class="btns">
-        <router-link to="/register" class="btn">注册</router-link>&nbsp
-        <router-link to="/login">登录</router-link>
+        <router-link to="/register" class="btn"><Icon type="ios-leaf" />&nbsp注册</router-link>&nbsp
+        <router-link to="/login"><Icon type="ios-paper-plane" />&nbsp登录</router-link>
       </div>
       <router-view></router-view>
     </div>
@@ -43,10 +46,14 @@ export default {
   beforeCreate() {
     document
       .querySelector("body")
-      .setAttribute("style", "background-color:#e0f6fd;");
+      .setAttribute("style", "background-color:#e9f6fa;");
   },
   beforeDestroy() {
     document.querySelector("body").removeAttribute("style");
+  },
+  // 下载app版
+  download(){
+    window.location.href = "http://119.23.243.252:8080/api/download/gateway"
   }
 };
 </script>
@@ -64,22 +71,27 @@ export default {
   height: 80px;
   line-height: 80px;
   text-align: center;
-  transition: -webkit-transform 1s;
+  cursor: pointer;
 }
 /* 系统名称样式 */
 .name {
   height: 80px;
   font-size: 50px;
-  text-align: center;
-  /* color: #4dd2ff; */
+  margin-left: 388px;
   color: #08acf8;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   font-style: italic;
   transition: -webkit-transform 1s;
+  cursor: pointer;
 }
-/* 当鼠标悬浮时让logo和name旋转 */
-.logo:hover {
-  transform: rotate(360deg);
+.ivu-col-span-2{
+  height: 80px;
+}
+span{
+  line-height: 80px;
+  font-size: 18px;
+  color: #08acf8;
+  cursor: pointer;
 }
 /* 头部右边样式 */
 .nav {
@@ -125,5 +137,8 @@ export default {
 }
 .about{
   vertical-align: middle;
+}
+.photo{
+  font-size: 22px;
 }
 </style>

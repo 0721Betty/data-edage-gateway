@@ -2,12 +2,20 @@
   <div class="wrapper">
     <Row class-name="head">
       <Col span="3">
+      <!-- 点击logo让其跳转到默认的主页面 -->
+      <router-link to="/home/msg1" tag="span">
         <div class="logo">
           <img src="../assets/logo.png" alt>
         </div>
+        </router-link>
       </Col>
-      <Col span="18">
+      <Col span="16">
         <div class="name">Data Edge Gateway</div>
+      </Col>
+      <Col span="2">
+      <span class="app" @click="download"><Icon type="ios-navigate" class="photo"/>&nbsp下载App</span>
+      </Col>
+      <Col>
       </Col>
       <Col span="3">
         <div class="user">
@@ -82,6 +90,10 @@ export default {
         .then(res => {
           this.adminName = res.data.data.name;
         });
+    },
+    // 下载app版
+    download() {
+      window.location.href = "http://119.23.243.252:8080/api/download/gateway"
     }
   }
 };
@@ -93,32 +105,32 @@ export default {
   background-color: #caf0fd;
   height: 80px;
   line-height: 80px;
-  /* box-shadow: 0px 10px 10px #999; */
-  /* border-radius: 10px; */
 }
 /* logo样式 */
 .logo {
   height: 80px;
   text-align: center;
-  transition: -webkit-transform 1s;
+  cursor: pointer;
 }
 /* 系统名称样式 */
 .name {
   height: 80px;
   font-size: 50px;
-  text-align: center;
-  /* color: #4dd2ff; */
+  margin-left: 415px;
   color: #08acf8;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   font-style: italic;
-}
-/* 当鼠标悬浮时让logo旋转 */
-.logo:hover {
-  transform: rotate(360deg);
+  cursor: pointer;
 }
 .user {
   text-align: center;
   height: 80px;
+}
+.app{
+  color: #08acf8;
+  display: inline-block;
+  margin-left: 45px;
+  cursor: pointer;
 }
 span {
   font-size: 16px;
@@ -126,5 +138,8 @@ span {
 .ivu-dropdown,
 .ivu-dropdown-rel {
   height: 80px !important;
+}
+.photo{
+  font-size: 20px;
 }
 </style>

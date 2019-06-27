@@ -3,7 +3,7 @@
     <p slot="title" class="title">
       <Icon type="md-happy" class="photo"></Icon>管理员注册
     </p>
-    <Form ref="registerUser" :model="registerUser" :rules="ruleValidate" :label-width="80">
+    <Form ref="registerUser" :model="registerUser" :rules="ruleValidate" :label-width="80" style="margin-top:8px;margin-right:10px">
       <FormItem label="姓名" prop="name">
         <Input v-model="registerUser.name" placeholder="请输入你的姓名"></Input>
       </FormItem>
@@ -19,7 +19,7 @@
       <FormItem label="邮箱" prop="email">
         <Input v-model="registerUser.email" placeholder="请输入你的邮箱"></Input>
       </FormItem>
-      <FormItem>
+      <FormItem style="margin-right: 65px;margin-bottom:10px">
         <Button type="primary" @click="handleSubmit('registerUser')">提交</Button>
         <Button type="info" @click="handleReset('registerUser')" class="reset">重置</Button>
       </FormItem>
@@ -159,9 +159,9 @@ export default {
   font-size: 18px;
 }
 .photo {
-  font-size: 24px;
+  font-size: 22px;
 }
 .reset {
-  margin-left: 8px;
+  margin-left: 12px;
 }
 </style>
