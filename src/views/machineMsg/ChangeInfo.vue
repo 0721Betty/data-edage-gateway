@@ -3,7 +3,7 @@
     <!-- 设备信息修改页面 -->
     <Card class="inner">
       <p slot="title" class="title">
-        <Icon type="ios-create" />&nbsp设备信息修改
+        <Icon type="ios-create" />&nbsp;设备信息修改
       </p>
       <Form ref="machineInfo" :model="machineInfo" :label-width="60">
         <!-- <FormItem label="ID 编号" prop="machineId">

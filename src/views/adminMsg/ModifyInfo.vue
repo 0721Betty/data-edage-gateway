@@ -3,7 +3,7 @@
     <!-- 个人信息修改页面 -->
     <Card class="inner">
       <p slot="title" class="title">
-        <Icon type="ios-card" />&nbsp个人信息修改
+        <Icon type="ios-card" />&nbsp;个人信息修改
       </p>
       <Form ref="admin" :model="admin" :rules="rules" :label-width="70">
         <FormItem label="姓名" prop="name">

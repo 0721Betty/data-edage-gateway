@@ -3,15 +3,15 @@
     <!-- 个人信息页面 -->
     <Card class="inner move">
       <p slot="title" class="title">
-        <Icon type="ios-card"/>&nbsp个人信息
+        <Icon type="ios-card"/>&nbsp;个人信息
       </p>
       <!-- <Form ref="admin" :model="admin" :label-width="180" class="name"> -->
         <div class="admin">
-        <p><Icon type="md-person" />&nbsp姓&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp名：{{admin.name}}</p>
-         <p><Icon type="md-mail" />&nbsp邮&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp箱：{{admin.email}}</p>
-        <p><Icon type="md-phone-portrait" />&nbsp手机号码：{{admin.phone}}</p>
-        <p><Icon type="ios-time" />&nbsp注册时间：{{admin.createTime}}</p>
-        <p><Icon type="md-clock" />&nbsp修改时间：{{admin.updateTime}}</p>
+        <p><Icon type="md-person" />&nbsp;姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：{{admin.name}}</p>
+         <p><Icon type="md-mail" />&nbsp;邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱：{{admin.email}}</p>
+        <p><Icon type="md-phone-portrait" />&nbsp;手机号码：{{admin.phone}}</p>
+        <p><Icon type="ios-time" />&nbsp;注册时间：{{admin.createTime}}</p>
+        <p><Icon type="md-clock" />&nbsp;修改时间：{{admin.updateTime}}</p>
         <!-- <FormItem> -->
           <router-link to="/home/modifyInfo" tag="span">
             <Button class="changeBtn" type="primary">修改</Button>

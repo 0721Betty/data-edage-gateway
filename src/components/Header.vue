@@ -13,7 +13,7 @@
         <div class="name">Data Edge Gateway</div>
       </Col>
       <Col span="2">
-      <span class="app" @click="download"><Icon type="ios-navigate" class="photo"/>&nbsp下载App</span>
+      <span class="app" @click="download"><Icon type="ios-navigate" class="photo"/>&nbsp;下载App</span>
       </Col>
       <Col>
       </Col>
@@ -21,8 +21,8 @@
         <div class="user">
           <Dropdown @on-click="handleClick">
             <a href="javascript:void(0)">
-              <Avatar src="http://www.zhongaigou.com/UploadFiles/2014/cabie.jpg"/>&nbsp
-              <span>{{ adminName }}&nbsp</span>
+              <Avatar src="http://www.zhongaigou.com/UploadFiles/2014/cabie.jpg"/>&nbsp;
+              <span>{{ adminName }}&nbsp;</span>
               <Icon type="ios-arrow-down"></Icon>
             </a>
             <DropdownMenu slot="list">

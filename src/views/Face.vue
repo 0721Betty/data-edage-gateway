@@ -12,21 +12,21 @@
         <div class="name">Data Edge Gateway</div>
       </Col>
       <Col span="2">
-      <span @click="download"><Icon type="ios-navigate" class="photo"/>&nbsp下载App</span>
+      <span  class="app" @click="download"><Icon type="ios-navigate" class="photo"/>&nbsp;下载App</span>
       </Col>
       <Col span="3">
         <div class="nav" @mouseover="over" @mouseout="out">
-          <img src="../assets/we.png" alt class="about">&nbsp<a href="javascript:;">关于我们</a>
+          <img src="../assets/we.png" alt class="about">&nbsp;<a href="javascript:;">关于我们</a>
           <div ref="text" class="text">
-            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp本产品主要针对工业应用领域的数据采集，开发可以连接多种 PLC、多种传感器，能够控制生产过程中使用的电机、开关、指示灯等的设备。该设备可以作为数据采集终端，也可以作为数据采集和处理的边缘网关使用。
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本产品主要针对工业应用领域的数据采集，开发可以连接多种 PLC、多种传感器，能够控制生产过程中使用的电机、开关、指示灯等的设备。该设备可以作为数据采集终端，也可以作为数据采集和处理的边缘网关使用。
           </div>
         </div>
       </Col>
     </Row>
     <div class="contain">
       <div class="btns">
-        <router-link to="/register" class="btn"><Icon type="ios-leaf" />&nbsp注册</router-link>&nbsp
-        <router-link to="/login"><Icon type="ios-paper-plane" />&nbsp登录</router-link>
+        <router-link to="/register" class="btn"><Icon type="ios-leaf" />&nbsp;注册</router-link>&nbsp;
+        <router-link to="/login"><Icon type="ios-paper-plane" />&nbsp;登录</router-link>
       </div>
       <router-view></router-view>
     </div>
@@ -34,14 +34,6 @@
 </template>
 <script>
 export default {
-  methods: {
-    over() {
-      this.$refs.text.style.display = "block";
-    }, //鼠标进入显示文字
-    out() {
-      this.$refs.text.style.display = "none";
-    } //鼠标退出不显示文字
-  },
   // 设置body的背景颜色
   beforeCreate() {
     document
@@ -51,10 +43,19 @@ export default {
   beforeDestroy() {
     document.querySelector("body").removeAttribute("style");
   },
-  // 下载app版
+  methods: {
+    over() {
+      this.$refs.text.style.display = "block";
+    }, //鼠标进入显示文字
+    out() {
+      this.$refs.text.style.display = "none";
+    }, //鼠标退出不显示文字
+    // 下载app版
   download(){
+    console.log("ehkhsek");
     window.location.href = "http://119.23.243.252:8080/api/download/gateway"
   }
+  },
 };
 </script>
 <style scoped>
@@ -87,7 +88,7 @@ export default {
 .ivu-col-span-2{
   height: 80px;
 }
-span{
+.app{
   line-height: 80px;
   font-size: 18px;
   color: #08acf8;
@@ -101,7 +102,6 @@ span{
   display: inline-block;
   height: 80px;
   line-height: 80px;
-  /* color: #4dd2ff; */
   color: #08acf8;
   font-size: 18px;
   text-align: center;
