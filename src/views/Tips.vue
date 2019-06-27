@@ -92,7 +92,7 @@ export default {
       // 重量超载警报信息
       pressWarn: "",
       // 散热扇的开关
-      switch1: false,
+      switch1: "",
       // 散热扇定时器
       fanTimer: null,
       rotateVal: 0,
@@ -102,21 +102,6 @@ export default {
         checkbox2: ["电机", "滑台", "推杆"]
       }
     };
-  },
-  beforeMount() {
-    this.initWebSocket(); //websocket初始化
-    if (this.switch1 === true) {
-      this.fanTimer = setInterval(() => {
-        this.rotateVal += 3;
-        // 设置旋转属性(顺时针)
-        this.$refs.img.style.transform = "rotate(" + this.rotateVal + "deg)";
-        // 设置旋转时的动画  匀速0.1s
-        this.$refs.img.style.transition = "0.1s linear";
-      }, 1);
-    } else if (this.switch1 === false) {
-      clearInterval(this.fanTimer);
-      this.rotateVal = 0;
-    }
   },
   beforeDestroy() {
     // 页面离开时断开连接,清除定时器
@@ -154,8 +139,18 @@ export default {
             }
             if (body.fan === "1") {
               this.switch1 = false; //风扇关闭
+              clearInterval(this.fanTimer);
+              this.rotateVal = 0;
             } else if (body.fan === "0") {
               this.switch1 = true; //风扇打开
+              this.fanTimer = setInterval(() => {
+                this.rotateVal += 3;
+                // 设置旋转属性(顺时针)
+                this.$refs.img.style.transform =
+                  "rotate(" + this.rotateVal + "deg)";
+                // 设置旋转时的动画  匀速0.1s
+                this.$refs.img.style.transition = "0.1s linear";
+              }, 1);
             }
           });
         },
