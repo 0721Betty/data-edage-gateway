@@ -10,28 +10,31 @@
           </p>
           <Form ref="slideTable" :model="slideTable">
             <FormItem label="运行状态">
-              <i-switch v-model="slideTable.switch" size="large">
+              <i-switch v-model="slideTable.switch" size="large" disabled>
                 <span slot="open">On</span>
                 <span slot="close">Off</span>
               </i-switch>
             </FormItem>
             <FormItem label="方向" prop="turn">
               <RadioGroup v-model="slideTable.turn">
-                <Radio label="0">
+                <Radio label="0" disabled>
                   <Icon type="md-rewind" />后退
                 </Radio>
-                <Radio label="1">
+                <Radio label="1" disabled>
                   <Icon type="md-fastforward" />前进
                 </Radio>
               </RadioGroup>
             </FormItem>
             <FormItem label="速度" prop="speed">
-              :
-              {{slideTable.speed}}mm/s
+              <RadioGroup v-model="slideTable.speed">
+                <Radio label="0" disabled>慢速</Radio>
+                <Radio label="1" disabled>中速</Radio>
+                <Radio label="2" disabled>快速</Radio>
+              </RadioGroup>
             </FormItem>
             <FormItem style="margin-left:36px">
               <!-- 滑台控制 -->
-              <Button type="primary" @click="modal1 = true">修改</Button>
+              <Button type="primary" @click="modal1 = true">控制</Button>
               <Modal title="设置滑台的状态" v-model="modal1" :mask-closable="false" @on-ok="slideSubmit">
                 <Form ref="slideCg" :model="slideCg">
                   <FormItem label="运行状态">
@@ -53,7 +56,7 @@
           </Form>
           <!-- 滑台图片 -->
           <div class="slidePh">
-            <img src="../../assets/slideTable.png" alt title="滑台">
+            <img src="../../assets/slideTable.png" alt title="滑台" />
           </div>
         </Card>
       </Col>
@@ -65,16 +68,16 @@
           </p>
           <Form ref="pushRod" :model="pushRod">
             <FormItem label="推送距离(单位cm)" prop="distance">
-              <br>
-              <Slider v-model="pushRod.distance" show-input show-stops :min="0" :max="20" :step="5"></Slider>
+              <br />
+              <Slider v-model="pushRod.distance" show-input show-stops :min="0" :max="20" :step="5" disabled></Slider>
             </FormItem>
             <FormItem>
               <!-- 推杆控制 -->
-              <Button type="primary" @click="modal2 = true">修改</Button>
+              <Button type="primary" @click="modal2 = true">控制</Button>
               <Modal title="设置推杆推送距离" v-model="modal2" :mask-closable="false" @on-ok="pushSubmit">
                 <Form ref="pushCg" :model="pushCg">
                   <FormItem label="推送距离" prop="distance">
-                    <br>
+                    <br />
                     <Slider
                       v-model="pushCg.distance"
                       show-input
@@ -90,7 +93,7 @@
           </Form>
           <!-- 推杆图片 -->
           <div class="pushPh">
-            <img src="../../assets/pushRod.png" alt title="推杆">
+            <img src="../../assets/pushRod.png" alt title="推杆" />
           </div>
         </Card>
       </Col>
@@ -108,7 +111,7 @@ export default {
       timer: "",
       // 滑台信息
       slideTable: {
-        switch: "",
+        switch: false,
         speed: "",
         turn: ""
       },
@@ -140,6 +143,7 @@ export default {
   methods: {
     // 滑台指令下发
     slideSubmit() {
+      this.$Message.info("指令下发中请耐心等待！");
       if (this.slideCg.switch === true) {
         // 滑台打开
         this.$axios
@@ -147,9 +151,14 @@ export default {
             headers: { token: localStorage.getItem("token") }
           })
           .then(res => {
-            console.log(res);
+            if(res.data.code < 300){
+              this.$Message.success("控制滑台打开指令下发成功！");
+            }else {
+              this.$Message.error("控制滑台打开指令下发失败！");
+            }
           })
           .catch(error => {
+            this.$Message.error("系统错误！");
             console.log(error);
           });
       } else if (this.slideCg.switch === false) {
@@ -159,13 +168,18 @@ export default {
             headers: { token: localStorage.getItem("token") }
           })
           .then(res => {
-            console.log(res);
+            if(res.data.code < 300){
+              this.$Message.success("控制滑台关闭指令下发成功！");
+            }else {
+              this.$Message.error("控制滑台关闭指令下发失败！");
+            }
           })
           .catch(error => {
+            this.$Message.error("系统错误！");
             console.log(error);
           });
       }
-      if (this.slideCg.speed === "slow") {
+      if (this.slideCg.speed === "0") {
         // 慢速
         this.$axios
           .get("/api/cmd/slide-slow", {
@@ -173,15 +187,16 @@ export default {
           })
           .then(res => {
             if (res.data.code < 300) {
-              this.$Message.success("指令下发成功！");
+              this.$Message.success("控制滑台慢速指令下发成功！");
             } else {
-              this.$Message.error("指令下发失败！");
+              this.$Message.error("控制滑台慢速指令下发失败！");
             }
           })
           .catch(error => {
+            this.$Message.error("系统错误！");
             console.log(error);
           });
-      } else if (this.slideCg.speed === "middle") {
+      } else if (this.slideCg.speed === "1") {
         // 中速
         this.$axios
           .get("/api/cmd/slide-middle", {
@@ -189,15 +204,16 @@ export default {
           })
           .then(res => {
             if (res.data.code < 300) {
-              this.$Message.success("指令下发成功！");
+              this.$Message.success("控制滑台中速指令下发成功！");
             } else {
-              this.$Message.error("指令下发失败！");
+              this.$Message.error("控制滑台中速指令下发失败！");
             }
           })
           .catch(error => {
+            this.$Message.error("系统错误！");
             console.log(error);
           });
-      } else if (this.slideCg.speed === "fast") {
+      } else if (this.slideCg.speed === "2") {
         // 快速
         this.$axios
           .get("/api/cmd/slide-fast", {
@@ -205,18 +221,20 @@ export default {
           })
           .then(res => {
             if (res.data.code < 300) {
-              this.$Message.success("指令下发成功！");
+              this.$Message.success("控制滑台快速指令下发成功！");
             } else {
-              this.$Message.error("指令下发失败！");
+              this.$Message.error("控制滑台快速指令下发失败！");
             }
           })
           .catch(error => {
+            this.$Message.error("系统错误！");
             console.log(error);
           });
       }
     },
     // 推杆指令下发
     pushSubmit() {
+      this.$Message.info("指令下发中请耐心等待！");
       if (this.pushCg.distance === 0) {
         // 推杆距离为0cm
         this.$axios
@@ -224,9 +242,14 @@ export default {
             headers: { token: localStorage.getItem("token") }
           })
           .then(res => {
-            console.log(res);
+            if(res.data.code < 300){
+              this.$Message.success("推杆距离调整为0cm指令下发成功！");
+            }else {
+              this.$Message.error("推杆距离调整为0cm指令下发失败！");
+            }
           })
           .catch(error => {
+            this.$Message.error("系统错误！");
             console.log(error);
           });
       } else if (this.pushCg.distance === 5) {
@@ -236,9 +259,14 @@ export default {
             headers: { token: localStorage.getItem("token") }
           })
           .then(res => {
-            console.log(res);
+            if(res.data.code < 300){
+              this.$Message.success("推杆距离调整为5cm指令下发成功！");
+            }else {
+              this.$Message.error("推杆距离调整为5cm指令下发失败！");
+            }
           })
           .catch(error => {
+            this.$Message.error("系统错误！");
             console.log(error);
           });
       } else if (this.pushCg.distance === 10) {
@@ -251,9 +279,14 @@ export default {
             headers: { token: localStorage.getItem("token") }
           })
           .then(res => {
-            console.log(res);
+            if(res.data.code < 300){
+              this.$Message.success("推杆距离调整为15cm指令下发成功！");
+            }else {
+              this.$Message.error("推杆距离调整为15cm指令下发失败！");
+            }
           })
           .catch(error => {
+            this.$Message.error("系统错误！");
             console.log(error);
           });
       } else if (this.pushCg.distance === 20) {
@@ -263,9 +296,14 @@ export default {
             headers: { token: localStorage.getItem("token") }
           })
           .then(res => {
-            console.log(res);
+            if(res.data.code < 300){
+              this.$Message.success("推杆距离调整为20cm指令下发成功！");
+            }else {
+              this.$Message.error("推杆距离调整为20cm指令下发失败！");
+            }
           })
           .catch(error => {
+            this.$Message.error("系统错误！");
             console.log(error);
           });
       }
@@ -288,11 +326,10 @@ export default {
           this.stompClient.subscribe("/topic/msg", msg => {
             // 订阅服务端提供的某个topic
             let body = JSON.parse(msg.body); //字符串转对象
-            console.log("获取成功");
             // 滑台信息
-            if (body.slideOpen === "0") {
+            if (body.slideOpen === "1") {
               this.slideTable.switch = true; //滑台开启
-            } else if (body.slideOpen === "1") {
+            } else if (body.slideOpen === "0") {
               this.slideTable.switch = false; //滑台关闭
             }
             // if(body.slideDir === "1"){
@@ -309,8 +346,7 @@ export default {
         },
         err => {
           // 连接发生错误时的处理函数
-          console.log("失败");
-          console.log(err);
+          this.$Message.error("连接失败！");
         },
         "/"
       );
@@ -351,6 +387,9 @@ export default {
 }
 .pushLayout {
   margin-left: 10px;
+}
+.ivu-switch-disabled{
+  opacity: 20!important;
 }
 </style>
 

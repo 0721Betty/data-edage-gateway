@@ -5,11 +5,7 @@
       <p slot="title" class="title">
         <Icon type="ios-create" />&nbsp;设备信息修改
       </p>
-      <Form ref="machineInfo" :model="machineInfo" :label-width="60">
-        <!-- <FormItem label="ID 编号" prop="machineId">
-          <p>{{}}</p>
-          <Input v-model="machineId"></Input>
-        </FormItem> -->
+      <Form ref="machineInfo" :model="machineInfo" :label-width="60" style="margin-left:47px;margin-top:20px;">
         <FormItem label="设备名称" prop="name">
           <Input v-model="machineInfo.name"></Input>
         </FormItem>
@@ -19,7 +15,7 @@
         <FormItem label="设备描述" prop="desc">
           <Input v-model="machineInfo.desc" type="textarea"></Input>
         </FormItem>
-        <FormItem style="margin-left:57px">
+        <FormItem style="margin-left:5px;margin-top:40px">
           <Button type="primary" @click="handleSubmit('machineInfo')">提交</Button>
           <Button type="info" @click="handleReset('machineInfo')" class="reset">重置</Button>
           <router-link to="/home/machineInfo" tag="span">
@@ -111,7 +107,7 @@ export default {
 }
 .reset,
 .back {
-  margin-left: 8px;
+  margin-left: 40px;
 }
 </style>
 

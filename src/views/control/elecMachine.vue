@@ -30,7 +30,7 @@
         </Card>
       </Col>
     </Row>
-    <br>
+    <br />
     <!-- 电机开关转向速度信息 -->
     <Row>
       <Col span="24">
@@ -40,34 +40,34 @@
           </p>
           <Form ref="elecCtrl" :model="elecCtrl">
             <FormItem label="运行状态">
-              <i-switch v-model="elecCtrl.switch" size="large">
+              <i-switch v-model="elecCtrl.switch" size="large" disabled>
                 <span slot="open">On</span>
                 <span slot="close">Off</span>
               </i-switch>
             </FormItem>
             <FormItem label="转向" prop="turn">
               <RadioGroup v-model="elecCtrl.turn">
-                <Radio label="1">
-                  <Icon type="ios-redo"/>顺时针
+                <Radio label="1" disabled>
+                  <Icon type="ios-redo" />顺时针（正转）
                 </Radio>
-                <Radio label="0">
-                  <Icon type="ios-undo"/>逆时针
+                <Radio label="0" disabled>
+                  <Icon type="ios-undo" />逆时针（反转）
                 </Radio>
               </RadioGroup>
             </FormItem>
             <FormItem style="margin-left:36px">
-              <Button type="primary" @click="modal = true">修改</Button>
-              <Button type="info" @click="handleStop" style="margin-left: 8px">停止</Button>
+              <Button type="primary" @click="modal = true">控制</Button>
+              <Button type="info" @click="handleStop" style="margin-left: 35px">停止</Button>
               <!-- 弹框设置电机的状态 -->
               <Modal title="设置电机的状态" v-model="modal" :mask-closable="false" @on-ok="control">
                 <Form ref="changeForm" :model="changeForm">
                   <FormItem label="转向" prop="turn">
                     <RadioGroup v-model="changeForm.turn">
                       <Radio label="1">
-                        <Icon type="ios-redo"/>顺时针
+                        <Icon type="ios-redo" />顺时针（正转）
                       </Radio>
                       <Radio label="0">
-                        <Icon type="ios-undo"/>逆时针
+                        <Icon type="ios-undo" />逆时针（反转）
                       </Radio>
                     </RadioGroup>
                   </FormItem>
@@ -83,7 +83,7 @@
             </FormItem>
             <!-- 电机图片 -->
             <div class="photo">
-              <img src="../../assets/elec.png" alt title="电机">
+              <img src="../../assets/elec.png" alt title="电机" />
             </div>
           </Form>
         </Card>
@@ -103,7 +103,7 @@ export default {
       // 电机的实时状态信息
       elecCtrl: {
         turn: "",
-        switch: ""
+        switch: false
       },
       // 查询按钮的大小
       buttonSize1: "small",
@@ -115,7 +115,7 @@ export default {
         end: ""
       },
       // 电机仪表盘的实时速度
-      realSpeed: 350,
+      realSpeed: 0,
       // 电机折线图的时间（横轴）和速度（纵轴）
       time: [],
       speed: [],
@@ -267,22 +267,25 @@ export default {
     // 向后端提交用户对电机操作的请求
     handleStop() {
       // 下发指令让电机停止
+      this.$Message.info("指令下发中请耐心等待！");
       this.$axios
         .get("/api/cmd/motor-stop", {
           headers: { token: localStorage.getItem("token") }
         })
         .then(res => {
           if (res.data.code < 300) {
-            this.$Message.success("指令下发成功！");
+            this.$Message.success("电机停止指令发送成功！");
           } else {
-            this.$Message.error("指令下发失败！");
+            this.$Message.error("电机停止指令发送失败！");
           }
         })
         .catch(error => {
+          this.$Message.error("系统错误！");
           console.log(error);
         });
     },
     control() {
+      this.$Message.info("指令下发中请耐心等待！");
       // 向后端发送控制转速的指令
       if (this.changeForm.turn === "1") {
         // 正转
@@ -292,12 +295,13 @@ export default {
           })
           .then(res => {
             if (res.data.code < 300) {
-              this.$Message.success("指令下发成功！");
+              this.$Message.success("控制电机正转指令下发成功！");
             } else {
-              this.$Message.error("指令下发失败！");
+              this.$Message.error("控制电机正转指令下发失败！");
             }
           })
           .catch(error => {
+            this.$Message.error("系统错误！");
             console.log(error);
           });
       } else if (this.changeForm.turn === "0") {
@@ -308,12 +312,13 @@ export default {
           })
           .then(res => {
             if (res.data.code < 300) {
-              this.$Message.success("指令下发成功！");
+              this.$Message.success("控制电机反转指令下发成功！");
             } else {
-              this.$Message.error("指令下发失败！");
+              this.$Message.error("控制电机反转指令下发失败！");
             }
           })
           .catch(error => {
+            this.$Message.error("系统错误！");
             console.log(error);
           });
       }
@@ -326,12 +331,13 @@ export default {
           })
           .then(res => {
             if (res.data.code < 300) {
-              this.$Message.success("指令下发成功！");
+              this.$Message.success("控制电机慢速指令下发成功！");
             } else {
-              this.$Message.error("指令下发失败！");
+              this.$Message.error("控制电机慢速指令下发失败！");
             }
           })
           .catch(error => {
+            this.$Message.error("系统错误！");
             console.log(error);
           });
       } else if (this.changeForm.speed === "middle") {
@@ -342,12 +348,13 @@ export default {
           })
           .then(res => {
             if (res.data.code < 300) {
-              this.$Message.success("指令下发成功！");
+              this.$Message.success("控制电机中速指令下发成功！");
             } else {
-              this.$Message.error("指令下发失败！");
+              this.$Message.error("控制电机中速指令下发失败！");
             }
           })
           .catch(error => {
+            this.$Message.error("系统错误！");
             console.log(error);
           });
       } else if (this.changeForm.speed === "fast") {
@@ -358,33 +365,22 @@ export default {
           })
           .then(res => {
             if (res.data.code < 300) {
-              this.$Message.success("指令下发成功！");
+              this.$Message.success("控制电机快速指令下发成功！");
             } else {
-              this.$Message.error("指令下发失败！");
+              this.$Message.error("控制电机快速指令下发失败！");
             }
           })
           .catch(error => {
+            this.$Message.error("系统错误！");
             console.log(error);
           });
       }
     },
     // 让折线图默认显示昨天的此刻到此刻的数据
     defaultHistory() {
-      let now = new Date();
-      let yesterday =
-        now.getFullYear() +
-        "/" +
-        (now.getMonth() + 1) +
-        "/" +
-        (now.getDate() - 1) +
-        "/" +
-        now.getHours() +
-        ":" +
-        now.getMinutes() +
-        ":" +
-        now.getSeconds();
-      let defaultEnd = Number(now); //默认结束时间为此刻的时间
-      let defaultStart = Number(new Date(yesterday)); //先将昨天的时间变为格式化之前的默认时间样式然后变为时间戳
+      let defaultEnd = Number(new Date()); //默认结束时间为此刻的时间
+      let defaultStart = defaultEnd - 24 * 60 * 60 * 1000; //昨天的时间的时间戳
+      console.log(new Date(defaultStart));
       // 发送请求获取数据进行渲染
       this.$axios
         .get(`/api/status/${defaultStart}/${defaultEnd}`, {
@@ -395,16 +391,17 @@ export default {
             this.$Message.error(res.data.msg);
           } else {
             if (res.data.data.length === 0) {
-              this.$Message.error("数据库中没有数据！");
+              this.$Message.error("默认时间段内没有相关数据！");
             }
             for (let i = 0; i < res.data.data.length; i++) {
               let date = new Date(res.data.data[i].createTime);
               this.time.push(this.$options.methods.formatTime(date));
               this.speed.push(
-                (
-                  parseFloat(res.data.data[i].motorSpeed) +
-                  Math.random() * 10
-                ).toFixed(0)
+                res.data.data[i].motorSpeed
+                // (
+                //   parseFloat(res.data.data[i].motorSpeed) +
+                //   Math.random() * 10
+                // ).toFixed(0)
               );
             }
             let brokenLine = this.$echarts.init(
@@ -461,11 +458,15 @@ export default {
           if (res.data.code >= 300) {
             this.$Message.error(res.data.msg);
           } else {
+            if (res.data.data.length === 0) {
+              this.$Message.error("默认时间段内没有相关数据！");
+            }
             for (let i = 0; i < res.data.data.length; i++) {
               let date = new Date(res.data.data[i].createTime);
               this.time.push(this.$options.methods.formatTime(date));
               this.speed.push(
-                parseFloat(res.data.data[i].motorSpeed) + Math.random() * 10
+                res.data.data[i].motorSpeed
+                // parseFloat(res.data.data[i].motorSpeed) + Math.random() * 10
               );
             }
             // 清除动画
@@ -518,21 +519,26 @@ export default {
           this.stompClient.subscribe("/topic/msg", msg => {
             // 订阅服务端提供的某个topic
             let body = JSON.parse(msg.body); //字符串转对象
-            console.log("获取成功");
-            if (body.motorOpen === "1") {
+            if (body.motorOpen === "0") {
               // 电机关闭
               this.elecCtrl.switch = false;
-            } else if (body.motorOpen === "0") {
+              this.realSpeed = 0;
+            } else if (body.motorOpen === "1") {
               // 电机开启
               this.elecCtrl.switch = true;
             }
-            this.elecCtrl.turn = body.motorDir; //电机转向，1为正转，0为反转
-            // this.realSpeed = body.motorSpeed; //实际情况下仪表盘中电机的实时转速
+            if (body.motorDir === "1") {
+              //电机转向，1为正转，2为反转
+              this.elecCtrl.turn = "1";
+            } else if (body.motorDir === "2") {
+              this.elecCtrl.turn = "0";
+            }
+            this.realSpeed = body.motorSpeed; //实际情况下仪表盘中电机的实时转速
             // 测试用的仪表盘中电机的实时转速
-            this.realSpeed = (
-              parseFloat(body.motorSpeed) +
-              Math.random() * 10
-            ).toFixed(3);
+            // this.realSpeed = (
+            //   parseFloat(body.motorSpeed) +
+            //   Math.random() * 10
+            // ).toFixed(3);
             //获取到数据后重新绘制仪表盘
             let dashBoard = this.$echarts.init(
               document.getElementById("dashBoard")
@@ -588,6 +594,9 @@ export default {
 }
 .sure {
   margin-left: 8px;
+}
+.ivu-switch-disabled {
+  opacity: 20 !important;
 }
 </style>
 

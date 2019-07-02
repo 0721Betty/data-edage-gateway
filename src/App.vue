@@ -5,7 +5,13 @@
 </template>
 <script>
 export default {
-  name: "app"
+  name: "app",
+  mounted(){
+    this.$Message.config({
+        top: 80,
+        duration: 10
+      });
+  }
 }
 </script>
 

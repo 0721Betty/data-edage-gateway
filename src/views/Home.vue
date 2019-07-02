@@ -67,7 +67,7 @@ export default {
   background-color: #e0f6fd;
 }
 .ivu-layout-content {
-  padding: 20px 20px;
+  padding: 20px;
 }
 .ivu-divider,
 .ivu-divider-vertical {

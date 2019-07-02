@@ -74,7 +74,6 @@ export default {
   },
   methods: {
     handleSubmit(name) {
-      console.log(this.config.remember);
       this.$refs[name].validate(valid => {
         if (valid) {
           this.$axios

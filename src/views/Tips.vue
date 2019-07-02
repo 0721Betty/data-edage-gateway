@@ -2,7 +2,7 @@
   <div class="wrapper">
     <div
       class="success"
-      v-if="this.tempWarn === '' && this.humiWarn === '' && this.pressWarn === ''"
+      v-if="this.tempWarn === '' && this.elecWarn === '' && this.pressWarn === ''"
     >
       <Alert type="success" show-icon closable>系统正常运行</Alert>
     </div>
@@ -13,10 +13,10 @@
       </template>
       <span slot="close">不再提示</span>
     </Alert>
-    <Alert type="warning" show-icon closable v-if="this.humiWarn != ''">
-      系统湿度报警
+    <Alert type="warning" show-icon closable v-if="this.elecWarn != ''">
+      系统电流报警
       <template slot="desc">
-        <p ref="warn">{{ humiWarn }}</p>
+        <p ref="warn">{{ elecWarn }}</p>
       </template>
       <span slot="close">不再提示</span>
     </Alert>
@@ -32,7 +32,7 @@
       <Row :gutter="20">
         <Col span="8" :offset="4">
           <p class="text">温度过高时请开启散热扇</p>
-          <br>
+          <br />
           <div class="choose">
             <i-switch size="large" @on-change="change" v-model="switch1">
               <span slot="open">ON</span>
@@ -40,7 +40,7 @@
             </i-switch>
           </div>
           <div class="fan">
-            <img src="../../src/assets/fan.png" alt ref="img">
+            <img src="../../src/assets/fan.png" alt ref="img" />
           </div>
         </Col>
         <Col span="8">
@@ -50,23 +50,23 @@
             </p>
             <Form ref="plc" :model="plc">
               <FormItem label="运行状态">
-                <i-switch v-model="plc.switch" size="large">
+                <i-switch v-model="plc.switch" size="large" disabled>
                   <span slot="open">On</span>
                   <span slot="close">Off</span>
                 </i-switch>
               </FormItem>
               <FormItem label="PLC选择">
                 <CheckboxGroup v-model="plc.checkbox1">
-                  <Checkbox label="国产"></Checkbox>
-                  <Checkbox label="三菱"></Checkbox>
-                  <Checkbox label="西门子"></Checkbox>
+                  <Checkbox label="国产" disabled></Checkbox>
+                  <Checkbox label="三菱" disabled></Checkbox>
+                  <Checkbox label="西门子" disabled></Checkbox>
                 </CheckboxGroup>
               </FormItem>
               <FormItem label="控制设备">
                 <CheckboxGroup v-model="plc.checkbox2">
-                  <Checkbox label="电机"></Checkbox>
-                  <Checkbox label="滑台"></Checkbox>
-                  <Checkbox label="推杆"></Checkbox>
+                  <Checkbox label="电机" disabled style="opacity:5"></Checkbox>
+                  <Checkbox label="滑台" disabled></Checkbox>
+                  <Checkbox label="推杆" disabled></Checkbox>
                 </CheckboxGroup>
               </FormItem>
             </Form>
@@ -87,21 +87,24 @@ export default {
       timer: "",
       // 温度警报信息
       tempWarn: "",
-      // 湿度警报信息
-      humiWarn: "",
+      // 电流警报信息
+      elecWarn: "",
       // 重量超载警报信息
       pressWarn: "",
       // 散热扇的开关
-      switch1: "",
+      switch1: false,
       // 散热扇定时器
       fanTimer: null,
       rotateVal: 0,
       plc: {
-        switch: true,
+        switch: false,
         checkbox1: ["三菱"],
         checkbox2: ["电机", "滑台", "推杆"]
       }
     };
+  },
+  mounted(){
+    this.initWebSocket();
   },
   beforeDestroy() {
     // 页面离开时断开连接,清除定时器
@@ -127,21 +130,21 @@ export default {
           this.stompClient.subscribe("/topic/msg", msg => {
             // 订阅服务端提供的某个topic
             let body = JSON.parse(msg.body); //字符串转对象, msg.body存放的是服务端发送给我们的信息
-            console.log("获取成功");
+            this.plc.switch = true;
             if (body.temperatureWarn === "1") {
               this.tempWarn = "设备温度过高！请开启散热扇！";
             }
             if (body.humidityWarn === "1") {
-              this.humiWarn = "设备湿度过高！";
+              this.elecWarn = "设备电流过大！";
             }
             if (body.weightWarn === "1") {
               this.pressWarn = "设备受重超载！";
             }
-            if (body.fan === "1") {
+            if (body.fan === "0") {
               this.switch1 = false; //风扇关闭
               clearInterval(this.fanTimer);
               this.rotateVal = 0;
-            } else if (body.fan === "0") {
+            } else if (body.fan === "1") {
               this.switch1 = true; //风扇打开
               this.fanTimer = setInterval(() => {
                 this.rotateVal += 3;
@@ -168,32 +171,35 @@ export default {
       }
     },
     change(switch1) {
+      this.$Message.info("指令下发中请耐心等待！");
       if (switch1 === true) {
         // 散热扇旋转，并且向后端发送指令开启扇热扇
         this.$axios
           .get("/api/cmd/fan-open", {
             headers: { token: localStorage.getItem("token") }
           })
-          .then(res => {
-            if (res.data.code < 300) {
-              this.$Message.success("指令下发成功！");
+          .then(res => { 
+             if (res.data.code < 300) {
+              this.$Message.success("打开散热扇指令下发成功！");
+              // 散热扇打开
+              this.fanTimer = setInterval(() => {
+                this.rotateVal += 3;
+                // 设置旋转属性(顺时针)
+                this.$refs.img.style.transform =
+                  "rotate(" + this.rotateVal + "deg)";
+                // 设置旋转属性(逆时针)
+                //img.style.transform = 'rotate(-' + rotateVal + 'deg)'
+                // 设置旋转时的动画  匀速0.1s
+                this.$refs.img.style.transition = "0.1s linear";
+              }, 1);
             } else {
-              this.$Message.error("指令下发失败！");
+              this.$Message.error("打开散热扇指令下发失败！");
+              this.switch1 = false;
             }
           })
           .catch(error => {
             console.log(error);
           });
-        // 散热扇打开
-        this.fanTimer = setInterval(() => {
-          this.rotateVal += 3;
-          // 设置旋转属性(顺时针)
-          this.$refs.img.style.transform = "rotate(" + this.rotateVal + "deg)";
-          // 设置旋转属性(逆时针)
-          //img.style.transform = 'rotate(-' + rotateVal + 'deg)'
-          // 设置旋转时的动画  匀速0.1s
-          this.$refs.img.style.transition = "0.1s linear";
-        }, 1);
       } else if (switch1 === false) {
         // 扇热扇停止，并且向后端发送关闭指令
         this.$axios
@@ -202,17 +208,19 @@ export default {
           })
           .then(res => {
             if (res.data.code < 300) {
-              this.$Message.success("指令下发成功！");
+              this.$Message.success("关闭扇热扇指令下发成功！");
+              // 扇热扇关闭
+              clearInterval(this.fanTimer);
+              this.rotateVal = 0;
             } else {
-              this.$Message.error("指令下发失败！");
+              this.$Message.error("关闭扇热扇指令下发失败！");
+              this.switch1 = true;
             }
           })
           .catch(error => {
+            this.$Message.error("系统错误！");
             console.log(error);
           });
-        // 扇热扇关闭
-        clearInterval(this.fanTimer);
-        this.rotateVal = 0;
       }
     }
   }
@@ -240,6 +248,12 @@ export default {
   width: 128px;
   height: 128px;
   margin-left: 27px;
+}
+.ivu-switch-disabled{
+  opacity: 20!important;
+}
+.ivu-checkbox-input{
+  opacity: 100!important;
 }
 </style>
 

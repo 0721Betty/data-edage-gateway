@@ -5,7 +5,7 @@
       <p slot="title" class="title">
         <Icon type="ios-card" />&nbsp;个人信息修改
       </p>
-      <Form ref="admin" :model="admin" :rules="rules" :label-width="70">
+      <Form ref="admin" :model="admin" :rules="rules" :label-width="80">
         <FormItem label="姓名" prop="name">
           <Input v-model="admin.name"></Input>
         </FormItem>

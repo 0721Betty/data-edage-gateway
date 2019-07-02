@@ -6,18 +6,6 @@
       <Col span="8">
         <Card>
           <div id="temp" class="myChart"></div>
-          <!-- <div class="choose">
-            <Form :label-width="80">
-              <FormItem style="margin-right:95px">
-                MIN:&nbsp&nbsp&nbsp<Input type="number"></Input>&nbsp
-                MAX:&nbsp&nbsp&nbsp<Input type="number"></Input>
-              </FormItem>
-              <FormItem style="margin-right:132px">
-                <Button type="info">确定</Button>
-                <Button type="primary" style="margin-left:8px">取消</Button>
-              </FormItem>
-            </Form>
-          </div> -->
         </Card>
       </Col>
       <!-- 湿度 -->
@@ -66,12 +54,12 @@ export default {
       stompClient: "",
       timer: "",
       // 上述仪表盘默认值
-      tempValue: 25.5,
-      humiValue: 40.1,
-      voltValue: 23.625,
-      elecValue: 2.333,
-      pressValue: 4.354,
-      powerValue: 108
+      tempValue: 0,
+      humiValue: 0,
+      voltValue: 0,
+      elecValue: 0,
+      pressValue: 0,
+      powerValue: 0
     };
   },
   mounted() {
@@ -253,23 +241,22 @@ export default {
           this.stompClient.subscribe("/topic/msg", msg => {
             // 订阅服务端提供的某个topic
             let body = JSON.parse(msg.body); //字符串转对象, msg.body存放的是服务端发送给我们的信息
-            console.log("获取成功");
             // 实际过程中用的代码
-            // this.tempValue = body.temperature;
-            // this.humiValue = body.humidity;
-            // this.voltValue = body.voltage;
-            // this.elecValue = body.electric;
-            // this.pressValue = body.weight;
-            // this.powerValue = body.power;
+            this.tempValue = body.temperature;
+            this.humiValue = body.humidity;
+            this.voltValue = body.voltage;
+            this.elecValue = body.electric;
+            this.pressValue = body.weight;
+            this.powerValue = body.power;
 
 
             // 测试用的随机代码
-            this.tempValue = (parseFloat(body.temperature) + Math.random() * 10).toFixed(1);
-            this.humiValue = (parseFloat(body.humidity) + Math.random() * 10).toFixed(1);
-            this.voltValue = (parseFloat(body.voltage) + Math.random() * 10).toFixed(3);
-            this.elecValue = (parseFloat(body.electric) + Math.random() * 10).toFixed(3);
-            this.pressValue = (parseFloat(body.weight) + Math.random() * 10).toFixed(3);
-            this.powerValue = (parseFloat(body.power) + Math.random() * 10).toFixed(3);
+            // this.tempValue = (parseFloat(body.temperature) + Math.random() * 10).toFixed(1);
+            // this.humiValue = (parseFloat(body.humidity) + Math.random() * 10).toFixed(1);
+            // this.voltValue = (parseFloat(body.voltage) + Math.random() * 10).toFixed(3);
+            // this.elecValue = (parseFloat(body.electric) + Math.random() * 10).toFixed(3);
+            // this.pressValue = (parseFloat(body.weight) + Math.random() * 10).toFixed(3);
+            // this.powerValue = (parseFloat(body.power) + Math.random() * 10).toFixed(3);
 
 
             //获取到数据后重新绘制仪表盘
@@ -325,6 +312,7 @@ export default {
         },
         err => {
           // 连接发生错误时的处理函数
+          this.$Message.error("系统错误！");
           console.log(err);
         },
         "/"

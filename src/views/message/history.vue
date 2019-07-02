@@ -194,21 +194,8 @@ export default {
       );
     },
     defaultHistory() {
-      let now = new Date();
-      let yesterday =
-        now.getFullYear() +
-        "/" +
-        (now.getMonth() + 1) +
-        "/" +
-        (now.getDate() - 1) +
-        "/" +
-        now.getHours() +
-        ":" +
-        now.getMinutes() +
-        ":" +
-        now.getSeconds();
-      let defaultEnd = Number(now);
-      let defaultStart = Number(new Date(yesterday)); //先将昨天的时间变为格式化之前的默认时间样式然后变为时间戳
+      let defaultEnd = Number(new Date());
+      let defaultStart = defaultEnd - 24*60*60*1000; //昨天的时间的时间戳
       this.$axios
         .get(`/api/status/${defaultStart}/${defaultEnd}`, {
           headers: { token: localStorage.getItem("token") }
@@ -218,35 +205,35 @@ export default {
             this.$Message.error(res.data.msg);
           } else {
             if (res.data.data.length === 0) {
-              this.$Message.error("数据库中没有数据！");
+              this.$Message.error("默认时间段内没有相关数据！");
             }
             for (let i = 0; i < res.data.data.length; i++) {
               let date = new Date(res.data.data[i].createTime);
               this.time.push(this.$options.methods.formatTime(date));
-              // this.temp.push(res.data.data[i].temperature);
-              // this.humi.push(res.data.data[i].humidity);
-              // this.volt.push(res.data.data[i].voltage);
-              // this.elec.push(res.data.data[i].electric);
-              // this.press.push(res.data.data[i].weight);
-              // this.power.push(res.data.data[i].power);
-              this.temp.push(
-                (parseFloat(res.data.data[i].temperature) + Math.random() * 10).toFixed(1)
-              );
-              this.humi.push(
-                (parseFloat(res.data.data[i].humidity) + Math.random() * 10).toFixed(1)
-              );
-              this.volt.push(
-                (parseFloat(res.data.data[i].voltage) + Math.random() * 10).toFixed(3)
-              );
-              this.elec.push(
-                (parseFloat(res.data.data[i].electric) + Math.random() * 10).toFixed(3)
-              );
-              this.press.push(
-                (parseFloat(res.data.data[i].weight) + Math.random() * 10).toFixed(3)
-              );
-              this.power.push(
-                (parseFloat(res.data.data[i].power) + Math.random() * 10).toFixed(3)
-              );
+              this.temp.push(res.data.data[i].temperature);
+              this.humi.push(res.data.data[i].humidity);
+              this.volt.push(res.data.data[i].voltage);
+              this.elec.push(res.data.data[i].electric);
+              this.press.push(res.data.data[i].weight);
+              this.power.push(res.data.data[i].power);
+              // this.temp.push(
+              //   (parseFloat(res.data.data[i].temperature) + Math.random() * 10).toFixed(1)
+              // );
+              // this.humi.push(
+              //   (parseFloat(res.data.data[i].humidity) + Math.random() * 10).toFixed(1)
+              // );
+              // this.volt.push(
+              //   (parseFloat(res.data.data[i].voltage) + Math.random() * 10).toFixed(3)
+              // );
+              // this.elec.push(
+              //   (parseFloat(res.data.data[i].electric) + Math.random() * 10).toFixed(3)
+              // );
+              // this.press.push(
+              //   (parseFloat(res.data.data[i].weight) + Math.random() * 10).toFixed(3)
+              // );
+              // this.power.push(
+              //   (parseFloat(res.data.data[i].power) + Math.random() * 10).toFixed(3)
+              // );
             }
             let history = this.$echarts.init(
               document.getElementById("history")
@@ -333,33 +320,36 @@ export default {
           if (res.data.code >= 300) {
             this.$Message.error(res.data.msg);
           } else {
+            if(res.data.data.length === 0){
+              this.$Message.error("该时间段内没有相关数据！请重新选择时间段！");
+            }
             for (let i = 0; i < res.data.data.length; i++) {
               let date = new Date(res.data.data[i].createTime);
               this.time.push(this.$options.methods.formatTime(date));
-              this.temp.push(
-                (parseFloat(res.data.data[i].temperature) + Math.random() * 10).toFixed(1)
-              );
-              this.humi.push(
-                (parseFloat(res.data.data[i].humidity) + Math.random() * 10).toFixed(1)
-              );
-              this.volt.push(
-                (parseFloat(res.data.data[i].voltage) + Math.random() * 10).toFixed(3)
-              );
-              this.elec.push(
-                (parseFloat(res.data.data[i].electric) + Math.random() * 10).toFixed(3)
-              );
-              this.press.push(
-                (parseFloat(res.data.data[i].weight) + Math.random() * 10).toFixed(3)
-              );
-              this.power.push(
-                (parseFloat(res.data.data[i].power) + Math.random() * 10).toFixed(3)
-              );
-              // this.temp.push(res.data.data[i].temperature);
-              // this.humi.push(res.data.data[i].humidity);
-              // this.volt.push(res.data.data[i].voltage);
-              // this.elec.push(res.data.data[i].electric);
-              // this.press.push(res.data.data[i].weight);
-              // this.power.push(res.data.data[i].power);
+              // this.temp.push(
+              //   (parseFloat(res.data.data[i].temperature) + Math.random() * 10).toFixed(1)
+              // );
+              // this.humi.push(
+              //   (parseFloat(res.data.data[i].humidity) + Math.random() * 10).toFixed(1)
+              // );
+              // this.volt.push(
+              //   (parseFloat(res.data.data[i].voltage) + Math.random() * 10).toFixed(3)
+              // );
+              // this.elec.push(
+              //   (parseFloat(res.data.data[i].electric) + Math.random() * 10).toFixed(3)
+              // );
+              // this.press.push(
+              //   (parseFloat(res.data.data[i].weight) + Math.random() * 10).toFixed(3)
+              // );
+              // this.power.push(
+              //   (parseFloat(res.data.data[i].power) + Math.random() * 10).toFixed(3)
+              // );
+              this.temp.push(res.data.data[i].temperature);
+              this.humi.push(res.data.data[i].humidity);
+              this.volt.push(res.data.data[i].voltage);
+              this.elec.push(res.data.data[i].electric);
+              this.press.push(res.data.data[i].weight);
+              this.power.push(res.data.data[i].power);
             }
             // 清除动画
             history.hideLoading();

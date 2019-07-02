@@ -15,8 +15,6 @@
       <Col span="2">
       <span class="app" @click="download"><Icon type="ios-navigate" class="photo"/>&nbsp;下载App</span>
       </Col>
-      <Col>
-      </Col>
       <Col span="3">
         <div class="user">
           <Dropdown @on-click="handleClick">
@@ -129,8 +127,10 @@ export default {
 .app{
   color: #08acf8;
   display: inline-block;
-  margin-left: 45px;
   cursor: pointer;
+}
+.ivu-col-span-2{
+  text-align: center;
 }
 span {
   font-size: 16px;
