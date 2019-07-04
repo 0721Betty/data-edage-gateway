@@ -1,29 +1,25 @@
-# data-edage-gateway
-
-## Project setup
+# data-edage-gateway（数据边缘网关前端部分）
+## 基于iviewjs，vue-cli3
+# [数据边缘网关后端部分](https://github.com/qmdx00/onenet-iot-project)
+### 下载依赖
 ```
 npm install
 ```
-
-### Compiles and hot-reloads for development
+### 编译运行开发模式
 ```
 npm run serve
 ```
-
-### Compiles and minifies for production
+### 编译生成dist包生产模式
 ```
 npm run build
 ```
-
-### Run your tests
+### 运行测试
 ```
 npm run test
 ```
-
-### Lints and fixes files
+### 整理修复文件
 ```
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+
