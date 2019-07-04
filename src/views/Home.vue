@@ -58,7 +58,8 @@ export default {
   margin-top: 0 !important;
 }
 .sider {
-  width: 200px;
+  /* width: 200px; */
+  width: 20%;
   display: block;
   position: relative;
   left: 0;
@@ -68,6 +69,7 @@ export default {
 }
 .ivu-layout-content {
   padding: 20px;
+  width: 100%;
 }
 .ivu-divider,
 .ivu-divider-vertical {

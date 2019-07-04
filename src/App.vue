@@ -9,7 +9,7 @@ export default {
   mounted(){
     this.$Message.config({
         top: 80,
-        duration: 10
+        duration: 5
       });
   }
 }

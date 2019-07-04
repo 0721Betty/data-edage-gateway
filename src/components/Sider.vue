@@ -70,7 +70,8 @@ export default {
 <style scoped>
 /* 让侧边栏占满 */
 .wrapper {
-  width: 200px;
+  /* width: 200px; */
+  width: 20%;
   display: block;
   position: absolute;
   left: 0;
@@ -79,7 +80,8 @@ export default {
   background-color: #e0f6fd;
 }
 .inner {
-  width: 200px;
+  /* width: 200px; */
+  width:20%;
 }
 .ivu-menu-light {
   background-color: #e0f6fd;

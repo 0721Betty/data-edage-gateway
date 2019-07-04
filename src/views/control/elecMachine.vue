@@ -12,7 +12,7 @@
       <!-- 折线图 -->
       <Col span="16">
         <Card>
-          <div id="brokenLine" class="line"></div>
+          <div id="brokenLine" class="line" :style="{width: autoWidth}"></div>
           <!-- 日期选择查询 -->
           <div class="selectTime">
             <Form :model="timeSelect">
@@ -97,6 +97,7 @@ import Stomp from "stompjs";
 export default {
   data() {
     return {
+      autoWidth: "",
       // WebSocket
       stompClient: "",
       timer: "",
@@ -131,6 +132,7 @@ export default {
   beforeMount() {
     //默认显示电机的历史记录从昨天的此刻到此刻的时间点的数据
     this.defaultHistory();
+     this.autoWidth = window.screen.availWidth - 730 +"px";
   },
   mounted() {
     this.initWebSocket(); //websocket初始化
@@ -275,8 +277,11 @@ export default {
         .then(res => {
           if (res.data.code < 300) {
             this.$Message.success("电机停止指令发送成功！");
+            this.elecCtrl.switch = false;
+            this.elecCtrl.turn = "";
           } else {
             this.$Message.error("电机停止指令发送失败！");
+            this.elecCtrl.switch = true;
           }
         })
         .catch(error => {
@@ -296,8 +301,10 @@ export default {
           .then(res => {
             if (res.data.code < 300) {
               this.$Message.success("控制电机正转指令下发成功！");
+              this.elecCtrl.switch = true
             } else {
               this.$Message.error("控制电机正转指令下发失败！");
+              this.elecCtrl.switch = false;
             }
           })
           .catch(error => {
@@ -313,8 +320,10 @@ export default {
           .then(res => {
             if (res.data.code < 300) {
               this.$Message.success("控制电机反转指令下发成功！");
+              this.elecCtrl.switch = true
             } else {
               this.$Message.error("控制电机反转指令下发失败！");
+              this.elecCtrl.switch = false;
             }
           })
           .catch(error => {
@@ -323,7 +332,7 @@ export default {
           });
       }
       // 向后端发送控制速度的指令
-      if (this.changeForm.speed === "slow") {
+      if (this.changeForm.speed === "slow" && this.elecCtrl.switch === true) {
         // 慢速
         this.$axios
           .get("/api/cmd/motor-slow", {
@@ -340,7 +349,7 @@ export default {
             this.$Message.error("系统错误！");
             console.log(error);
           });
-      } else if (this.changeForm.speed === "middle") {
+      } else if (this.changeForm.speed === "middle" && this.elecCtrl.switch === true) {
         // 中速
         this.$axios
           .get("/api/cmd/motor-middle", {
@@ -357,7 +366,7 @@ export default {
             this.$Message.error("系统错误！");
             console.log(error);
           });
-      } else if (this.changeForm.speed === "fast") {
+      } else if (this.changeForm.speed === "fast" && this.elecCtrl.switch === true) {
         // 快速
         this.$axios
           .get("/api/cmd/motor-fast", {
@@ -523,17 +532,19 @@ export default {
               // 电机关闭
               this.elecCtrl.switch = false;
               this.realSpeed = 0;
-            } else if (body.motorOpen === "1") {
+            } else if (body.motorDir === "1" ||"2") {
               // 电机开启
               this.elecCtrl.switch = true;
+              this.realSpeed = body.motorSpeed; //实际情况下仪表盘中电机的实时转速
             }
-            if (body.motorDir === "1") {
+            if (body.motorDir === "1" && this.elecCtrl.switch === true) {
               //电机转向，1为正转，2为反转
               this.elecCtrl.turn = "1";
-            } else if (body.motorDir === "2") {
+            } else if (body.motorDir === "2" && this.elecCtrl.switch === true) {
               this.elecCtrl.turn = "0";
+            }else if(this.elecCtrl.switch === true){
+              this.elecCtrl.turn = "1";
             }
-            this.realSpeed = body.motorSpeed; //实际情况下仪表盘中电机的实时转速
             // 测试用的仪表盘中电机的实时转速
             // this.realSpeed = (
             //   parseFloat(body.motorSpeed) +
@@ -578,7 +589,6 @@ export default {
 /* 折线图样式 */
 .line {
   display: block;
-  width: 840px;
   height: 300px;
 }
 /* 电机图片样式 */

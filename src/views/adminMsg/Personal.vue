@@ -96,11 +96,12 @@ export default {
 .title {
   font-size: 18px;
   text-align: center;
+  color: #17233d;
 }
 .photo {
   font-size: 24px;
 }
-p {
+.admin p {
   font-size: 16px;
   text-align: left;
   line-height: 57px;

@@ -94,6 +94,7 @@ export default {
       // 散热扇的开关
       switch1: false,
       // 散热扇定时器
+      // fanTimer: null,
       fanTimer: null,
       rotateVal: 0,
       plc: {
@@ -143,10 +144,11 @@ export default {
             if (body.fan === "0") {
               this.switch1 = false; //风扇关闭
               clearInterval(this.fanTimer);
-              this.rotateVal = 0;
             } else if (body.fan === "1") {
+              clearInterval(this.fanTimer)
               this.switch1 = true; //风扇打开
               this.fanTimer = setInterval(() => {
+                // this.rotateVal = 0;
                 this.rotateVal += 3;
                 // 设置旋转属性(顺时针)
                 this.$refs.img.style.transform =
@@ -181,20 +183,21 @@ export default {
           .then(res => { 
              if (res.data.code < 300) {
               this.$Message.success("打开散热扇指令下发成功！");
+              clearInterval(this.fanTimer)
               // 散热扇打开
               this.fanTimer = setInterval(() => {
                 this.rotateVal += 3;
                 // 设置旋转属性(顺时针)
                 this.$refs.img.style.transform =
                   "rotate(" + this.rotateVal + "deg)";
-                // 设置旋转属性(逆时针)
-                //img.style.transform = 'rotate(-' + rotateVal + 'deg)'
                 // 设置旋转时的动画  匀速0.1s
                 this.$refs.img.style.transition = "0.1s linear";
               }, 1);
             } else {
               this.$Message.error("打开散热扇指令下发失败！");
               this.switch1 = false;
+              clearInterval(this.fanTimer);
+              // this.rotateVal = 0;
             }
           })
           .catch(error => {
@@ -211,10 +214,21 @@ export default {
               this.$Message.success("关闭扇热扇指令下发成功！");
               // 扇热扇关闭
               clearInterval(this.fanTimer);
-              this.rotateVal = 0;
+              // this.rotateVal = 0;
             } else {
               this.$Message.error("关闭扇热扇指令下发失败！");
               this.switch1 = true;
+              clearInterval(this.fanTimer)
+              // 散热扇打开
+              this.fanTimer = setInterval(() => {
+                // this.rotateVal = 0;
+                this.rotateVal += 3;
+                // 设置旋转属性(顺时针)
+                this.$refs.img.style.transform =
+                  "rotate(" + this.rotateVal + "deg)";
+                // 设置旋转时的动画  匀速0.1s
+                this.$refs.img.style.transition = "0.1s linear";
+              }, 1);
             }
           })
           .catch(error => {

@@ -19,7 +19,7 @@
             </Form>
           </div>
           <!-- 折线图 -->
-          <div id="history" class="myChart"></div>
+          <div id="history" class="myChart" :style="{width: autoWidth}"></div>
         </Card>
       </Col>
     </Row>
@@ -29,6 +29,7 @@
 export default {
   data() {
     return {
+      autoWidth: "",
       // 查询按钮的大小
       buttonSize: "small",
       // 时间选择框选择的时间的值
@@ -51,6 +52,7 @@ export default {
   beforeMount() {
     //用户选择时间查询前默认展示昨天的此刻到现在此刻的时间
     this.defaultHistory();
+    this.autoWidth = window.screen.availWidth - 272 +"px";
   },
   mounted() {
     this.init();//折线图初始化
@@ -413,7 +415,6 @@ export default {
 <style scoped>
 .myChart {
   display: block;
-  width: 1309px;
   height: 600px;
 }
 .selectTime {

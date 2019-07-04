@@ -69,7 +69,15 @@
           <Form ref="pushRod" :model="pushRod">
             <FormItem label="推送距离(单位cm)" prop="distance">
               <br />
-              <Slider v-model="pushRod.distance" show-input show-stops :min="0" :max="20" :step="5" disabled></Slider>
+              <Slider
+                v-model="pushRod.distance"
+                show-input
+                show-stops
+                :min="0"
+                :max="20"
+                :step="5"
+                disabled
+              ></Slider>
             </FormItem>
             <FormItem>
               <!-- 推杆控制 -->
@@ -151,10 +159,12 @@ export default {
             headers: { token: localStorage.getItem("token") }
           })
           .then(res => {
-            if(res.data.code < 300){
+            if (res.data.code < 300) {
               this.$Message.success("控制滑台打开指令下发成功！");
-            }else {
+              // console.log(res);
+            } else {
               this.$Message.error("控制滑台打开指令下发失败！");
+              // console.log(res);
             }
           })
           .catch(error => {
@@ -168,10 +178,12 @@ export default {
             headers: { token: localStorage.getItem("token") }
           })
           .then(res => {
-            if(res.data.code < 300){
+            if (res.data.code < 300) {
               this.$Message.success("控制滑台关闭指令下发成功！");
-            }else {
+              // console.log(res);
+            } else {
               this.$Message.error("控制滑台关闭指令下发失败！");
+              // console.log(res);
             }
           })
           .catch(error => {
@@ -179,7 +191,7 @@ export default {
             console.log(error);
           });
       }
-      if (this.slideCg.speed === "0") {
+      if (this.slideCg.speed === "0" && this.slideCg.switch === true) {
         // 慢速
         this.$axios
           .get("/api/cmd/slide-slow", {
@@ -196,7 +208,7 @@ export default {
             this.$Message.error("系统错误！");
             console.log(error);
           });
-      } else if (this.slideCg.speed === "1") {
+      } else if (this.slideCg.speed === "1" && this.slideCg.switch === true) {
         // 中速
         this.$axios
           .get("/api/cmd/slide-middle", {
@@ -213,7 +225,7 @@ export default {
             this.$Message.error("系统错误！");
             console.log(error);
           });
-      } else if (this.slideCg.speed === "2") {
+      } else if (this.slideCg.speed === "2" && this.slideCg.switch === true) {
         // 快速
         this.$axios
           .get("/api/cmd/slide-fast", {
@@ -242,9 +254,9 @@ export default {
             headers: { token: localStorage.getItem("token") }
           })
           .then(res => {
-            if(res.data.code < 300){
+            if (res.data.code < 300) {
               this.$Message.success("推杆距离调整为0cm指令下发成功！");
-            }else {
+            } else {
               this.$Message.error("推杆距离调整为0cm指令下发失败！");
             }
           })
@@ -259,9 +271,9 @@ export default {
             headers: { token: localStorage.getItem("token") }
           })
           .then(res => {
-            if(res.data.code < 300){
+            if (res.data.code < 300) {
               this.$Message.success("推杆距离调整为5cm指令下发成功！");
-            }else {
+            } else {
               this.$Message.error("推杆距离调整为5cm指令下发失败！");
             }
           })
@@ -279,9 +291,9 @@ export default {
             headers: { token: localStorage.getItem("token") }
           })
           .then(res => {
-            if(res.data.code < 300){
+            if (res.data.code < 300) {
               this.$Message.success("推杆距离调整为15cm指令下发成功！");
-            }else {
+            } else {
               this.$Message.error("推杆距离调整为15cm指令下发失败！");
             }
           })
@@ -296,9 +308,9 @@ export default {
             headers: { token: localStorage.getItem("token") }
           })
           .then(res => {
-            if(res.data.code < 300){
+            if (res.data.code < 300) {
               this.$Message.success("推杆距离调整为20cm指令下发成功！");
-            }else {
+            } else {
               this.$Message.error("推杆距离调整为20cm指令下发失败！");
             }
           })
@@ -329,6 +341,8 @@ export default {
             // 滑台信息
             if (body.slideOpen === "1") {
               this.slideTable.switch = true; //滑台开启
+              this.slideTable.turn = body.slideDir; //滑台方向
+              this.slideTable.speed = body.slideSpeed; //滑台速度
             } else if (body.slideOpen === "0") {
               this.slideTable.switch = false; //滑台关闭
             }
@@ -337,9 +351,6 @@ export default {
             // }else if(body.slideDir === "0"){
             //   this.slideTable.direction = "0";
             // }
-
-            this.slideTable.turn = body.slideDir; //滑台方向
-            this.slideTable.speed = body.slideSpeed; //滑台速度
 
             this.pushRod.distance = body.rodDistance; //推杆距离
           });
@@ -388,8 +399,8 @@ export default {
 .pushLayout {
   margin-left: 10px;
 }
-.ivu-switch-disabled{
-  opacity: 20!important;
+.ivu-switch-disabled {
+  opacity: 20 !important;
 }
 </style>
 
