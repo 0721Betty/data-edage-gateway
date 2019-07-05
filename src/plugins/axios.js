@@ -13,7 +13,7 @@ import router from '../router/index'
 
 let config = {
   // baseURL: process.env.baseURL || process.env.apiUrl || ""
-  baseURL: "http://119.23.243.252:8080"
+  baseURL: "http://47.111.134.50:8200"
   // timeout: 60 * 1000, // Timeout
   // withCredentials: true, // Check cross-site Access-Control
 };

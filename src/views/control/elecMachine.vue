@@ -517,7 +517,7 @@ export default {
     //连接 后台
     connection() {
       // 建立连接对象
-      let socket = new SockJS("http://119.23.243.252:8080/ws");
+      let socket = new SockJS("http://47.111.134.50:8200/ws");
       // 获取STOMP子协议的客户端对象
       this.stompClient = Stomp.over(socket);
       // 向服务器发起websocket连接
