@@ -91,7 +91,7 @@ export default {
     },
     // 下载app版
     download() {
-      window.location.href = "http://119.23.243.252:8080/api/download/gateway"
+      window.location.href = "http://47.111.134.50:8200/api/download/gateway"
     }
   }
 };

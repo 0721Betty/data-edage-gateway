@@ -277,11 +277,11 @@ export default {
         .then(res => {
           if (res.data.code < 300) {
             this.$Message.success("电机停止指令发送成功！");
-            this.elecCtrl.switch = false;
-            this.elecCtrl.turn = "";
+            // this.elecCtrl.switch = false;
+            // this.elecCtrl.turn = "9";//没有转向
           } else {
             this.$Message.error("电机停止指令发送失败！");
-            this.elecCtrl.switch = true;
+            // this.elecCtrl.switch = true;
           }
         })
         .catch(error => {
@@ -301,10 +301,17 @@ export default {
           .then(res => {
             if (res.data.code < 300) {
               this.$Message.success("控制电机正转指令下发成功！");
-              this.elecCtrl.switch = true
+              // this.elecCtrl.switch = true;
+              // this.elecCtrl.turn = "1";
             } else {
               this.$Message.error("控制电机正转指令下发失败！");
-              this.elecCtrl.switch = false;
+              // 如果电机是开着的，指令失败时，电机转向为反转
+              // if(this.elecCtrl.switch === true){
+              //   this.elecCtrl.turn = "0";//反转
+              // }else if(this.elecCtrl.switch === false){
+              //   // 如果电机是关着的，没有转向
+              //   this.elecCtrl.turn = "9";
+              // }
             }
           })
           .catch(error => {
@@ -320,10 +327,17 @@ export default {
           .then(res => {
             if (res.data.code < 300) {
               this.$Message.success("控制电机反转指令下发成功！");
-              this.elecCtrl.switch = true
+              // this.elecCtrl.switch = true;
+              // this.elecCtrl.turn = "0";
             } else {
               this.$Message.error("控制电机反转指令下发失败！");
-              this.elecCtrl.switch = false;
+              // 如果电机是关着的，turn为空
+              // if(this.elecCtrl.switch === true){
+              //   this.elecCtrl.turn = "1";//正转
+              // }else if(this.elecCtrl.switch === false){
+              //   // 如果电机是关着的，没有转向
+              //   this.elecCtrl.turn = "9";
+              // }
             }
           })
           .catch(error => {
@@ -531,7 +545,8 @@ export default {
             if (body.motorOpen === "0") {
               // 电机关闭
               this.elecCtrl.switch = false;
-              this.realSpeed = 0;
+              this.realSpeed = 0;//速度为0
+              this.elecCtrl.turn = "9";//没有转向
             } else if (body.motorDir === "1" ||"2") {
               // 电机开启
               this.elecCtrl.switch = true;

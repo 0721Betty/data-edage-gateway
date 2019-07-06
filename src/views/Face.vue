@@ -52,8 +52,7 @@ export default {
     }, //鼠标退出不显示文字
     // 下载app版
   download(){
-    console.log("ehkhsek");
-    window.location.href = "http://119.23.243.252:8080/api/download/gateway"
+    window.location.href = "http://47.111.134.50:8200/api/download/gateway"
   }
   },
 };

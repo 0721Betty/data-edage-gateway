@@ -144,7 +144,7 @@ router.beforeEach((to, from, next) => {
   if(to.path == '/login' || to.path == '/register'){
     next();
   }else {
-    isLogin ? next() : next('/login');
+    isLogin ? next() : next('/login');//token存在则可以路由跳转，token不存在说明登录没成功，路由跳转回登录页面
   }
 })
 

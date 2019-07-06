@@ -161,10 +161,12 @@ export default {
           .then(res => {
             if (res.data.code < 300) {
               this.$Message.success("控制滑台打开指令下发成功！");
-              // console.log(res);
+              // this.slideTable.switch = true;//开关打开
             } else {
               this.$Message.error("控制滑台打开指令下发失败！");
-              // console.log(res);
+              // this.slideTable.switch = false;//开关关闭
+              // this.slideTable.turn = "9";//没有转向
+              // this.slideTable.speed = "9";//没有速度
             }
           })
           .catch(error => {
@@ -180,10 +182,12 @@ export default {
           .then(res => {
             if (res.data.code < 300) {
               this.$Message.success("控制滑台关闭指令下发成功！");
-              // console.log(res);
+              // this.slideTable.switch = false;//开关关闭
+              // this.slideTable.turn = "9";//没有转向
+              // this.slideTable.speed = "9";//没有速度
             } else {
               this.$Message.error("控制滑台关闭指令下发失败！");
-              // console.log(res);
+              // this.slideTable.switch = true;//开关打开
             }
           })
           .catch(error => {
@@ -191,8 +195,8 @@ export default {
             console.log(error);
           });
       }
-      if (this.slideCg.speed === "0" && this.slideCg.switch === true) {
-        // 慢速
+      if (this.slideCg.speed === "0" && this.slideTable.switch === true) {
+        // 慢速且滑台是打开的情况下
         this.$axios
           .get("/api/cmd/slide-slow", {
             headers: { token: localStorage.getItem("token") }
@@ -200,6 +204,7 @@ export default {
           .then(res => {
             if (res.data.code < 300) {
               this.$Message.success("控制滑台慢速指令下发成功！");
+              // this.slideTable.speed = "0";
             } else {
               this.$Message.error("控制滑台慢速指令下发失败！");
             }
@@ -208,7 +213,7 @@ export default {
             this.$Message.error("系统错误！");
             console.log(error);
           });
-      } else if (this.slideCg.speed === "1" && this.slideCg.switch === true) {
+      } else if (this.slideCg.speed === "1" && this.slideTable.switch === true) {
         // 中速
         this.$axios
           .get("/api/cmd/slide-middle", {
@@ -217,6 +222,7 @@ export default {
           .then(res => {
             if (res.data.code < 300) {
               this.$Message.success("控制滑台中速指令下发成功！");
+              // this.slideTable.speed = "1";
             } else {
               this.$Message.error("控制滑台中速指令下发失败！");
             }
@@ -225,7 +231,7 @@ export default {
             this.$Message.error("系统错误！");
             console.log(error);
           });
-      } else if (this.slideCg.speed === "2" && this.slideCg.switch === true) {
+      } else if (this.slideCg.speed === "2" && this.slideTable.switch === true) {
         // 快速
         this.$axios
           .get("/api/cmd/slide-fast", {
@@ -234,6 +240,7 @@ export default {
           .then(res => {
             if (res.data.code < 300) {
               this.$Message.success("控制滑台快速指令下发成功！");
+              // this.slideTable.speed = "2";
             } else {
               this.$Message.error("控制滑台快速指令下发失败！");
             }
@@ -345,6 +352,8 @@ export default {
               this.slideTable.speed = body.slideSpeed; //滑台速度
             } else if (body.slideOpen === "0") {
               this.slideTable.switch = false; //滑台关闭
+              this.slideTable.turn = "9";//没有转向
+              this.slideTable.speed = "9";//没有速度
             }
             // if(body.slideDir === "1"){
             //   this.slideTable.direction = "1";
