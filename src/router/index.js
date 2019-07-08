@@ -6,10 +6,10 @@ import login from '../views/Login.vue'
 import register from '../views/Register.vue'
 import home from '../views/Home.vue'
 
-import realTime from '../views/message/RealTime.vue'
-import history from '../views/message/History.vue'
+import realTime from '../views/message/realTime.vue'
+import history from '../views/message/history.vue'
 
-import CelecMachine from '../views/control/ElecMachine.vue'
+import CelecMachine from '../views/control/elecMachine.vue'
 import Cother from '../views/control/Other.vue'
 
 import machineInfo from '../views/machineMsg/machineInfo.vue'
