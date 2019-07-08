@@ -8,13 +8,12 @@
       </Header>
       <Layout>
         <Sider class="sider">
-          <Affix :offset-top="90">
+          <Affix :offset-top="64">
             <SideBar></SideBar>
           </Affix>
         </Sider>
-        <Divider type="vertical" :style="{minHeight: autoHeight}"/>
         <Layout>
-          <Content :style="{minHeight: autoHeight}">
+          <Content :style="{'minHeight': autoHeight}">
             <router-view></router-view>
           </Content>
         </Layout>
@@ -37,20 +36,17 @@ export default {
     };
   },
   beforeMount() {
-    this.autoHeight = window.innerHeight - 80 + "px";
+    this.autoHeight = window.innerHeight - 64 + "px";
   }
 };
 </script>
 <style scoped>
 .ivu-layout-header {
-  background-color: #caf0fd;
-  height: 80px;
-  line-height: 80px;
+  height: 64px;
+  line-height: 64px;
   padding: 0;
 }
 .ivu-layout-sider {
-  background: #f5f7f9 !important;
-  background-color: #e0f6fd !important;
   position: relative;
 }
 .ivu-layout-sider-children {
@@ -58,17 +54,14 @@ export default {
   margin-top: 0 !important;
 }
 .sider {
-  /* width: 200px; */
-  width: 20%;
   display: block;
   position: relative;
   left: 0;
   top: 0;
   bottom: 0;
-  background-color: #e0f6fd;
 }
 .ivu-layout-content {
-  padding: 20px;
+  /* padding: 20px; */
   width: 100%;
 }
 .ivu-divider,

@@ -8,7 +8,7 @@ export default {
   name: "app",
   mounted(){
     this.$Message.config({
-        top: 80,
+        top: 64,
         duration: 5
       });
   }

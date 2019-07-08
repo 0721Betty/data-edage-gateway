@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import face from '../views/Face.vue'
 import login from '../views/Login.vue'
 import register from '../views/Register.vue'
 import home from '../views/Home.vue'
@@ -24,32 +23,22 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    redirect: '/face',
+    redirect: '/login',
   }, 
   {
-    path: '/face',
-    component: face,
-    redirect: '/login',
+    path: '/login',
+    component: login,
     meta: {
-			title: '首页门面'
-		},
-    children: [
-      {
-        path: '/login',
-        component: login,
-        meta: {
-          title: '登录'
-        }
-      },
-      {
-        path: '/register',
-        component: register,
-        meta: {
-          title: '注册'
-        }
-      }
-    ]
-  }, 
+      title: '登录'
+    }
+  },
+  {
+    path: '/register',
+    component: register,
+    meta: {
+      title: '注册'
+    }
+  },
   {
     path: '/home',
     name: 'home',

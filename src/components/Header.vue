@@ -18,11 +18,11 @@
       <Col span="3">
         <div class="user">
           <Dropdown @on-click="handleClick">
-            <a href="javascript:void(0)">
-              <Avatar src="http://www.zhongaigou.com/UploadFiles/2014/cabie.jpg"/>&nbsp;
+            <div>
+              <Avatar src="http://b-ssl.duitang.com/uploads/item/201605/04/20160504175758_hSCK2.jpeg"/>&nbsp;
               <span>{{ adminName }}&nbsp;</span>
-              <Icon type="ios-arrow-down"></Icon>
-            </a>
+              <Icon type="ios-arrow-down" style="color: #fff;"></Icon>
+            </div>
             <DropdownMenu slot="list">
               <DropdownItem name="personal">个人信息</DropdownItem>
               <DropdownItem name="loginOut" @click="confirm">退出登录</DropdownItem>
@@ -100,32 +100,36 @@ export default {
 <style scoped>
 /* 头部样式 */
 .head {
-  background-color: #caf0fd;
-  height: 80px;
-  line-height: 80px;
+  /* background-color: #08acf8; */
+  /* background-color: #caf0fd; */
+  height: 64px;
+  line-height: 64px;
 }
 /* logo样式 */
 .logo {
-  height: 80px;
+  height: 64px;
   text-align: center;
   cursor: pointer;
 }
 /* 系统名称样式 */
 .name {
-  height: 80px;
+  height: 64px;
   font-size: 50px;
   margin-left: 415px;
-  color: #08acf8;
+  /* color: #08acf8; */
+  /* color: #e3f5fc; */
+  color: #fff;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   font-style: italic;
   cursor: pointer;
 }
 .user {
   text-align: center;
-  height: 80px;
+  height: 64px;
 }
 .app{
-  color: #08acf8;
+  /* color: #08acf8; */
+  color: #fff;
   display: inline-block;
   cursor: pointer;
 }
@@ -133,11 +137,12 @@ export default {
   text-align: center;
 }
 span {
-  font-size: 16px;
+  font-size: 18px;
+  color: #fff;
 }
 .ivu-dropdown,
 .ivu-dropdown-rel {
-  height: 80px !important;
+  height: 64px !important;
 }
 .photo{
   font-size: 20px;

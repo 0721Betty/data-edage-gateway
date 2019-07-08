@@ -39,7 +39,7 @@ import getOpenKeys from '../siderConfig/openKeys.config.js'
 export default {
   data() {
     return {
-      theme1: 'light',
+      theme1: 'dark',
       activeNav: '',
       openKeys: [''],
     };
@@ -70,44 +70,44 @@ export default {
 <style scoped>
 /* 让侧边栏占满 */
 .wrapper {
-  /* width: 200px; */
-  width: 20%;
+  width: 200px;
   display: block;
   position: absolute;
   left: 0;
   top: 0px;
   bottom: 0;
-  background-color: #e0f6fd;
 }
 .inner {
-  /* width: 200px; */
-  width:20%;
+  width: 200px;
 }
-.ivu-menu-light {
-  background-color: #e0f6fd;
-}
+
 /* 设置左边导航栏的宽及文字居中*/
 ul {
   width: 200px !important;
   text-align: center;
-}
-/* 高亮显示的颜色 */
-.ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu) {
-  background: #caf0fd;
 }
 /* 让导航栏右边的线消失 */
 .ivu-menu-vertical.ivu-menu-light:after {
   width: 0px;
   height: 0px;
 }
-.ivu-menu{
-  font-size: 16px;
-}
-.ivu-menu-item{
-  font-size: 16px;
+.ivu-menu,.ivu-menu-item{
+  font-size: 18px;
 }
 i.ivu-icon.ivu-icon-md-chatboxes::before{
-  font-size: 16px;
+  font-size: 18px;
+}
+/* 覆盖二级菜单默认背景 */
+.ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item,.ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item, .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item:hover{
+  background: #515A6E!important;
+}
+/* 覆盖一级菜单被选中时的默认背景 */
+.ivu-menu-dark.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu), .ivu-menu-dark.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu):hover{
+  background: #515A6E!important;
+}
+/* 二级菜单被选中时的字体颜色 */
+.ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item-active,.ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item-active, .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item-active:hover{
+  color:#2d8cf0;
 }
 </style>
 

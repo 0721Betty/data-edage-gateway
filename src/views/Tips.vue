@@ -4,7 +4,7 @@
       class="success"
       v-if="this.tempWarn === '' && this.elecWarn === '' && this.pressWarn === ''"
     >
-      <Alert type="success" show-icon closable>系统正常运行</Alert>
+      <Alert type="success" show-icon closable>系统正常</Alert>
     </div>
     <Alert type="warning" show-icon closable v-if="this.tempWarn != ''">
       系统温度报警
@@ -161,6 +161,7 @@ export default {
         },
         err => {
           // 连接发生错误时的处理函数
+          this.$Message.error("webSocket连接错误！");
           console.log(err);
         },
         "/"
@@ -242,6 +243,7 @@ export default {
 </script>
 <style scoped>
 .wrapper {
+  padding: 20px;
   width: 100%;
   height: 100%;
   background: url("../assets/bkg.png") no-repeat;

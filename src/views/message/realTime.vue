@@ -1,47 +1,36 @@
 <template>
   <!-- 实时数据页面 -->
   <div class="wrapper">
-    <Row :gutter="20">
+    <div class="inner">
+    <Row :style="{'width': autoWidth}">
       <!-- 温度 -->
-      <Col span="8">
-        <Card>
-          <div id="temp" class="myChart"></div>
-        </Card>
+      <Col span="8" :style="{'height': autoHeight}">
+        <div id="temp" class="myChart"></div>
       </Col>
       <!-- 湿度 -->
-      <Col span="8">
-        <Card>
-          <div id="humi" class="myChart"></div>
-        </Card>
+      <Col span="8" :style="{'height': autoHeight}">
+        <div id="humi" class="myChart"></div>
       </Col>
       <!-- 电压 -->
-      <Col span="8">
-        <Card>
-          <div id="volt" class="myChart"></div>
-        </Card>
+      <Col span="8" :style="{'height': autoHeight}">
+        <div id="volt" class="myChart"></div>
       </Col>
     </Row>
-    <br>
-    <Row :gutter="20">
+    <Row :style="{'width': autoWidth}">
       <!-- 电流 -->
-      <Col span="8">
-        <Card>
-          <div id="elec" class="myChart"></div>
-        </Card>
+      <Col span="8" :style="{'height': autoHeight}">
+        <div id="elec" class="myChart"></div>
       </Col>
       <!-- 压力 -->
-      <Col span="8">
-        <Card>
-          <div id="press" class="myChart"></div>
-        </Card>
+      <Col span="8" :style="{'height': autoHeight}">
+        <div id="press" class="myChart"></div>
       </Col>
       <!-- 功率 -->
-      <Col span="8">
-        <Card>
-          <div id="power" class="myChart"></div>
-        </Card>
+      <Col span="8" :style="{'height': autoHeight}">
+        <div id="power" class="myChart"></div>
       </Col>
     </Row>
+    </div>
   </div>
 </template>
 <script>
@@ -50,6 +39,9 @@ import Stomp from "stompjs";
 export default {
   data() {
     return {
+      // 自动计算宽高
+      autoWidth: "",
+      autoHeight: "",
       // WebSocket
       stompClient: "",
       timer: "",
@@ -61,6 +53,10 @@ export default {
       pressValue: 0,
       powerValue: 0
     };
+  },
+   beforeMount() {
+    this.autoWidth = window.screen.availWidth - 200 +"px";
+    this.autoHeight = parseInt((window.innerHeight - 64)/2) + "px";
   },
   mounted() {
     this.initWebSocket(); //websocket初始化
@@ -81,144 +77,567 @@ export default {
       let press = this.$echarts.init(document.getElementById("press"));
       let power = this.$echarts.init(document.getElementById("power"));
       temp.setOption({
+        tooltip: {
+          formatter: "{a} <br/>{c} ℃" //标题，值，单位
+        },
+        toolbox: {
+          show: true,
+          feature: {
+            mark: { show: true }
+          }
+        },
         width: "auto",
         height: "auto",
         series: [
           {
-            name: "设备参数",
+            name: "温度",
             type: "gauge",
-            detail: { formatter: "{value}℃" },
-            data: [{ value: this.tempValue, name: "温度" }],
             min: 10,
             max: 70,
-            title: {
-              color: "#08acf8"
-            },
-            splitNumber: 6, //分成6份
-            fontWeight: "normal",
-            radius: "100%", //仪表盘大小
+            splitNumber: 6,
+            radius: "85%",
             axisLine: {
               // 坐标轴线
               lineStyle: {
                 // 属性lineStyle控制线条样式
-                color: [[5 / 6, "#91c7ae"], [1, "#c23531"]]
+                color: [[5 / 6, "lime"], [1, "#ff4500"]],
+                width: 3,
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
               }
-            }
+            },
+            axisLabel: {
+              // 坐标轴小标记
+              textStyle: {
+                // 属性lineStyle控制线条样式
+                fontWeight: "bolder",
+                color: "#fff",
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
+              }
+            },
+            axisTick: {
+              // 坐标轴小标记
+              length: 15, // 属性length控制线长
+              lineStyle: {
+                // 属性lineStyle控制线条样式
+                color: "auto",
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
+              }
+            },
+            splitLine: {
+              // 分隔线
+              length: 25, // 属性length控制线长
+              lineStyle: {
+                // 属性lineStyle（详见lineStyle）控制线条样式
+                width: 3,
+                color: "#fff",
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
+              }
+            },
+            pointer: {
+              // 分隔线
+              shadowColor: "#fff", //默认透明
+              shadowBlur: 5
+            },
+            title: {
+              textStyle: {
+                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                fontWeight: "bolder",
+                fontSize: 20,
+                fontStyle: "italic",
+                color: "#fff",
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
+              }
+            },
+            detail: {
+              // backgroundColor: "rgba(30,144,255,0.8)",
+              backgroundColor: "#2d8cf0",
+              borderWidth: 1,
+              borderColor: "#fff",
+              shadowColor: "#fff", //默认透明
+              shadowBlur: 5,
+              offsetCenter: [0, "50%"], // x, y，单位px
+              textStyle: {
+                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                fontWeight: "bolder",
+                color: "#fff"
+              }
+            },
+            data: [{ value: this.tempValue, name: "℃" }]
           }
         ]
       });
       humi.setOption({
+        tooltip: {
+          formatter: "{a} <br/>{c} %RH" //标题，值，单位
+        },
+        toolbox: {
+          show: true,
+          feature: {
+            mark: { show: true }
+          }
+        },
+        width: "auto",
+        height: "auto",
         series: [
           {
-            name: "设备参数",
+            name: "湿度",
             type: "gauge",
-            detail: { formatter: "{value}%RH" },
-            data: [{ value: this.humiValue, name: "湿度" }],
-            title: {
-              color: "#08acf8"
-            },
             min: 40,
             max: 70,
             splitNumber: 6,
-            fontWeight: "normal",
-            radius: "100%",
+            radius: "85%",
             axisLine: {
+              // 坐标轴线
               lineStyle: {
-                color: [[4 / 6, "#91c7ae"], [1, "#c23531"]]
+                // 属性lineStyle控制线条样式
+                color: [[4 / 6, "lime"], [1, "#ff4500"]],
+                width: 3,
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
               }
-            }
+            },
+            axisLabel: {
+              // 坐标轴小标记
+              textStyle: {
+                // 属性lineStyle控制线条样式
+                fontWeight: "bolder",
+                color: "#fff",
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
+              }
+            },
+            axisTick: {
+              // 坐标轴小标记
+              length: 15, // 属性length控制线长
+              lineStyle: {
+                // 属性lineStyle控制线条样式
+                color: "auto",
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
+              }
+            },
+            splitLine: {
+              // 分隔线
+              length: 25, // 属性length控制线长
+              lineStyle: {
+                // 属性lineStyle（详见lineStyle）控制线条样式
+                width: 3,
+                color: "#fff",
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
+              }
+            },
+            pointer: {
+              // 分隔线
+              shadowColor: "#fff", //默认透明
+              shadowBlur: 5
+            },
+            title: {
+              textStyle: {
+                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                fontWeight: "bolder",
+                fontSize: 20,
+                fontStyle: "italic",
+                color: "#fff",
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
+              }
+            },
+            detail: {
+              backgroundColor: "#2d8cf0",
+              borderWidth: 1,
+              borderColor: "#fff",
+              shadowColor: "#fff", //默认透明
+              shadowBlur: 5,
+              offsetCenter: [0, "50%"], // x, y，单位px
+              textStyle: {
+                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                fontWeight: "bolder",
+                color: "#fff"
+              }
+            },
+            data: [{ value: this.tempValue, name: "%RH" }]
           }
         ]
       });
       volt.setOption({
+        tooltip: {
+          formatter: "{a} <br/>{c} V" //标题，值，单位
+        },
+        toolbox: {
+          show: true,
+          feature: {
+            mark: { show: true }
+          }
+        },
+        width: "auto",
+        height: "auto",
         series: [
           {
-            name: "设备参数",
+            name: "电压",
             type: "gauge",
-            detail: { formatter: "{value}V" },
-            data: [{ value: this.voltValue, name: "电压" }],
-            title: {
-              color: "#08acf8"
-            },
             min: 20,
             max: 28,
             splitNumber: 8,
-            fontWeight: "normal",
-            radius: "100%",
+            radius: "85%",
             axisLine: {
+              // 坐标轴线
               lineStyle: {
-                color: [[5/8, "#91c7ae"], [1, "#c23531"]]
+                // 属性lineStyle控制线条样式
+                color: [[5 / 8, "lime"], [1, "#ff4500"]],
+                width: 3,
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
               }
-            }
+            },
+            axisLabel: {
+              // 坐标轴小标记
+              textStyle: {
+                // 属性lineStyle控制线条样式
+                fontWeight: "bolder",
+                color: "#fff",
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
+              }
+            },
+            axisTick: {
+              // 坐标轴小标记
+              length: 15, // 属性length控制线长
+              lineStyle: {
+                // 属性lineStyle控制线条样式
+                color: "auto",
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
+              }
+            },
+            splitLine: {
+              // 分隔线
+              length: 25, // 属性length控制线长
+              lineStyle: {
+                // 属性lineStyle（详见lineStyle）控制线条样式
+                width: 3,
+                color: "#fff",
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
+              }
+            },
+            pointer: {
+              // 分隔线
+              shadowColor: "#fff", //默认透明
+              shadowBlur: 5
+            },
+            title: {
+              textStyle: {
+                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                fontWeight: "bolder",
+                fontSize: 20,
+                fontStyle: "italic",
+                color: "#fff",
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
+              }
+            },
+            detail: {
+              backgroundColor: "#2d8cf0",
+              borderWidth: 1,
+              borderColor: "#fff",
+              shadowColor: "#fff", //默认透明
+              shadowBlur: 5,
+              offsetCenter: [0, "50%"], // x, y，单位px
+              textStyle: {
+                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                fontWeight: "bolder",
+                color: "#fff"
+              }
+            },
+            data: [{ value: this.tempValue, name: "V" }]
           }
         ]
       });
       elec.setOption({
+        tooltip: {
+          formatter: "{a} <br/>{c} A" //标题，值，单位
+        },
+        toolbox: {
+          show: true,
+          feature: {
+            mark: { show: true }
+          }
+        },
+        width: "auto",
+        height: "auto",
         series: [
           {
-            name: "设备参数",
+            name: "电流",
             type: "gauge",
-            detail: { formatter: "{value}A" },
-            data: [{ value: this.elecValue, name: "电流" }],
-            title: {
-              color: "#08acf8"
-            },
             min: 0,
             max: 5,
             splitNumber: 10,
-            fontWeight: "normal",
-            radius: "100%",
+            radius: "85%",
             axisLine: {
+              // 坐标轴线
               lineStyle: {
-                color: [[4 / 5, "#91c7ae"], [1, "#c23531"]]
+                // 属性lineStyle控制线条样式
+                color: [[4 / 5, "lime"], [1, "#ff4500"]],
+                width: 3,
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
               }
-            }
+            },
+            axisLabel: {
+              // 坐标轴小标记
+              textStyle: {
+                // 属性lineStyle控制线条样式
+                fontWeight: "bolder",
+                color: "#fff",
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
+              }
+            },
+            axisTick: {
+              // 坐标轴小标记
+              length: 15, // 属性length控制线长
+              lineStyle: {
+                // 属性lineStyle控制线条样式
+                color: "auto",
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
+              }
+            },
+            splitLine: {
+              // 分隔线
+              length: 25, // 属性length控制线长
+              lineStyle: {
+                // 属性lineStyle（详见lineStyle）控制线条样式
+                width: 3,
+                color: "#fff",
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
+              }
+            },
+            pointer: {
+              // 分隔线
+              shadowColor: "#fff", //默认透明
+              shadowBlur: 5
+            },
+            title: {
+              textStyle: {
+                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                fontWeight: "bolder",
+                fontSize: 20,
+                fontStyle: "italic",
+                color: "#fff",
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
+              }
+            },
+            detail: {
+              backgroundColor: "#2d8cf0",
+              borderWidth: 1,
+              borderColor: "#fff",
+              shadowColor: "#fff", //默认透明
+              shadowBlur: 5,
+              offsetCenter: [0, "50%"], // x, y，单位px
+              textStyle: {
+                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                fontWeight: "bolder",
+                color: "#fff"
+              }
+            },
+            data: [{ value: this.tempValue, name: "A" }]
           }
         ]
       });
       press.setOption({
+        tooltip: {
+          formatter: "{a} <br/>{c} Kg" //标题，值，单位
+        },
+        toolbox: {
+          show: true,
+          feature: {
+            mark: { show: true }
+          }
+        },
+        width: "auto",
+        height: "auto",
         series: [
           {
-            name: "设备参数",
+            name: "压力",
             type: "gauge",
-            detail: { formatter: "{value}KG" },
-            data: [{ value: this.pressValue, name: "压力" }],
-            title: {
-              color: "#08acf8"
-            },
             min: 0,
             max: 6,
             splitNumber: 6,
-            fontWeight: "normal",
-            radius: "100%",
+            radius: "85%",
             axisLine: {
+              // 坐标轴线
               lineStyle: {
-                color: [[5 / 6, "#91c7ae"], [1, "#c23531"]]
+                // 属性lineStyle控制线条样式
+                color: [[5 / 6, "lime"], [1, "#ff4500"]],
+                width: 3,
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
               }
-            }
+            },
+            axisLabel: {
+              // 坐标轴小标记
+              textStyle: {
+                // 属性lineStyle控制线条样式
+                fontWeight: "bolder",
+                color: "#fff",
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
+              }
+            },
+            axisTick: {
+              // 坐标轴小标记
+              length: 15, // 属性length控制线长
+              lineStyle: {
+                // 属性lineStyle控制线条样式
+                color: "auto",
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
+              }
+            },
+            splitLine: {
+              // 分隔线
+              length: 25, // 属性length控制线长
+              lineStyle: {
+                // 属性lineStyle（详见lineStyle）控制线条样式
+                width: 3,
+                color: "#fff",
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
+              }
+            },
+            pointer: {
+              // 分隔线
+              shadowColor: "#fff", //默认透明
+              shadowBlur: 5
+            },
+            title: {
+              textStyle: {
+                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                fontWeight: "bolder",
+                fontSize: 20,
+                fontStyle: "italic",
+                color: "#fff",
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
+              }
+            },
+            detail: {
+              backgroundColor: "#2d8cf0",
+              borderWidth: 1,
+              borderColor: "#fff",
+              shadowColor: "#fff", //默认透明
+              shadowBlur: 5,
+              offsetCenter: [0, "50%"], // x, y，单位px
+              textStyle: {
+                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                fontWeight: "bolder",
+                color: "#fff"
+              }
+            },
+            data: [{ value: this.tempValue, name: "Kg" }]
           }
         ]
       });
       power.setOption({
+        tooltip: {
+          formatter: "{a} <br/>{c} W" //标题，值，单位
+        },
+        toolbox: {
+          show: true,
+          feature: {
+            mark: { show: true }
+          }
+        },
+        width: "auto",
+        height: "auto",
         series: [
           {
-            name: "设备参数",
+            name: "功率",
             type: "gauge",
-            detail: { formatter: "{value}W" },
-            data: [{ value: this.powerValue, name: "功率" }],
-            title: {
-              color: "#08acf8"
-            },
             min: 0,
             max: 150,
             splitNumber: 15,
-            fontWeight: "normal",
-            radius: "100%",
+            radius: "85%",
             axisLine: {
+              // 坐标轴线
               lineStyle: {
-                color: [[18 / 25, "#91c7ae"], [1, "#c23531"]]
+                // 属性lineStyle控制线条样式
+                color: [[18 / 25, "lime"], [1, "#ff4500"]],
+                width: 3,
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
               }
-            }
+            },
+            axisLabel: {
+              // 坐标轴小标记
+              textStyle: {
+                // 属性lineStyle控制线条样式
+                fontWeight: "bolder",
+                color: "#fff",
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
+              }
+            },
+            axisTick: {
+              // 坐标轴小标记
+              length: 15, // 属性length控制线长
+              lineStyle: {
+                // 属性lineStyle控制线条样式
+                color: "auto",
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
+              }
+            },
+            splitLine: {
+              // 分隔线
+              length: 25, // 属性length控制线长
+              lineStyle: {
+                // 属性lineStyle（详见lineStyle）控制线条样式
+                width: 3,
+                color: "#fff",
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
+              }
+            },
+            pointer: {
+              // 分隔线
+              shadowColor: "#fff", //默认透明
+              shadowBlur: 5
+            },
+            title: {
+              textStyle: {
+                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                fontWeight: "bolder",
+                fontSize: 20,
+                fontStyle: "italic",
+                color: "#fff",
+                shadowColor: "#fff", //默认透明
+                shadowBlur: 10
+              }
+            },
+            detail: {
+              backgroundColor: "#2d8cf0",
+              borderWidth: 1,
+              borderColor: "#fff",
+              shadowColor: "#fff", //默认透明
+              shadowBlur: 5,
+              offsetCenter: [0, "50%"], // x, y，单位px
+              textStyle: {
+                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                fontWeight: "bolder",
+                color: "#fff"
+              }
+            },
+            data: [{ value: this.tempValue, name: "W" }]
           }
         ]
       });
@@ -249,7 +668,6 @@ export default {
             this.pressValue = body.weight;
             this.powerValue = body.power;
 
-
             // 测试用的随机代码
             // this.tempValue = (parseFloat(body.temperature) + Math.random() * 10).toFixed(1);
             // this.humiValue = (parseFloat(body.humidity) + Math.random() * 10).toFixed(1);
@@ -257,7 +675,6 @@ export default {
             // this.elecValue = (parseFloat(body.electric) + Math.random() * 10).toFixed(3);
             // this.pressValue = (parseFloat(body.weight) + Math.random() * 10).toFixed(3);
             // this.powerValue = (parseFloat(body.power) + Math.random() * 10).toFixed(3);
-
 
             //获取到数据后重新绘制仪表盘
             let temp = this.$echarts.init(document.getElementById("temp"));
@@ -312,7 +729,7 @@ export default {
         },
         err => {
           // 连接发生错误时的处理函数
-          this.$Message.error("系统错误！");
+          this.$Message.error("WebSocket连接错误！");
           console.log(err);
         },
         "/"
@@ -331,10 +748,14 @@ export default {
 /* 仪表盘样式 */
 .myChart {
   display: block;
-  width: 400px;
-  height: 300px;
+  width: 100%;
+  height: 100%;
+  background-color: #363e4f;
 }
-.ivu-input-wrapper{
+.ivu-input-wrapper {
   width: 30%;
 }
+/* .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item-active {
+  background: #363e4f;
+} */
 </style>

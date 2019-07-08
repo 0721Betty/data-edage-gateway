@@ -1,6 +1,6 @@
 <template>
   <!-- 电机信息页面及控制页面 -->
-  <div>
+  <div class="wrapper">
     <!-- 电机信息 -->
     <Row :gutter="20">
       <!-- 仪表盘 -->
@@ -132,7 +132,7 @@ export default {
   beforeMount() {
     //默认显示电机的历史记录从昨天的此刻到此刻的时间点的数据
     this.defaultHistory();
-     this.autoWidth = window.screen.availWidth - 730 +"px";
+     this.autoWidth = window.screen.availWidth - 750 +"px";
   },
   mounted() {
     this.initWebSocket(); //websocket初始化
@@ -403,7 +403,6 @@ export default {
     defaultHistory() {
       let defaultEnd = Number(new Date()); //默认结束时间为此刻的时间
       let defaultStart = defaultEnd - 24 * 60 * 60 * 1000; //昨天的时间的时间戳
-      console.log(new Date(defaultStart));
       // 发送请求获取数据进行渲染
       this.$axios
         .get(`/api/status/${defaultStart}/${defaultEnd}`, {
@@ -560,11 +559,6 @@ export default {
             }else if(this.elecCtrl.switch === true){
               this.elecCtrl.turn = "1";
             }
-            // 测试用的仪表盘中电机的实时转速
-            // this.realSpeed = (
-            //   parseFloat(body.motorSpeed) +
-            //   Math.random() * 10
-            // ).toFixed(3);
             //获取到数据后重新绘制仪表盘
             let dashBoard = this.$echarts.init(
               document.getElementById("dashBoard")
@@ -580,6 +574,7 @@ export default {
         },
         err => {
           // 连接发生错误时的处理函数
+          this.$Message.error("WebSocket连接错误!");
           console.log(err);
         },
         "/"
@@ -595,6 +590,9 @@ export default {
 };
 </script>
 <style scoped>
+.wrapper {
+  margin: 20px;
+}
 /* 仪表盘样式 */
 .myChart {
   display: block;

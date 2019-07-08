@@ -1,5 +1,6 @@
 <template>
-  <Card class="wrapper">
+<div class="wrapper" :style="{height: autoHeight}">
+  <Card class="inner">
     <p slot="title" class="title">
       <Icon type="md-happy" class="photo"></Icon>管理员注册
     </p>
@@ -25,6 +26,7 @@
       </FormItem>
     </Form>
   </Card>
+  </div>
 </template>
 <script>
 export default {
@@ -121,6 +123,9 @@ export default {
       }
     };
   },
+   beforeMount(){
+    this.autoHeight = window.innerHeight + "px";
+  },
   methods: {
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
@@ -152,8 +157,16 @@ export default {
 </script>
 <style scoped>
 .wrapper {
+  width: 100%;
+  height: 100%;
+  background: url("../assets/loginBkg.png") no-repeat;
+  background-size: 100% 100%;
+  overflow: hidden;
+}
+.inner {
   width: 360px;
-  margin: 60px auto;
+  margin-top: 300px;
+  margin-left: 1055px;
 }
 .title {
   font-size: 18px;
@@ -163,5 +176,8 @@ export default {
 }
 .reset {
   margin-left: 12px;
+}
+.ivu-form-item {
+  text-align: center;
 }
 </style>

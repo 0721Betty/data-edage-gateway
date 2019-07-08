@@ -355,18 +355,13 @@ export default {
               this.slideTable.turn = "9";//没有转向
               this.slideTable.speed = "9";//没有速度
             }
-            // if(body.slideDir === "1"){
-            //   this.slideTable.direction = "1";
-            // }else if(body.slideDir === "0"){
-            //   this.slideTable.direction = "0";
-            // }
-
             this.pushRod.distance = body.rodDistance; //推杆距离
           });
         },
         err => {
           // 连接发生错误时的处理函数
-          this.$Message.error("连接失败！");
+          this.$Message.error("webSocket连接错误！");
+          console.log(err);
         },
         "/"
       );

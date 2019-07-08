@@ -1,5 +1,6 @@
 <template>
-  <Card class="wrapper">
+<div class="wrapper" :style="{height: autoHeight}">
+  <Card class="inner">
     <p slot="title" class="title">
       <Icon type="md-happy" class="photo"></Icon>管理员登录
     </p>
@@ -21,8 +22,10 @@
         <Button type="primary" @click="handleSubmit('loginUser')">登录</Button>
         <Button type="info" @click="handleCancel('loginUser')" class="cancel">重置</Button>
       </FormItem>
+      <div><p class="register">还没有账号？马上<router-link to="/register">注册</router-link></p></div>
     </Form>
   </Card>
+  </div>
 </template>
 
 <script>
@@ -30,6 +33,7 @@ const Base64 = require("js-base64").Base64;
 export default {
   data() {
     return {
+      autoHeight: "",
       loginUser: {
         name: "",
         password: ""
@@ -60,6 +64,9 @@ export default {
         ]
       }
     };
+  },
+  beforeMount(){
+    this.autoHeight = window.innerHeight + "px";
   },
   created() {
     // 在页面加载时从cookie获取登录信息
@@ -148,8 +155,16 @@ export default {
 
 <style scoped>
 .wrapper {
+  width: 100%;
+  height: 100%;
+  background: url("../assets/loginBkg.png") no-repeat;
+  background-size: 100% 100%;
+  overflow: hidden;
+}
+.inner {
   width: 360px;
-  margin: 60px auto;
+  margin-top: 300px;
+  margin-left: 1055px;
 }
 .title {
   font-size: 18px;
@@ -159,5 +174,11 @@ export default {
 }
 .cancel {
   margin-left: 12px;
+}
+.register {
+  text-align: center;
+}
+.ivu-form-item {
+  text-align: center;
 }
 </style>

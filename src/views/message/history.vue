@@ -1,6 +1,6 @@
 <template>
   <!-- 历史数据记录页面 -->
-  <div>
+  <div class="inner">
     <Row>
       <Col span="24">
         <Card>
@@ -19,7 +19,7 @@
             </Form>
           </div>
           <!-- 折线图 -->
-          <div id="history" class="myChart" :style="{width: autoWidth}"></div>
+          <div id="history" class="myChart" :style="{'width': autoWidth, 'height': autoHeight}"></div>
         </Card>
       </Col>
     </Row>
@@ -30,6 +30,7 @@ export default {
   data() {
     return {
       autoWidth: "",
+      autoHeight: "",
       // 查询按钮的大小
       buttonSize: "small",
       // 时间选择框选择的时间的值
@@ -52,18 +53,14 @@ export default {
   beforeMount() {
     //用户选择时间查询前默认展示昨天的此刻到现在此刻的时间
     this.defaultHistory();
-    this.autoWidth = window.screen.availWidth - 272 +"px";
+    this.autoWidth = window.screen.availWidth - 280 +"px";
+    this.autoHeight = window.innerHeight -205 + "px";
   },
   mounted() {
     this.init();//折线图初始化
   },
   methods: {
     init() {
-      // 全局配置this.$Message
-      this.$Message.config({
-        top: 100, //距离顶部100px
-        duration: 10 //显示10秒
-      });
       let history = this.$echarts.init(document.getElementById("history"));
       history.showLoading({
         text: "加载中",
@@ -413,9 +410,11 @@ export default {
 };
 </script>
 <style scoped>
+.inner {
+  margin: 20px;
+}
 .myChart {
   display: block;
-  height: 600px;
 }
 .selectTime {
   margin-top: 8px;
