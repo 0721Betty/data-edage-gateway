@@ -70,7 +70,7 @@ export default {
       });
       history.setOption({
         title: {
-          text: "设备历史数据(默认显示昨天的此刻到此刻的数据)"
+          text: "历史数据(默认显示昨天的此刻到此刻的数据)"
         },
         tooltip: {
           trigger: "axis",

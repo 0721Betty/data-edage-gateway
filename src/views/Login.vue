@@ -19,8 +19,8 @@
         <Checkbox v-model="config.remember">记住密码</Checkbox>
       </FormItem>
       <FormItem>
-        <Button type="primary" @click="handleSubmit('loginUser')">登录</Button>
-        <Button type="info" @click="handleCancel('loginUser')" class="cancel">重置</Button>
+        <Button type="info" @click="handleCancel('loginUser')">重置</Button>
+        <Button type="primary" @click="handleSubmit('loginUser')" class="cancel">登录</Button>
       </FormItem>
       <div><p class="register">还没有账号？马上<router-link to="/register">注册</router-link></p></div>
     </Form>
@@ -168,6 +168,7 @@ export default {
 }
 .title {
   font-size: 18px;
+  text-align: center;
 }
 .photo {
   font-size: 22px;

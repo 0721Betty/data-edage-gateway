@@ -147,4 +147,7 @@ span {
 .photo{
   font-size: 20px;
 }
+.ivu-dropdown-item {
+  font-size: 14px !important;
+}
 </style>

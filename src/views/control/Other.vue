@@ -125,7 +125,7 @@ export default {
       },
       // 推杆信息
       pushRod: {
-        distance: ""
+        distance: 0
       },
       // 修改滑台信息
       modal1: false,
@@ -136,7 +136,7 @@ export default {
       // 修改推杆信息
       modal2: false,
       pushCg: {
-        distance: ""
+        distance: 0
       }
     };
   },
@@ -161,16 +161,12 @@ export default {
           .then(res => {
             if (res.data.code < 300) {
               this.$Message.success("控制滑台打开指令下发成功！");
-              // this.slideTable.switch = true;//开关打开
-            } else {
+            } else if(res.data.code >= 300){
               this.$Message.error("控制滑台打开指令下发失败！");
-              // this.slideTable.switch = false;//开关关闭
-              // this.slideTable.turn = "9";//没有转向
-              // this.slideTable.speed = "9";//没有速度
             }
           })
           .catch(error => {
-            this.$Message.error("系统错误！");
+            this.$Message.error("接口或处理逻辑出错！");
             console.log(error);
           });
       } else if (this.slideCg.switch === false) {
@@ -182,16 +178,12 @@ export default {
           .then(res => {
             if (res.data.code < 300) {
               this.$Message.success("控制滑台关闭指令下发成功！");
-              // this.slideTable.switch = false;//开关关闭
-              // this.slideTable.turn = "9";//没有转向
-              // this.slideTable.speed = "9";//没有速度
-            } else {
+            } else if(res.data.code >= 300){
               this.$Message.error("控制滑台关闭指令下发失败！");
-              // this.slideTable.switch = true;//开关打开
             }
           })
           .catch(error => {
-            this.$Message.error("系统错误！");
+            this.$Message.error("接口或处理逻辑出错！");
             console.log(error);
           });
       }
@@ -204,13 +196,12 @@ export default {
           .then(res => {
             if (res.data.code < 300) {
               this.$Message.success("控制滑台慢速指令下发成功！");
-              // this.slideTable.speed = "0";
-            } else {
+            } else if(res.data.code >= 300){
               this.$Message.error("控制滑台慢速指令下发失败！");
             }
           })
           .catch(error => {
-            this.$Message.error("系统错误！");
+            this.$Message.error("接口或处理逻辑出错！");
             console.log(error);
           });
       } else if (this.slideCg.speed === "1" && this.slideTable.switch === true) {
@@ -222,13 +213,12 @@ export default {
           .then(res => {
             if (res.data.code < 300) {
               this.$Message.success("控制滑台中速指令下发成功！");
-              // this.slideTable.speed = "1";
-            } else {
+            } else if(res.data.code >= 300){
               this.$Message.error("控制滑台中速指令下发失败！");
             }
           })
           .catch(error => {
-            this.$Message.error("系统错误！");
+            this.$Message.error("接口或处理逻辑出错！");
             console.log(error);
           });
       } else if (this.slideCg.speed === "2" && this.slideTable.switch === true) {
@@ -240,13 +230,12 @@ export default {
           .then(res => {
             if (res.data.code < 300) {
               this.$Message.success("控制滑台快速指令下发成功！");
-              // this.slideTable.speed = "2";
-            } else {
+            } else if(res.data.code >= 300){
               this.$Message.error("控制滑台快速指令下发失败！");
             }
           })
           .catch(error => {
-            this.$Message.error("系统错误！");
+            this.$Message.error("接口或处理逻辑出错！");
             console.log(error);
           });
       }
@@ -263,12 +252,12 @@ export default {
           .then(res => {
             if (res.data.code < 300) {
               this.$Message.success("推杆距离调整为0cm指令下发成功！");
-            } else {
+            } else if(res.data.code >= 300){
               this.$Message.error("推杆距离调整为0cm指令下发失败！");
             }
           })
           .catch(error => {
-            this.$Message.error("系统错误！");
+            this.$Message.error("接口或处理逻辑出错！");
             console.log(error);
           });
       } else if (this.pushCg.distance === 5) {
@@ -280,12 +269,12 @@ export default {
           .then(res => {
             if (res.data.code < 300) {
               this.$Message.success("推杆距离调整为5cm指令下发成功！");
-            } else {
+            } else if(res.data.code >= 300){
               this.$Message.error("推杆距离调整为5cm指令下发失败！");
             }
           })
           .catch(error => {
-            this.$Message.error("系统错误！");
+            this.$Message.error("接口或处理逻辑出错！");
             console.log(error);
           });
       } else if (this.pushCg.distance === 10) {
@@ -300,12 +289,12 @@ export default {
           .then(res => {
             if (res.data.code < 300) {
               this.$Message.success("推杆距离调整为15cm指令下发成功！");
-            } else {
+            } else if(res.data.code >= 300){
               this.$Message.error("推杆距离调整为15cm指令下发失败！");
             }
           })
           .catch(error => {
-            this.$Message.error("系统错误！");
+            this.$Message.error("接口或处理逻辑出错！");
             console.log(error);
           });
       } else if (this.pushCg.distance === 20) {
@@ -317,12 +306,12 @@ export default {
           .then(res => {
             if (res.data.code < 300) {
               this.$Message.success("推杆距离调整为20cm指令下发成功！");
-            } else {
+            } else if(res.data.code >= 300){
               this.$Message.error("推杆距离调整为20cm指令下发失败！");
             }
           })
           .catch(error => {
-            this.$Message.error("系统错误！");
+            this.$Message.error("接口或处理逻辑出错！");
             console.log(error);
           });
       }

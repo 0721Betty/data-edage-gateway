@@ -132,7 +132,7 @@ export default {
   beforeMount() {
     //默认显示电机的历史记录从昨天的此刻到此刻的时间点的数据
     this.defaultHistory();
-     this.autoWidth = window.screen.availWidth - 750 +"px";
+    this.autoWidth = window.screen.availWidth - 750 +"px";
   },
   mounted() {
     this.initWebSocket(); //websocket初始化
@@ -277,21 +277,18 @@ export default {
         .then(res => {
           if (res.data.code < 300) {
             this.$Message.success("电机停止指令发送成功！");
-            // this.elecCtrl.switch = false;
-            // this.elecCtrl.turn = "9";//没有转向
-          } else {
+          }else if(res.data.code >= 300){
             this.$Message.error("电机停止指令发送失败！");
-            // this.elecCtrl.switch = true;
           }
         })
         .catch(error => {
-          this.$Message.error("系统错误！");
+          this.$Message.error("接口或处理逻辑出错！");
           console.log(error);
         });
     },
     control() {
       this.$Message.info("指令下发中请耐心等待！");
-      // 向后端发送控制转速的指令
+      // 向后端发送控制转向的指令
       if (this.changeForm.turn === "1") {
         // 正转
         this.$axios
@@ -301,21 +298,12 @@ export default {
           .then(res => {
             if (res.data.code < 300) {
               this.$Message.success("控制电机正转指令下发成功！");
-              // this.elecCtrl.switch = true;
-              // this.elecCtrl.turn = "1";
-            } else {
+            } else if(res.data.code >= 300){
               this.$Message.error("控制电机正转指令下发失败！");
-              // 如果电机是开着的，指令失败时，电机转向为反转
-              // if(this.elecCtrl.switch === true){
-              //   this.elecCtrl.turn = "0";//反转
-              // }else if(this.elecCtrl.switch === false){
-              //   // 如果电机是关着的，没有转向
-              //   this.elecCtrl.turn = "9";
-              // }
             }
           })
           .catch(error => {
-            this.$Message.error("系统错误！");
+            this.$Message.error("接口或处理逻辑出错！");
             console.log(error);
           });
       } else if (this.changeForm.turn === "0") {
@@ -325,23 +313,16 @@ export default {
             headers: { token: localStorage.getItem("token") }
           })
           .then(res => {
+            console.log(this.elecCtrl.turn);
+             console.log( typeof this.elecCtrl.turn);
             if (res.data.code < 300) {
               this.$Message.success("控制电机反转指令下发成功！");
-              // this.elecCtrl.switch = true;
-              // this.elecCtrl.turn = "0";
-            } else {
+            }else if(res.data.code >= 300){
               this.$Message.error("控制电机反转指令下发失败！");
-              // 如果电机是关着的，turn为空
-              // if(this.elecCtrl.switch === true){
-              //   this.elecCtrl.turn = "1";//正转
-              // }else if(this.elecCtrl.switch === false){
-              //   // 如果电机是关着的，没有转向
-              //   this.elecCtrl.turn = "9";
-              // }
             }
           })
           .catch(error => {
-            this.$Message.error("系统错误！");
+            this.$Message.error("接口或处理逻辑出错！");
             console.log(error);
           });
       }
@@ -355,12 +336,12 @@ export default {
           .then(res => {
             if (res.data.code < 300) {
               this.$Message.success("控制电机慢速指令下发成功！");
-            } else {
+            } else if(res.data.code >= 300){
               this.$Message.error("控制电机慢速指令下发失败！");
             }
           })
           .catch(error => {
-            this.$Message.error("系统错误！");
+            this.$Message.error("接口或处理逻辑出错！");
             console.log(error);
           });
       } else if (this.changeForm.speed === "middle" && this.elecCtrl.switch === true) {
@@ -372,12 +353,12 @@ export default {
           .then(res => {
             if (res.data.code < 300) {
               this.$Message.success("控制电机中速指令下发成功！");
-            } else {
+            } else if(res.data.code >= 300){
               this.$Message.error("控制电机中速指令下发失败！");
             }
           })
           .catch(error => {
-            this.$Message.error("系统错误！");
+            this.$Message.error("接口或处理逻辑出错！");
             console.log(error);
           });
       } else if (this.changeForm.speed === "fast" && this.elecCtrl.switch === true) {
@@ -389,12 +370,12 @@ export default {
           .then(res => {
             if (res.data.code < 300) {
               this.$Message.success("控制电机快速指令下发成功！");
-            } else {
+            } else if(res.data.code >= 300){
               this.$Message.error("控制电机快速指令下发失败！");
             }
           })
           .catch(error => {
-            this.$Message.error("系统错误！");
+            this.$Message.error("接口或处理逻辑出错！");
             console.log(error);
           });
       }
@@ -420,10 +401,6 @@ export default {
               this.time.push(this.$options.methods.formatTime(date));
               this.speed.push(
                 res.data.data[i].motorSpeed
-                // (
-                //   parseFloat(res.data.data[i].motorSpeed) +
-                //   Math.random() * 10
-                // ).toFixed(0)
               );
             }
             let brokenLine = this.$echarts.init(
@@ -543,21 +520,20 @@ export default {
             let body = JSON.parse(msg.body); //字符串转对象
             if (body.motorOpen === "0") {
               // 电机关闭
-              this.elecCtrl.switch = false;
+              this.elecCtrl.switch = false;//关
               this.realSpeed = 0;//速度为0
               this.elecCtrl.turn = "9";//没有转向
-            } else if (body.motorDir === "1" ||"2") {
+            } else if (body.motorOpen === "1") {
               // 电机开启
-              this.elecCtrl.switch = true;
+              this.elecCtrl.switch = true;//开
+              this.elecCtrl.turn = "1";//正转
               this.realSpeed = body.motorSpeed; //实际情况下仪表盘中电机的实时转速
             }
-            if (body.motorDir === "1" && this.elecCtrl.switch === true) {
-              //电机转向，1为正转，2为反转
-              this.elecCtrl.turn = "1";
-            } else if (body.motorDir === "2" && this.elecCtrl.switch === true) {
-              this.elecCtrl.turn = "0";
-            }else if(this.elecCtrl.switch === true){
-              this.elecCtrl.turn = "1";
+            else if (body.motorOpen === "2"){
+              // 电机开启
+              this.elecCtrl.switch = true;//开
+              this.elecCtrl.turn = "0";//反转
+              this.realSpeed = body.motorSpeed; //实际情况下仪表盘中电机的实时转速
             }
             //获取到数据后重新绘制仪表盘
             let dashBoard = this.$echarts.init(

@@ -2,34 +2,34 @@
   <!-- 实时数据页面 -->
   <div class="wrapper">
     <div class="inner">
-    <Row :style="{'width': autoWidth}">
-      <!-- 温度 -->
-      <Col span="8" :style="{'height': autoHeight}">
-        <div id="temp" class="myChart"></div>
-      </Col>
-      <!-- 湿度 -->
-      <Col span="8" :style="{'height': autoHeight}">
-        <div id="humi" class="myChart"></div>
-      </Col>
-      <!-- 电压 -->
-      <Col span="8" :style="{'height': autoHeight}">
-        <div id="volt" class="myChart"></div>
-      </Col>
-    </Row>
-    <Row :style="{'width': autoWidth}">
-      <!-- 电流 -->
-      <Col span="8" :style="{'height': autoHeight}">
-        <div id="elec" class="myChart"></div>
-      </Col>
-      <!-- 压力 -->
-      <Col span="8" :style="{'height': autoHeight}">
-        <div id="press" class="myChart"></div>
-      </Col>
-      <!-- 功率 -->
-      <Col span="8" :style="{'height': autoHeight}">
-        <div id="power" class="myChart"></div>
-      </Col>
-    </Row>
+      <Row :style="{'width': autoWidth}">
+        <!-- 温度 -->
+        <Col span="8" :style="{'height': autoHeight}">
+          <div id="temp" class="myChart"></div>
+        </Col>
+        <!-- 湿度 -->
+        <Col span="8" :style="{'height': autoHeight}">
+          <div id="humi" class="myChart"></div>
+        </Col>
+        <!-- 电压 -->
+        <Col span="8" :style="{'height': autoHeight}">
+          <div id="volt" class="myChart"></div>
+        </Col>
+      </Row>
+      <Row :style="{'width': autoWidth}">
+        <!-- 电流 -->
+        <Col span="8" :style="{'height': autoHeight}">
+          <div id="elec" class="myChart"></div>
+        </Col>
+        <!-- 压力 -->
+        <Col span="8" :style="{'height': autoHeight}">
+          <div id="press" class="myChart"></div>
+        </Col>
+        <!-- 功率 -->
+        <Col span="8" :style="{'height': autoHeight}">
+          <div id="power" class="myChart"></div>
+        </Col>
+      </Row>
     </div>
   </div>
 </template>
@@ -54,9 +54,9 @@ export default {
       powerValue: 0
     };
   },
-   beforeMount() {
-    this.autoWidth = window.screen.availWidth - 200 +"px";
-    this.autoHeight = parseInt((window.innerHeight - 64)/2) + "px";
+  beforeMount() {
+    this.autoWidth = window.screen.availWidth - 200 + "px";
+    this.autoHeight = parseInt((window.innerHeight - 64) / 2) + "px";
   },
   mounted() {
     this.initWebSocket(); //websocket初始化
@@ -167,7 +167,7 @@ export default {
                 color: "#fff"
               }
             },
-            data: [{ value: this.tempValue, name: "℃" }]
+            data: [{ value: this.tempValue, name: "温度℃" }]
           }
         ]
       });
@@ -261,7 +261,7 @@ export default {
                 color: "#fff"
               }
             },
-            data: [{ value: this.tempValue, name: "%RH" }]
+            data: [{ value: this.humiValue, name: "湿度%RH" }]
           }
         ]
       });
@@ -355,7 +355,7 @@ export default {
                 color: "#fff"
               }
             },
-            data: [{ value: this.tempValue, name: "V" }]
+            data: [{ value: this.voltValue, name: "电压V" }]
           }
         ]
       });
@@ -449,7 +449,7 @@ export default {
                 color: "#fff"
               }
             },
-            data: [{ value: this.tempValue, name: "A" }]
+            data: [{ value: this.elecValue, name: "电流A" }]
           }
         ]
       });
@@ -543,7 +543,7 @@ export default {
                 color: "#fff"
               }
             },
-            data: [{ value: this.tempValue, name: "Kg" }]
+            data: [{ value: this.pressValue, name: "压力Kg" }]
           }
         ]
       });
@@ -637,7 +637,7 @@ export default {
                 color: "#fff"
               }
             },
-            data: [{ value: this.tempValue, name: "W" }]
+            data: [{ value: this.powerValue, name: "功率W" }]
           }
         ]
       });
@@ -686,42 +686,42 @@ export default {
             temp.setOption({
               series: [
                 {
-                  data: [{ value: this.tempValue, name: "温度" }]
+                  data: [{ value: this.tempValue, name: "温度℃" }]
                 }
               ]
             });
             humi.setOption({
               series: [
                 {
-                  data: [{ value: this.humiValue, name: "湿度" }]
+                  data: [{ value: this.humiValue, name: "湿度%RH" }]
                 }
               ]
             });
             volt.setOption({
               series: [
                 {
-                  data: [{ value: this.voltValue, name: "电压" }]
+                  data: [{ value: this.voltValue, name: "电压V" }]
                 }
               ]
             });
             elec.setOption({
               series: [
                 {
-                  data: [{ value: this.elecValue, name: "电流" }]
+                  data: [{ value: this.elecValue, name: "电流A" }]
                 }
               ]
             });
             press.setOption({
               series: [
                 {
-                  data: [{ value: this.pressValue, name: "压力" }]
+                  data: [{ value: this.pressValue, name: "压力Kg" }]
                 }
               ]
             });
             power.setOption({
               series: [
                 {
-                  data: [{ value: this.powerValue, name: "功率" }]
+                  data: [{ value: this.powerValue, name: "功率W" }]
                 }
               ]
             });
@@ -755,7 +755,4 @@ export default {
 .ivu-input-wrapper {
   width: 30%;
 }
-/* .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item-active {
-  background: #363e4f;
-} */
 </style>

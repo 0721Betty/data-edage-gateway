@@ -113,6 +113,72 @@ export default {
     clearInterval(this.timer);
   },
   methods: {
+     change(switch1) {
+      this.$Message.info("指令下发中请耐心等待！");
+      if (switch1 === true) {
+        // 散热扇旋转，并且向后端发送指令开启扇热扇
+        this.$axios
+          .get("/api/cmd/fan-open", {
+            headers: { token: localStorage.getItem("token") }
+          })
+          .then(res => { 
+             if (res.data.code < 300) {
+              this.$Message.success("打开散热扇指令下发成功！");
+              clearInterval(this.fanTimer)
+              // 散热扇打开
+              this.fanTimer = setInterval(() => {
+                this.rotateVal += 3;
+                // 设置旋转属性(顺时针)
+                this.$refs.img.style.transform =
+                  "rotate(" + this.rotateVal + "deg)";
+                // 设置旋转时的动画  匀速0.1s
+                this.$refs.img.style.transition = "0.1s linear";
+              }, 1);
+            } else if(res.data.code >= 300){
+              this.$Message.error("打开散热扇指令下发失败！");
+              this.switch1 = false;
+              clearInterval(this.fanTimer);
+              // this.rotateVal = 0;
+            }
+          })
+          .catch(error => {
+            this.$Message.error("接口或处理逻辑出错！");
+            console.log(error);
+          });
+      } else if (switch1 === false) {
+        // 扇热扇停止，并且向后端发送关闭指令
+        this.$axios
+          .get("/api/cmd/fan-close", {
+            headers: { token: localStorage.getItem("token") }
+          })
+          .then(res => {
+            if (res.data.code < 300) {
+              this.$Message.success("关闭扇热扇指令下发成功！");
+              // 扇热扇关闭
+              clearInterval(this.fanTimer);
+              // this.rotateVal = 0;
+            } else if(res.data.code >= 300){
+              this.$Message.error("关闭扇热扇指令下发失败！");
+              this.switch1 = true;
+              clearInterval(this.fanTimer)
+              // 散热扇打开
+              this.fanTimer = setInterval(() => {
+                // this.rotateVal = 0;
+                this.rotateVal += 3;
+                // 设置旋转属性(顺时针)
+                this.$refs.img.style.transform =
+                  "rotate(" + this.rotateVal + "deg)";
+                // 设置旋转时的动画  匀速0.1s
+                this.$refs.img.style.transition = "0.1s linear";
+              }, 1);
+            }
+          })
+          .catch(error => {
+            this.$Message.error("接口或处理逻辑出错！");
+            console.log(error);
+          });
+      }
+    },
     //websocket初始化
     initWebSocket() {
       this.connection();
@@ -171,71 +237,6 @@ export default {
     disconnect() {
       if (this.stompClient) {
         this.stompClient.disconnect();
-      }
-    },
-    change(switch1) {
-      this.$Message.info("指令下发中请耐心等待！");
-      if (switch1 === true) {
-        // 散热扇旋转，并且向后端发送指令开启扇热扇
-        this.$axios
-          .get("/api/cmd/fan-open", {
-            headers: { token: localStorage.getItem("token") }
-          })
-          .then(res => { 
-             if (res.data.code < 300) {
-              this.$Message.success("打开散热扇指令下发成功！");
-              clearInterval(this.fanTimer)
-              // 散热扇打开
-              this.fanTimer = setInterval(() => {
-                this.rotateVal += 3;
-                // 设置旋转属性(顺时针)
-                this.$refs.img.style.transform =
-                  "rotate(" + this.rotateVal + "deg)";
-                // 设置旋转时的动画  匀速0.1s
-                this.$refs.img.style.transition = "0.1s linear";
-              }, 1);
-            } else {
-              this.$Message.error("打开散热扇指令下发失败！");
-              this.switch1 = false;
-              clearInterval(this.fanTimer);
-              // this.rotateVal = 0;
-            }
-          })
-          .catch(error => {
-            console.log(error);
-          });
-      } else if (switch1 === false) {
-        // 扇热扇停止，并且向后端发送关闭指令
-        this.$axios
-          .get("/api/cmd/fan-close", {
-            headers: { token: localStorage.getItem("token") }
-          })
-          .then(res => {
-            if (res.data.code < 300) {
-              this.$Message.success("关闭扇热扇指令下发成功！");
-              // 扇热扇关闭
-              clearInterval(this.fanTimer);
-              // this.rotateVal = 0;
-            } else {
-              this.$Message.error("关闭扇热扇指令下发失败！");
-              this.switch1 = true;
-              clearInterval(this.fanTimer)
-              // 散热扇打开
-              this.fanTimer = setInterval(() => {
-                // this.rotateVal = 0;
-                this.rotateVal += 3;
-                // 设置旋转属性(顺时针)
-                this.$refs.img.style.transform =
-                  "rotate(" + this.rotateVal + "deg)";
-                // 设置旋转时的动画  匀速0.1s
-                this.$refs.img.style.transition = "0.1s linear";
-              }, 1);
-            }
-          })
-          .catch(error => {
-            this.$Message.error("系统错误！");
-            console.log(error);
-          });
       }
     }
   }

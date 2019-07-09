@@ -21,8 +21,8 @@
         <Input v-model="registerUser.email" placeholder="请输入你的邮箱"></Input>
       </FormItem>
       <FormItem style="margin-right: 65px;margin-bottom:10px">
-        <Button type="primary" @click="handleSubmit('registerUser')">提交</Button>
-        <Button type="info" @click="handleReset('registerUser')" class="reset">重置</Button>
+        <Button type="info" @click="handleReset('registerUser')">重置</Button>
+        <Button type="primary" @click="handleSubmit('registerUser')" class="reset">提交</Button>
       </FormItem>
     </Form>
   </Card>
@@ -170,6 +170,7 @@ export default {
 }
 .title {
   font-size: 18px;
+  text-align: center;
 }
 .photo {
   font-size: 22px;
