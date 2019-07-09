@@ -16,8 +16,8 @@
           <Input v-model="machineInfo.desc" type="textarea"></Input>
         </FormItem>
         <FormItem style="margin-left:5px;margin-top:40px">
-          <Button type="primary" @click="handleSubmit('machineInfo')">提交</Button>
-          <Button type="info" @click="handleReset('machineInfo')" class="reset">重置</Button>
+          <Button type="info" @click="handleReset('machineInfo')">重置</Button>
+          <Button type="primary" @click="handleSubmit('machineInfo')" class="reset">提交</Button>
           <router-link to="/home/machineInfo" tag="span">
             <Button class="back" type="success">返回</Button>
           </router-link>
@@ -93,7 +93,7 @@ export default {
 .inner {
   width: 450px;
   height: 372px;
-  margin: 95px auto;
+  margin: 120px auto;
 }
 .ivu-input-wrapper {
   width: 85%;

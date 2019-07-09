@@ -16,8 +16,8 @@
           <Input v-model="admin.email"></Input>
         </FormItem>
         <FormItem style="margin-left:53px">
-          <Button type="primary" @click="handleSubmit('admin')">提交</Button>
-          <Button type="info" @click="handleReset('admin')" class="reset">重置</Button>
+          <Button type="info" @click="handleReset('admin')">重置</Button>
+          <Button type="primary" @click="handleSubmit('admin')" class="reset">提交</Button>
           <router-link to="/home/personal" tag="span">
           <Button class="personal" type="success">
             返回
@@ -121,7 +121,7 @@ export default {
 .inner {
   width: 450px;
   height: 300px;
-  margin: 115px auto;
+  margin: 150px auto;
 }
 .ivu-input-wrapper {
   width: 85%;

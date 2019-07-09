@@ -344,7 +344,16 @@ export default {
               this.slideTable.turn = "9";//没有转向
               this.slideTable.speed = "9";//没有速度
             }
-            this.pushRod.distance = body.rodDistance; //推杆距离
+            //推杆距离
+            if(body.rodDistance === "00"){
+              this.pushRod.distance = 0;
+            }else if(body.rodDistance === "01"){
+              this.pushRod.distance = 5;
+            }else if(body.rodDistance === "02"){
+              this.pushRod.distance = 15;
+            }else if(body.rodDistance === "03"){
+              this.pushRod.distance = 20;
+            }
           });
         },
         err => {

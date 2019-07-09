@@ -91,7 +91,7 @@ export default {
 .inner {
   width: 430px;
   height: 425px;
-  margin: 70px auto;
+  margin: 90px auto;
 }
 .title {
   font-size: 18px;
