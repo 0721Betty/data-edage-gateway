@@ -1,6 +1,6 @@
 <template>
   <!-- 设备信息页面 -->
-  <div class="wrapper">
+  <div class="wrapper" :style="{minHeight: autoHeight}">
     <div class="excel">
       <Table border :columns="columns" :data="data1" class="move">
         <template slot-scope="{ row, index }" slot="action">
@@ -16,6 +16,7 @@
 export default {
   data() {
     return {
+       autoHeight: "",
       columns: [
         {
           title: "ID 编号",
@@ -51,6 +52,9 @@ export default {
       data1: []
     };
   },
+  beforeMount(){
+    this.autoHeight = window.innerHeight -64 + "px";
+  },
   mounted() {
     this.getMachineId();
   },
@@ -81,14 +85,15 @@ export default {
 <style scoped>
 .wrapper {
   width: 100%;
-  height: 100%;
   background: url("../../assets/bkg.png") no-repeat;
+  background-size: 100% 100%;
   border: 1px solid #fff;
   animation: animated 0.5s;
 }
 .excel {
   width: 1103px;
-  margin: 100px auto;
+  margin: auto;
+  margin-top: 6%;
 }
 .changeBtn {
   margin: 20px 474px;

@@ -2,9 +2,9 @@
   <div>
     <Layout>
       <Header>
-        <Affix>
+        <!-- <Affix> -->
           <HeadBar></HeadBar>
-        </Affix>
+        <!-- </Affix> -->
       </Header>
       <Layout>
         <Sider class="sider">

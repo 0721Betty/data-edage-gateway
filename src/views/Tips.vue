@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" :style="{minHeight: autoHeight}">
     <div
       class="success"
       v-if="this.tempWarn === '' && this.elecWarn === '' && this.pressWarn === ''"
@@ -82,6 +82,7 @@ import Stomp from "stompjs";
 export default {
   data() {
     return {
+      autoHeight: "",
       // WebSocket
       stompClient: "",
       timer: "",
@@ -103,6 +104,9 @@ export default {
         checkbox2: ["电机", "滑台", "推杆"]
       }
     };
+  },
+  beforeMount(){
+    this.autoHeight = window.innerHeight -64 + "px";
   },
   mounted(){
     this.initWebSocket();
@@ -246,8 +250,8 @@ export default {
 .wrapper {
   padding: 20px;
   width: 100%;
-  height: 100%;
   background: url("../assets/bkg.png") no-repeat;
+  background-size: 100% 100%;
   border: 1px solid #fff;
 }
 .adjust {

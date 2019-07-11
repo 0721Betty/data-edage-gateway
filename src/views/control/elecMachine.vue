@@ -572,7 +572,7 @@ export default {
 /* 仪表盘样式 */
 .myChart {
   display: block;
-  width: 400px;
+  width: 320px;
   height: 389px;
 }
 /* 折线图样式 */

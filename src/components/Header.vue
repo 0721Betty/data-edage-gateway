@@ -19,7 +19,7 @@
         <div class="user">
           <Dropdown @on-click="handleClick">
             <div>
-              <Avatar src="http://b-ssl.duitang.com/uploads/item/201605/04/20160504175758_hSCK2.jpeg"/>&nbsp;
+              <Avatar style="background-color: #363e4f" icon="ios-home" />&nbsp;
               <span>{{ adminName }}&nbsp;</span>
               <Icon type="ios-arrow-down" style="color: #fff;"></Icon>
             </div>
@@ -100,8 +100,6 @@ export default {
 <style scoped>
 /* 头部样式 */
 .head {
-  /* background-color: #08acf8; */
-  /* background-color: #caf0fd; */
   height: 64px;
   line-height: 64px;
 }

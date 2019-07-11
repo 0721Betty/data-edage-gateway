@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" :style="{minHeight: autoHeight}">
     <!-- 设备信息修改页面 -->
     <Card class="inner">
       <p slot="title" class="title">
@@ -30,6 +30,7 @@
 export default {
   data() {
     return {
+      autoHeight: "",
       machineId: "",
       machineInfo: {
         name: "",
@@ -37,6 +38,9 @@ export default {
         desc: ""
       },
     };
+  },
+  beforeMount(){
+    this.autoHeight = window.innerHeight -64 + "px";
   },
   mounted(){
     this.getMachineId()
@@ -86,14 +90,15 @@ export default {
 <style scoped>
 .wrapper {
   width: 100%;
-  height: 100%;
   background: url("../../assets/bkg.png") no-repeat;
+  background-size: 100% 100%;
   border: 1px solid #fff;
 }
 .inner {
   width: 450px;
   height: 372px;
-  margin: 120px auto;
+  margin: auto;
+  margin-top: 4%;
 }
 .ivu-input-wrapper {
   width: 85%;

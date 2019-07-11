@@ -1,6 +1,6 @@
 <template>
   <!-- 滑台和推杆信息及控制页面 -->
-  <div class="wrapper">
+  <div class="wrapper" :style="{minHeight: autoHeight}">
     <!-- 滑台信息 -->
     <Row class="contain code-row-bg" type="flex" justify="center" align="middle">
       <Col span="8" offset="1">
@@ -114,6 +114,7 @@ import Stomp from "stompjs";
 export default {
   data() {
     return {
+      autoHeight: "",
       // WebSocket
       stompClient: "",
       timer: "",
@@ -139,6 +140,9 @@ export default {
         distance: 0
       }
     };
+  },
+  beforeMount(){
+    this.autoHeight = window.innerHeight -64 + "px";
   },
   mounted() {
     this.initWebSocket(); //websocket初始化
@@ -376,12 +380,12 @@ export default {
 <style scoped>
 .wrapper {
   width: 100%;
-  height: 100%;
   background: url("../../assets/bkg.png") no-repeat;
+  background-size: 100% 100%;
   border: 1px solid #fff;
 }
 .contain {
-  margin-top: 100px;
+  margin-top: 6%;
 }
 /* 滑台图片 */
 .slidePh {

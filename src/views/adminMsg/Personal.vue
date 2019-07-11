@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" :style="{minHeight: autoHeight}">
     <!-- 个人信息页面 -->
     <Card class="inner move">
       <p slot="title" class="title">
@@ -26,6 +26,7 @@
 export default {
   data() {
     return {
+       autoHeight: "",
       admin: {
         name: "",
         phone: "",
@@ -37,6 +38,7 @@ export default {
   },
   beforeMount() {
     this.getMsg();
+    this.autoHeight = window.innerHeight -64 + "px";
   },
   methods: {
     // 格式化时间
@@ -84,14 +86,15 @@ export default {
 <style scoped>
 .wrapper {
   width: 100%;
-  height: 100%;
   background: url("../../assets/bkg.png") no-repeat;
   border: 1px solid #fff;
+  background-size: 100% 100%;
 }
 .inner {
   width: 430px;
   height: 425px;
-  margin: 90px auto;
+  margin: auto;
+  margin-top: 2%;
 }
 .title {
   font-size: 18px;

@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" :style="{minHeight: autoHeight}">
     <!-- 个人信息修改页面 -->
     <Card class="inner">
       <p slot="title" class="title">
@@ -41,6 +41,7 @@ export default {
       }
     };
     return {
+       autoHeight: "",
       admin: {
         name: "",
         phone: "",
@@ -82,6 +83,9 @@ export default {
       }
     };
   },
+  beforeMount(){
+    this.autoHeight = window.innerHeight -64 + "px";
+  },
   methods: {
       handleSubmit(name) {
       this.$refs[name].validate(valid => {
@@ -114,14 +118,15 @@ export default {
 <style scoped>
 .wrapper {
   width: 100%;
-  height: 100%;
   background: url("../../assets/bkg.png") no-repeat;
+  background-size: 100% 100%;
   border: 1px solid #fff;
 }
 .inner {
   width: 450px;
   height: 300px;
-  margin: 150px auto;
+  margin: auto;
+  margin-top: 7%;
 }
 .ivu-input-wrapper {
   width: 85%;

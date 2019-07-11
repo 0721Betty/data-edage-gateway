@@ -1,5 +1,5 @@
 <template>
-<div class="wrapper" :style="{height: autoHeight}">
+<div class="wrapper" :style="{minHeight: autoHeight}">
   <Card class="inner">
     <p slot="title" class="title">
       <Icon type="md-happy" class="photo"></Icon>管理员注册
@@ -158,15 +158,15 @@ export default {
 <style scoped>
 .wrapper {
   width: 100%;
-  height: 100%;
   background: url("../assets/loginBkg.png") no-repeat;
   background-size: 100% 100%;
-  overflow: hidden;
+  position: relative;
 }
 .inner {
   width: 360px;
-  margin-top: 300px;
-  margin-left: 1055px;
+  position: absolute;
+  top: 34%;
+  right: 10%; 
 }
 .title {
   font-size: 18px;
