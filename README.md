@@ -13,13 +13,5 @@ npm run serve
 ```
 npm run build
 ```
-### 运行测试
-```
-npm run test
-```
-### 整理修复文件
-```
-npm run lint
-```
 
 
